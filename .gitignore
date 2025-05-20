@@ -1,0 +1,15 @@
+.bloop
+.bsp
+.metals
+project/target
+project/project
+.vscode
+target
+*.log
+graal_dumps
+.idea
+metals.sbt
+jmh-result.json
+*.jfr
+*.json
+*.gpg
