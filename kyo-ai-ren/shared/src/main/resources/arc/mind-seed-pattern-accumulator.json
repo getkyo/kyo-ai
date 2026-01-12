@@ -1,0 +1,76 @@
+{
+  "name": "pattern-accumulator",
+  "maxRecursions": 5,
+  "neurons": [
+    {
+      "name": "pattern-learner",
+      "description": "Self-recursive pattern extraction",
+      "previous": [],
+      "next": ["pattern-learner", "rule-synthesizer"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Accumulate patterns across self-recursive iterations.\n\nYou receive current pattern extraction, iteration number, and existing memory with accumulated patterns.\n\nFor each iteration, accumulate:\n- Patterns at increasing depth levels\n- Track iteration count to control recursion\n\nPROGRESSIVE DEPTH:\n- Iteration 1: Surface patterns (obvious)\n- Iteration 2: Medium patterns (less obvious)\n- Iteration 3: Deep patterns (subtle)\n- Iteration 4: Deeper patterns (very subtle)\n- Iteration 5: Final integration\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of all pattern entry indices\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nAccumulate patterns progressively across iterations.",
+          "reminder": "Store patterns at increasing depth using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Extract patterns with progressive depth through self-recursion.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Retrieved memory with accumulated patterns from previous iterations (if any)\n\nDetermine iteration:\n- **First iteration**: Memory empty → Extract surface patterns\n- **Later iterations**: Memory has patterns → Extract deeper patterns not yet found\n\n## PROGRESSIVE PATTERN EXTRACTION\n\n**Iteration 1 (Surface - if memory empty)**:\n- Obvious patterns immediately visible\n- Simple transformations\n- Direct observations\n- Example: \"Grid rotates 90°\", \"Color 3 becomes 5\"\n\n**Iteration 2 (Medium depth)**:\n- Patterns requiring more analysis\n- Object-level patterns\n- Regional patterns\n- Example: \"Objects in top half behave differently\", \"Connected components merge\"\n\n**Iteration 3 (Deep)**:\n- Subtle patterns\n- Conditional patterns\n- Context-dependent patterns\n- Example: \"Color change depends on neighbor count\", \"Transformation varies by position\"\n\n**Iteration 4 (Deeper)**:\n- Very subtle patterns\n- Multi-order dependencies\n- Hidden structure\n- Example: \"Pattern relates to prime positions\", \"Recursive structure\"\n\n**Iteration 5 (Integration)**:\n- Synthesize all accumulated patterns\n- Find connections between patterns\n- Build complete understanding\n\n## EXTRACTION DISCIPLINE\n\n- **Don't repeat**: Check memory, extract NEW patterns not yet found\n- **Go deeper**: Each iteration finds patterns at deeper level than previous\n- **Be specific**: Patterns should be testable and specific\n\n## ITERATION CONTROL\n\n- Check iteration count in memory\n- If iteration < 4: Extract new patterns, continue recursion\n- If iteration >= 4: Extract final patterns, stop recursion\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Pattern extraction at current depth level\n- consciousOutput: List of patterns found at this iteration\n- activations: Route decision based on iteration count\n\nFor activations:\n- If iteration < 4: Route back to self (pattern-learner) for deeper extraction\n- If iteration >= 4: Route to rule-synthesizer with all accumulated patterns\n\nInclude in activation:\n- Current iteration number\n- Accumulated patterns so far\n- Complete original input",
+        "reminder": "Extract patterns at progressive depth. This is conscious. Route based on iteration.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "rule-synthesizer",
+      "description": "Synthesizes accumulated patterns into rules",
+      "previous": ["pattern-learner"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Synthesize accumulated patterns into transformation rules.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Multiple iterations of pattern extraction from pattern-learner\n- Patterns at surface, medium, deep, and deeper levels\n\n## PATTERN SYNTHESIS\n\n1. **Collect all patterns**:\n   - Patterns from iteration 1 (surface)\n   - Patterns from iteration 2 (medium)\n   - Patterns from iteration 3 (deep)\n   - Patterns from iteration 4+ (deeper/integration)\n\n2. **Pattern integration**:\n   - How do patterns relate?\n   - Are they complementary? (different aspects of same transformation)\n   - Are they hierarchical? (coarse to fine)\n   - Are they alternatives? (different hypotheses)\n\n3. **Rule synthesis**:\n   - Combine compatible patterns into unified transformation rule\n   - Resolve conflicts between patterns\n   - Prioritize patterns with strong evidence\n   - Create complete, executable transformation rule\n\n4. **Validation**:\n   - Test synthesized rule against training examples\n   - All examples correct?\n   - Adjust if needed\n\n## APPLICATION\n\n1. **Parse test cases** from original JSON\n\n2. **Apply synthesized rule**:\n   - Use integrated understanding from all pattern layers\n   - Generate output for each test case\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Synthesis process and rule creation\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Synthesize patterns into rules. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on pattern accumulation.\n\nYou receive the original input and MULTIPLE conscious thoughts:\n- Pattern-learner iterations (1-4+): Progressive pattern extraction\n- Rule-synthesizer: Integrated transformation rule and solutions\n\nThe rule-synthesizer has applied the multi-layer pattern understanding.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the rule-synthesizer's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the synthesized solution",
+    "reminder": "Return JSON array of grids from rule-synthesizer's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

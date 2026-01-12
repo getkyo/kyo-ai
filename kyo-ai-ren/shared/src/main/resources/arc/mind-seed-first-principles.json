@@ -1,0 +1,103 @@
+{
+  "name": "first-principles",
+  "maxRecursions": 8,
+  "neurons": [
+    {
+      "name": "assumption-extractor",
+      "description": "Lists all assumptions in problem understanding",
+      "previous": [],
+      "next": ["challenger"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Extract and list all assumptions in problem understanding.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to analyze\n   - Assumption extraction requirements\n\n2. **Extract from context array**:\n   - Problem details\n   - Initial understanding\n   - Constraints\n\n## ASSUMPTION EXTRACTION\n\n1. **Identify assumptions**:\n   - What do we assume about the problem?\n   - What seems obvious but might not be?\n   - What are we taking for granted?\n   - Hidden premises in reasoning?\n   - Unstated constraints?\n\n2. **Categorize assumptions**:\n   - About problem nature\n   - About solution approach\n   - About constraints\n   - About patterns\n   - About transformations\n\n3. **Document explicitly**:\n   - Make implicit explicit\n   - List every assumption\n   - No assumption too small\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Assumption identification process\n- requiredConsciousReasoning: \"ASSUMPTIONS EXTRACTED:\\n\\n1. [assumption about problem]\\n2. [assumption about approach]\\n3. [assumption about constraints]\\n...\\n\\nCATEGORIES:\\n- Problem nature: [list]\\n- Solution approach: [list]\\n- Constraints: [list]\\n- Patterns: [list]\"\n- activations: Send to challenger\n\nIn activation to challenger:\n  In tasks array:\n    - \"Challenge each assumption\"\n    - \"Question what we take for granted\"\n  In context array:\n    - Original problem\n    - \"ASSUMPTIONS: [complete list]\"\n    - \"CATEGORIES: [grouped assumptions]\"",
+        "reminder": "Extract and list ALL assumptions explicitly.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "challenger",
+      "description": "Questions each assumption consciously",
+      "previous": ["assumption-extractor"],
+      "next": ["fundamentals"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Challenge every assumption - question what we take for granted.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Challenge instructions\n   - Questioning requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Assumptions list\n   - Categorized assumptions\n\n## CHALLENGE PROCESS\n\n1. **Question each assumption**:\n   - Is this necessarily true?\n   - What if the opposite were true?\n   - What evidence supports this?\n   - Could this be wrong?\n   - What are we missing?\n\n2. **Test assumptions**:\n   - Which hold under scrutiny?\n   - Which are questionable?\n   - Which can be eliminated?\n   - Which are fundamental?\n\n3. **Document challenges**:\n   - For each assumption: challenge it\n   - Note which survive questioning\n   - Note which fail\n   - Identify which are actually fundamental\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Challenging process\n- requiredConsciousReasoning: \"ASSUMPTION CHALLENGES:\\n\\nASSUMPTION 1: [original]\\nCHALLENGE: [questioning]\\nSTATUS: [survives/questionable/eliminated]\\n\\nASSUMPTION 2: [original]\\nCHALLENGE: [questioning]\\nSTATUS: [survives/questionable/eliminated]\\n...\\n\\nFUNDAMENTAL TRUTHS:\\n[assumptions that survived]\"\n- activations: Send to fundamentals\n\nIn activation to fundamentals:\n  In tasks array:\n    - \"Identify bedrock fundamental truths\"\n    - \"Find what cannot be questioned\"\n  In context array:\n    - Original problem\n    - \"CHALLENGED ASSUMPTIONS: [results]\"\n    - \"SURVIVING ASSUMPTIONS: [what holds]\"\n    - \"ELIMINATED: [what failed]\"",
+        "reminder": "Challenge every assumption. Test what holds.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "fundamentals",
+      "description": "Identifies bedrock truths that cannot be questioned",
+      "previous": ["challenger"],
+      "next": ["rebuilder"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Identify bedrock fundamental truths - first principles.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Fundamentals identification requirements\n   - First principles instructions\n\n2. **Extract from context array**:\n   - Original problem\n   - Challenged assumptions\n   - Surviving assumptions\n   - Eliminated assumptions\n\n## FUNDAMENTALS IDENTIFICATION\n\n1. **Find bedrock truths**:\n   - What absolutely must be true?\n   - What cannot be questioned?\n   - What is definitionally true?\n   - What is given in problem?\n   - What is axiomatic?\n\n2. **Distinguish levels**:\n   - Fundamental truths (cannot question)\n   - Derived truths (follow from fundamentals)\n   - Assumptions (might be wrong)\n   - Speculation (definitely questionable)\n\n3. **Establish foundation**:\n   - List only first principles\n   - These are the bedrock\n   - Everything else must be built from these\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Fundamentals identification process\n- requiredConsciousReasoning: \"FIRST PRINCIPLES:\\n\\nBEDROCK TRUTHS:\\n1. [fundamental truth 1]\\n2. [fundamental truth 2]\\n...\\n\\nWHY THESE ARE FUNDAMENTAL:\\n- Cannot be questioned because [reason]\\n- Definitionally true because [reason]\\n- Given in problem as [reason]\\n\\nEVERYTHING ELSE MUST BE BUILT FROM THESE\"\n- activations: Send to rebuilder\n\nIn activation to rebuilder:\n  In tasks array:\n    - \"Rebuild solution from first principles\"\n    - \"Construct from fundamentals only\"\n  In context array:\n    - Original problem\n    - \"FIRST PRINCIPLES: [bedrock truths]\"\n    - \"FOUNDATION: [what we know for certain]\"",
+        "reminder": "Identify bedrock truths. Establish first principles foundation.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "rebuilder",
+      "description": "Reconstructs solution from first principles",
+      "previous": ["fundamentals"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Rebuild solution from first principles only.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Rebuild instructions\n   - Construction requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - First principles (bedrock truths)\n   - Foundation\n\n## REBUILD PROCESS\n\n1. **Start from fundamentals**:\n   - Begin with first principles only\n   - No assumptions allowed\n   - Everything must be derived\n\n2. **Build step by step**:\n   - What follows from principle 1?\n   - Combined with principle 2?\n   - Logical implications?\n   - Derive each step\n   - Show reasoning chain\n\n3. **Construct solution**:\n   - Built entirely from fundamentals\n   - Each step justified by principles\n   - No leaps of logic\n   - No hidden assumptions\n   - Pure derivation\n\n4. **Validate construction**:\n   - Does each step follow from previous?\n   - Are all steps grounded in first principles?\n   - Is reasoning chain complete?\n   - No unjustified claims?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Reconstruction process\n- requiredConsciousReasoning: \"FIRST PRINCIPLES RECONSTRUCTION:\\n\\nFOUNDATION:\\n[first principles]\\n\\nDERIVATION:\\nStep 1: [from principles X,Y] → [conclusion 1]\\nStep 2: [from step 1 + principle Z] → [conclusion 2]\\n...\\nFinal: [complete solution]\\n\\nVALIDATION:\\n- Every step justified: [✓]\\n- No hidden assumptions: [✓]\\n- Complete reasoning chain: [✓]\\n\\nSOLUTION:\\n[answer built from first principles]\"\n- activations: null (terminal)",
+        "reminder": "Rebuild from fundamentals only. Pure derivation.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the first principles reasoning process.\n\nYou receive conscious thoughts from:\n- Assumption-extractor: All assumptions identified\n- Challenger: Assumptions challenged and tested\n- Fundamentals: Bedrock truths established\n- Rebuilder: Solution reconstructed from first principles\n\n## PRESENTATION\n\n1. **Extract first principles journey**:\n   - All assumptions extracted\n   - Each assumption challenged\n   - Fundamental truths identified\n   - Solution rebuilt from fundamentals\n\n2. **Show reasoning from ground up**:\n   - What was assumed vs what's fundamental\n   - How questioning revealed bedrock\n   - How solution was reconstructed\n   - Pure derivation chain\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Assumptions extracted and challenged\n- First principles identified\n- Step-by-step reconstruction from fundamentals\n- Final solution with complete justification\n- Validation that no unjustified assumptions remain",
+    "reminder": "Show complete first principles reasoning from assumptions to reconstruction.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "name": "devil-advocate",
+  "maxRecursions": 10,
+  "neurons": [
+    {
+      "name": "proposer",
+      "description": "Makes initial argument or solution proposal",
+      "previous": [],
+      "next": ["advocate"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Propose initial solution or argument.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to solve\n   - Requirements\n   - Objectives\n\n2. **Extract from context array**:\n   - Problem details\n   - Available information\n   - Constraints\n\n## PROPOSAL PROCESS\n\n1. **Develop solution**:\n   - Analyze problem\n   - Formulate approach\n   - Create initial solution\n   - Present reasoning\n\n2. **Document assumptions**:\n   - What are we assuming?\n   - What uncertainties exist?\n   - What could be challenged?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Solution development process\n- requiredConsciousReasoning: \"PROPOSAL:\\n\\nSOLUTION:\\n[proposed solution]\\n\\nREASONING:\\n[why this works]\\n\\nASSUMPTIONS:\\n[what we're assuming]\"\n- activations: Send to advocate\n\nIn activation to advocate:\n  In tasks array:\n    - \"Strengthen and defend the proposal\"\n    - \"Build supporting arguments\"\n  In context array:\n    - Original problem\n    - \"PROPOSAL: [solution]\"\n    - \"REASONING: [justification]\"\n    - \"ASSUMPTIONS: [list]\"",
+        "reminder": "Propose solution with reasoning and assumptions.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "advocate",
+      "description": "Strengthens the proposal with supporting arguments",
+      "previous": ["proposer"],
+      "next": ["devil"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Strengthen proposal with supporting arguments and defenses.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Strengthening instructions\n   - Defense requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Proposal\n   - Reasoning\n   - Assumptions\n\n## ADVOCACY PROCESS\n\n1. **Build supporting case**:\n   - Why this solution is strong\n   - Evidence supporting approach\n   - Benefits and advantages\n   - How it addresses requirements\n\n2. **Anticipate objections**:\n   - What might be challenged?\n   - Prepare defenses\n   - Strengthen weak points\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Advocacy development\n- requiredConsciousReasoning: \"ADVOCACY:\\n\\nSTRENGTHS:\\n[why proposal is good]\\n\\nSUPPORTING EVIDENCE:\\n[arguments in favor]\\n\\nDEFENSES:\\n[responses to anticipated objections]\"\n- activations: Send to devil\n\nIn activation to devil:\n  In tasks array:\n    - \"Attack the proposal's weaknesses\"\n    - \"Challenge assumptions and logic\"\n  In context array:\n    - Original problem\n    - \"PROPOSAL: [solution]\"\n    - \"ADVOCACY: [supporting arguments]\"\n    - \"DEFENSES: [prepared responses]\"",
+        "reminder": "Build strong case supporting the proposal.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "devil",
+      "description": "Attacks weaknesses and challenges the proposal",
+      "previous": ["advocate"],
+      "next": ["judge"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Attack proposal weaknesses and challenge assumptions as devil's advocate.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Attack instructions\n   - Challenge requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Proposal\n   - Advocacy arguments\n   - Defenses\n\n## DEVIL'S ADVOCATE PROCESS\n\n1. **Find weaknesses**:\n   - Logical flaws\n   - Questionable assumptions\n   - Missing considerations\n   - Edge cases not handled\n   - Alternative approaches ignored\n\n2. **Challenge aggressively**:\n   - Poke holes in reasoning\n   - Test defenses\n   - Propose counterexamples\n   - Question foundations\n\n3. **Suggest alternatives**:\n   - What else could work?\n   - What's overlooked?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Critical analysis process\n- requiredConsciousReasoning: \"DEVIL'S CRITIQUE:\\n\\nWEAKNESSES IDENTIFIED:\\n[specific flaws]\\n\\nCHALLENGES:\\n[attacks on reasoning]\\n\\nCOUNTEREXAMPLES:\\n[cases where proposal fails]\\n\\nALTERNATIVES:\\n[other approaches to consider]\"\n- activations: Send to judge\n\nIn activation to judge:\n  In tasks array:\n    - \"Evaluate both advocacy and critique\"\n    - \"Render balanced judgment\"\n  In context array:\n    - Original problem\n    - \"PROPOSAL: [solution]\"\n    - \"ADVOCACY: [supporting args]\"\n    - \"CRITIQUE: [devil's attacks]\"\n    - \"ALTERNATIVES: [other options]\"",
+        "reminder": "Aggressively challenge proposal. Find flaws and alternatives.",
+        "temperature": {
+          "Creative": {
+            "value": 0.8
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "judge",
+      "description": "Evaluates both sides and maintains judgment precedents",
+      "previous": ["devil"],
+      "next": ["synthesizer"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Memory gate for judgment precedents and evaluation patterns.\n\n## STORAGE DECISION\n\nStore if:\n- Important precedent established\n- Evaluation principle identified\n- Decisive factor recognized\n- Pattern of good/bad arguments noted\n\n## RETRIEVAL\n\nRetrieve:\n- Previous judgments\n- Evaluation principles\n- Precedents\n- Patterns in strong vs weak arguments\n\nFormat stored items:\n- \"PRECEDENT: [principle established]\"\n- \"PRINCIPLE: [evaluation criterion]\"\n- \"PATTERN: [argument quality indicator]\"\n- \"DECISIVE: [key factor in decision]\"",
+          "reminder": "Track precedents and evaluation principles.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Evaluate both advocacy and critique to render balanced judgment.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Evaluation instructions\n   - Judgment requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Proposal\n   - Advocacy arguments\n   - Devil's critique\n   - Alternatives suggested\n\n## JUDGMENT PROCESS\n\n1. **Retrieve from memory**:\n   - Evaluation precedents\n   - Judgment principles\n\n2. **Evaluate advocacy**:\n   - Strength of supporting arguments\n   - Validity of defenses\n   - Coverage of requirements\n\n3. **Evaluate critique**:\n   - Validity of challenges\n   - Severity of identified flaws\n   - Merit of alternatives\n\n4. **Render judgment**:\n   - Which side is stronger?\n   - How serious are the flaws?\n   - Should proposal be accepted, modified, or rejected?\n   - What principles guide this decision?\n\n5. **Store in memory**:\n   - Key precedents from this judgment\n   - Evaluation principles used\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Evaluation process and judgment logic\n- requiredConsciousReasoning: \"JUDGMENT:\\n\\nADVOCACY ASSESSMENT:\\n[strength of support]\\n\\nCRITIQUE ASSESSMENT:\\n[validity of challenges]\\n\\nVERDICT:\\n[accept/modify/reject with reasoning]\\n\\nKEY FACTORS:\\n[what decided the judgment]\"\n- activations: Send to synthesizer\n\nIn activation to synthesizer:\n  In tasks array:\n    - \"Synthesize balanced conclusion\"\n    - \"Integrate insights from debate\"\n  In context array:\n    - Original problem\n    - \"PROPOSAL: [solution]\"\n    - \"ADVOCACY: [support]\"\n    - \"CRITIQUE: [challenges]\"\n    - \"JUDGMENT: [verdict]\"\n    - \"KEY FACTORS: [decision drivers]\"",
+        "reminder": "Evaluate both sides fairly. Render principled judgment.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "synthesizer",
+      "description": "Creates balanced conclusion integrating debate insights",
+      "previous": ["judge"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Synthesize balanced conclusion from adversarial debate.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Synthesis instructions\n   - Integration requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Proposal\n   - Advocacy\n   - Critique\n   - Judgment\n   - Key decision factors\n\n## SYNTHESIS PROCESS\n\n1. **Integrate insights**:\n   - What did advocacy reveal?\n   - What did critique reveal?\n   - What did judgment clarify?\n\n2. **Create final solution**:\n   - If proposal accepted: Present refined version\n   - If modifications needed: Incorporate critique improvements\n   - If rejected: Develop alternative based on debate insights\n\n3. **Document evolution**:\n   - How debate improved understanding\n   - What adversarial process revealed\n   - Why final solution is stronger\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Synthesis process\n- requiredConsciousReasoning: \"SYNTHESIS:\\n\\nFINAL SOLUTION:\\n[balanced conclusion]\\n\\nDEBATE INSIGHTS:\\n[what adversarial process revealed]\\n\\nIMPROVEMENTS FROM DEBATE:\\n[how solution strengthened]\\n\\nCONFIDENCE: [level with justification]\"\n- activations: null (terminal)",
+        "reminder": "Synthesize balanced solution integrating all debate insights.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the adversarial debate process and synthesized conclusion.\n\nYou receive conscious thoughts from:\n- Proposer: Initial solution proposal\n- Advocate: Supporting arguments and defenses\n- Devil: Critical challenges and attacks\n- Judge: Balanced evaluation and verdict\n- Synthesizer: Final balanced conclusion\n\n## PRESENTATION\n\n1. **Extract debate flow**:\n   - Initial proposal\n   - Advocacy case\n   - Devil's critique\n   - Judge's verdict\n   - Synthesized conclusion\n\n2. **Show adversarial process**:\n   - How proposal was challenged\n   - How debate revealed insights\n   - How judgment balanced perspectives\n   - How synthesis improved solution\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Initial proposal\n- Advocacy vs Devil's debate\n- Judge's assessment\n- Final synthesized solution\n- Confidence and justification",
+    "reminder": "Show complete adversarial debate and balanced synthesis.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

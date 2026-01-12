@@ -1,0 +1,118 @@
+{
+  "name": "hierarchical-abstraction-tower",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "coarse-analyzer",
+      "description": "High-level pattern analysis",
+      "previous": [],
+      "next": ["medium-analyzer"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze ARC-AGI task at coarse, high-level scale.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## COARSE-LEVEL ANALYSIS (30,000 foot view)\n\nFocus on broad, overall patterns:\n\n1. **Overall Structure**:\n   - Grid dimensions: do they change? How?\n   - Overall grid transformation type:\n     * Geometric (rotation, reflection, scaling)\n     * Color-based (swaps, mappings)\n     * Object-based (manipulation of components)\n     * Structural (tiling, cropping, reshaping)\n\n2. **Major Patterns**:\n   - What is the dominant pattern across all training examples?\n   - Is there a single overarching transformation?\n   - Complexity: simple (single operation) or complex (multi-step)?\n\n3. **High-Level Categories**:\n   - Template matching: does this fit a known ARC pattern?\n     * Gravity, symmetry, tiling, flood fill, etc.\n   - Rule-based: explicit if-then rules\n   - Transformation-based: mathematical operations\n\n4. **Global Properties**:\n   - Information preservation: is information preserved, added, removed?\n   - Determinism: same input always produces same output?\n   - Scalability: does transformation scale with input size?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: High-level analysis of overall patterns\n- activations: Route to medium-analyzer with coarse findings\n\nInclude in activation:\n- Overall transformation type and major pattern\n- High-level hypothesis\n- Complete original input for further analysis",
+        "reminder": "Analyze at coarse level. Pass findings to medium-analyzer.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "medium-analyzer",
+      "description": "Mid-level regional pattern analysis",
+      "previous": ["coarse-analyzer"],
+      "next": ["fine-analyzer"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze ARC-AGI task at medium, regional scale.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Coarse-level analysis from previous neuron\n\n## MEDIUM-LEVEL ANALYSIS (Regional patterns)\n\nBuild on coarse analysis with regional detail:\n\n1. **Regional Patterns**:\n   - Does transformation vary by region?\n   - Grid subdivisions: quadrants, rows, columns, zones\n   - Regional rules: different rules for different areas\n   - Example: \"Top half rotates, bottom half reflects\"\n\n2. **Object Groups**:\n   - If objects present, how are they grouped?\n   - Object categories: by color, size, position\n   - Group behaviors: do groups transform differently?\n   - Object interactions within groups\n\n3. **Pattern Refinement**:\n   - Refine coarse hypothesis with regional details\n   - Conditional aspects: when does pattern apply differently?\n   - Spatial dependencies: does location matter?\n\n4. **Intermediate Structure**:\n   - Layers: foreground, background, overlays\n   - Zones: functional regions in the grid\n   - Paths: connections, boundaries, separators\n\n5. **Medium-Scale Operations**:\n   - Object-level operations (if objects identified)\n   - Regional transformations (if regions identified)\n   - Pattern propagation (how patterns spread)\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Regional pattern analysis\n- activations: Route to fine-analyzer with medium findings\n\nInclude in activation:\n- Coarse hypothesis plus regional refinements\n- Object groups and regional patterns\n- Complete context for fine-level analysis",
+        "reminder": "Analyze at medium level. Pass refined findings to fine-analyzer.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "fine-analyzer",
+      "description": "Low-level cell details and edge cases",
+      "previous": ["medium-analyzer"],
+      "next": ["synthesizer"],
+      "conscious": false,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Manage memory of progressive abstraction details.\n\nYou receive fine-level analysis, accumulated details from coarse and medium levels, and existing memory entries.\n\nStore progressive refinement:\n- Coarse patterns that proved relevant\n- Medium-level refinements that matter\n- Fine details that explain edge cases\n- Multi-scale integration insights\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for multi-scale patterns\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nStore multi-scale insights for future reference.",
+          "reminder": "Store multi-scale details using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+          }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Analyze ARC-AGI task at fine, cell-level detail.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Coarse-level analysis\n- Medium-level analysis\n- Retrieved memory with multi-scale patterns\n\n## FINE-LEVEL ANALYSIS (Cell-level details)\n\nExamine specific details and edge cases:\n\n1. **Cell-Level Behavior**:\n   - Individual cell transformations\n   - Cell dependencies: neighbors, position, context\n   - Cell-level rules: specific conditions for each cell\n\n2. **Boundary Conditions**:\n   - Edge cells: special handling at grid boundaries\n   - Corner cells: behavior at corners\n   - Boundary wrapping: toroidal vs. clipping\n\n3. **Edge Cases**:\n   - Special configurations that need specific handling\n   - Ambiguous cases: how are they resolved?\n   - Degenerate cases: empty regions, single cells, etc.\n\n4. **Fine Details from Coarse/Medium**:\n   - Coarse said \"rotate\" → Fine: exactly how? Center point? Per object?\n   - Medium said \"regional\" → Fine: exact boundaries between regions?\n   - Refine vague aspects with specific details\n\n5. **Validation Details**:\n   - Are there any mismatches in coarse/medium hypotheses?\n   - Fine-level corrections needed?\n   - Do training outputs match fine-level predictions?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Fine-level detail analysis\n- activations: Route to synthesizer with complete multi-scale hypothesis\n\nInclude in activation:\n- Complete hypothesis across all scales (coarse, medium, fine)\n- Validation results on training examples\n- All context needed for synthesis",
+        "reminder": "Analyze fine details. Pass complete multi-scale hypothesis to synthesizer.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "synthesizer",
+      "description": "Synthesizes across all scales",
+      "previous": ["fine-analyzer"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Synthesize multi-scale analysis and generate test solutions.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Complete multi-scale hypothesis (coarse, medium, fine)\n- Validation results\n\n## MULTI-SCALE SYNTHESIS\n\n1. **Integrate across scales**:\n   - Coarse provides overall strategy\n   - Medium provides regional organization\n   - Fine provides specific implementation details\n\n2. **Unified understanding**:\n   - Combine insights from all three levels\n   - Resolve any conflicts between scales\n   - Create complete, executable transformation\n\n3. **Complete transformation procedure**:\n   - **Coarse level**: [overall approach]\n   - **Medium level**: [regional handling]\n   - **Fine level**: [cell-level execution]\n\n## SOLUTION GENERATION\n\n1. **Parse test cases** from original JSON\n\n2. **For each test case**, apply multi-scale transformation:\n\n   **Apply coarse-level strategy**:\n   - Set up overall transformation approach\n   - Determine output dimensions\n   - Initialize output\n   \n   **Apply medium-level refinement**:\n   - Handle regional patterns\n   - Process object groups\n   - Apply zone-specific rules\n   \n   **Apply fine-level details**:\n   - Execute cell-level transformations\n   - Handle boundary conditions\n   - Resolve edge cases\n\n3. **Validation**:\n   - All scales applied correctly\n   - Output dimensions correct\n   - All values 0-9\n   - Consistent with training examples\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Synthesis and application process\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Synthesize and apply multi-scale transformation. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on hierarchical multi-scale analysis.\n\nYou receive the original input and conscious thought from the synthesizer.\n\nThe synthesizer has integrated coarse, medium, and fine-level analyses and generated solutions.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the synthesizer's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the multi-scale synthesized solutions",
+    "reminder": "Return JSON array of grids from synthesizer's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

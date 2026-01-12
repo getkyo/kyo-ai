@@ -1,0 +1,97 @@
+{
+  "name": "deep-iterative-refiner",
+  "maxRecursions": 6,
+  "neurons": [
+    {
+      "name": "solver",
+      "description": "Generates and refines solution hypothesis",
+      "previous": [],
+      "next": ["critic"],
+      "conscious": false,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Manage memory of solution evolution across iterations.\n\nYou receive current solution state, iteration feedback, and existing memory entries.\n\nTrack solution evolution:\n- Store iteration history with hypotheses and changes\n- Track what has been tried and what worked\n- Record critic feedback and responses\n- Track iteration count\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for iteration history\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nStore iteration history for progressive refinement.",
+          "reminder": "Store solution evolution using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Generate or refine solution hypothesis.\n\nYou receive tasks and context arrays containing:\n- Original input with training examples\n- Retrieved memory with iteration history (if any)\n- Critique feedback (if refining)\n\nDetermine scenario:\n- INITIAL GENERATION: No memory, no feedback → Generate initial hypothesis\n- REFINEMENT: Memory and feedback present → Refine based on critique\n\n## INITIAL GENERATION\n\nIf this is the first iteration:\n1. Analyze training examples\n2. Generate initial transformation hypothesis\n3. Be specific and testable\n4. Formulate clear transformation rule\n\n## REFINEMENT\n\nIf this is a refinement iteration:\n1. Review critique feedback: what issues were identified?\n2. Review memory: what has been tried? What worked?\n3. Make targeted improvements:\n   - Address specific issues from critique\n   - Don't discard what works\n   - Refine problematic aspects\n   - Add missing details\n   - Correct errors\n\n4. Refinement strategies:\n   - **Precision**: Make vague rules more specific\n   - **Completeness**: Add handling for edge cases\n   - **Correction**: Fix identified errors\n   - **Expansion**: Add missing steps or conditions\n   - **Simplification**: Remove unnecessary complexity\n\n## PROGRESSIVE IMPROVEMENT\n\nEach iteration should be BETTER than the previous:\n- Incorporate critique feedback\n- Learn from past attempts\n- Converge toward correct solution\n- Track improvements\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis and refinement logic\n- activations: Route to critic with hypothesis\n\nInclude in activation:\n- Current hypothesis (initial or refined)\n- Iteration number\n- Changes made (if refinement)\n- Complete original input",
+        "reminder": "Generate or refine solution progressively based on feedback.",
+        "temperature": {
+          "Creative": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "critic",
+      "description": "Evaluates solution and identifies issues",
+      "previous": ["solver"],
+      "next": ["decision"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Critically evaluate solution hypothesis.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Solution hypothesis from solver\n- Iteration context\n\n## CRITICAL EVALUATION\n\nBe thorough and demanding. Identify any issues:\n\n1. **Correctness Check**:\n   - Apply hypothesis to each training example\n   - Does it produce correct output?\n   - Any mismatches?\n   - Cell-level accuracy\n\n2. **Completeness Check**:\n   - Is hypothesis fully specified?\n   - Any ambiguities?\n   - All cases covered?\n   - Edge cases handled?\n\n3. **Consistency Check**:\n   - Does hypothesis work for ALL training examples?\n   - Are there contradictions?\n   - Is application consistent?\n\n4. **Specificity Check**:\n   - Is hypothesis specific enough to execute?\n   - Any vague terms?\n   - Parameters clearly defined?\n\n5. **Quality Assessment**:\n   - **EXCELLENT**: Perfect on all examples, clear, complete\n   - **GOOD**: Works on all examples, minor clarity issues\n   - **ACCEPTABLE**: Works on all examples, some refinement possible\n   - **NEEDS IMPROVEMENT**: Works on most examples, notable issues\n   - **POOR**: Fails on multiple examples, major issues\n\n## ISSUE IDENTIFICATION\n\nFor each issue found:\n- **What**: Specific problem\n- **Where**: Which training example or aspect\n- **Why**: Root cause\n- **Impact**: How serious (critical, major, minor)\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Detailed evaluation process\n- activations: Route to decision with evaluation\n\nInclude in activation:\n- Quality assessment (EXCELLENT/GOOD/etc)\n- List of identified issues\n- Recommendation (ACCEPT/REFINE)\n- Refinement guidance if needed\n- Complete context",
+        "reminder": "Evaluate critically. Pass assessment to decision.",
+        "temperature": {
+          "Precise": {
+            "value": 0.1
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "decision",
+      "description": "Decides to accept or refine further",
+      "previous": ["critic"],
+      "next": ["solver"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Decide whether to accept solution or refine further.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Solution hypothesis\n- Critic evaluation\n- Iteration context\n\n## DECISION CRITERIA\n\n**ACCEPT solution if**:\n- Critic evaluation: EXCELLENT or GOOD\n- Hypothesis works perfectly on all training examples\n- No critical or major issues\n- Ready for application to test cases\n\n**REFINE solution if**:\n- Critic identifies issues (any level)\n- Hypothesis fails on any training example\n- Quality is ACCEPTABLE or below\n- Improvement is possible\n- Iteration budget allows (maxRecursions not exceeded)\n\n**FORCED ACCEPT if**:\n- Iteration limit approaching\n- Solution is best available (even if imperfect)\n- Further refinement unlikely to help\n\n## ROUTING DECISION\n\n**If ACCEPT**:\n- Apply solution to test cases\n- Generate final output\n- No further routing\n\n**If REFINE**:\n- Route back to solver with critique feedback\n- Solver will refine based on issues\n- Continue refinement loop\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Decision logic and rationale\n- consciousOutput: If accepting, JSON array of solution grids; if refining, refinement plan\n- activations: If refining, route back to solver; if accepting, empty array\n\nFor ACCEPT, consciousOutput contains actual solutions:\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nFor REFINE, include in activation to solver:\n- Critic feedback and issues\n- Specific refinement guidance\n- Iteration count",
+        "reminder": "Decide: accept (output grids) or refine (route to solver). This is conscious.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on iterative refinement.\n\nYou receive the original input and conscious thought from the decision neuron.\n\nThe decision neuron has accepted a solution (possibly after multiple refinement iterations) and generated the output grids in its consciousOutput.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the decision neuron's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the iteratively refined solutions",
+    "reminder": "Return JSON array of grids from decision's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

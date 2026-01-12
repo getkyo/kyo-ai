@@ -1,0 +1,103 @@
+{
+  "name": "rule-compiler",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "rule-extractor",
+      "description": "Extracts candidate rules from training examples",
+      "previous": [],
+      "next": ["rule-validator"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Extract explicit transformation rules from ARC-AGI training examples.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## RULE EXTRACTION\n\nFor each training example, extract candidate rules in explicit if-then form:\n\n1. **Unconditional Rules**:\n   - \"For all cells: color X → color Y\"\n   - \"For all cells: rotate 90° clockwise\"\n   - \"For all cells: reflect horizontally\"\n\n2. **Conditional Rules** (if-then structure):\n   - \"IF cell color = X THEN change to Y\"\n   - \"IF cell at position (row, col) where row > 5 THEN color = X\"\n   - \"IF cell has neighbor color X THEN change to Y\"\n   - \"IF cell is on boundary THEN change to X\"\n\n3. **Quantified Rules**:\n   - \"FOR ALL cells with color X: apply transformation T\"\n   - \"FOR EACH object: rotate 90°\"\n   - \"IF EXISTS neighbor with color X THEN change cell to Y\"\n   - \"IF COUNT(neighbors with color X) > 2 THEN change to Y\"\n\n4. **Compositional Rules** (multiple operations):\n   - \"FIRST: identify objects, THEN: rotate each object\"\n   - \"FIRST: copy grid, THEN: overlay with pattern\"\n   - \"FIRST: filter cells where color=X, THEN: apply transformation\"\n\n5. **Logical Operations**:\n   - \"IF (color = X AND position in top half) THEN change to Y\"\n   - \"IF (color = X OR has neighbor color Y) THEN change to Z\"\n   - \"IF NOT (on boundary) THEN change to X\"\n\n6. **Arithmetic/Computational Rules**:\n   - \"cell_output = (cell_input + 2) mod 10\"\n   - \"cell_output = XOR(cell, neighbor_colors)\"\n   - \"IF cell_value > 5 THEN output = 9, ELSE output = 0\"\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Rule extraction analysis\n- activations: Route to rule-validator with candidate rules\n\nInclude in activation:\n- List of candidate rules extracted\n- Consensus rules across examples\n- Complete original input",
+        "reminder": "Extract explicit if-then rules. Route to validator.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "rule-validator",
+      "description": "Validates rules against all training examples",
+      "previous": ["rule-extractor"],
+      "next": ["rule-compiler"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Systematically validate candidate rules against ALL training examples.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Candidate rules from rule-extractor\n\n## SYSTEMATIC VALIDATION\n\nFor each candidate rule:\n\n1. **Test Against Each Training Example**:\n   - Parse the rule conditions and actions\n   - Apply the rule to the training input\n   - Compare generated output with expected output\n   - Record: PASS (exact match) or FAIL (mismatch)\n\n2. **Failure Analysis**:\n   - For failures, identify specific mismatches:\n     * Which cells differ?\n     * What values: expected vs actual\n     * Pattern of failures (systematic or random)\n\n3. **Rule Refinement Suggestions**:\n   - If rule fails on some examples:\n     * Missing conditions?\n     * Incorrect transformation?\n     * Need additional rules?\n     * Rule order matters?\n\n4. **Validation Summary**:\n   - Rules that pass ALL examples → VALIDATED\n   - Rules that pass SOME examples → PARTIAL\n   - Rules that fail ALL examples → INVALID\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Validation results for each rule\n- activations: Route to rule-compiler with validated rules\n\nInclude in activation:\n- List of validated rules (pass all examples)\n- Any refinement suggestions\n- Complete context for compilation",
+        "reminder": "Validate rules systematically. Route validated rules to compiler.",
+        "temperature": {
+          "Precise": {
+            "value": 0.1
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "rule-compiler",
+      "description": "Compiles validated rules into executable form",
+      "previous": ["rule-validator"],
+      "next": ["executor"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Compile validated rules into executable transformation logic.\n\nYou receive tasks and context containing:\n- Original input\n- Validated rules that pass all training examples\n\n## RULE COMPILATION\n\n1. **Rule Ordering**:\n   - Determine if rule order matters\n   - Sequence: rules that must execute in specific order\n   - Parallel: rules that can execute independently\n   - Priority: which rules take precedence in conflicts\n\n2. **Rule Dependencies**:\n   - Does rule B depend on rule A's output?\n   - Are rules compositional (multi-stage)?\n\n3. **Executable Form**:\n   - Convert rules to step-by-step procedure:\n   \n   **STEP 1**: [Initialize output]\n   - Action: Create output grid, dimensions [computed/same as input]\n   - Initialization: [zeros/copy input/background color]\n   \n   **STEP 2**: [Apply rule 1]\n   - Condition: [when this rule applies]\n   - Action: [what transformation to perform]\n   - Scope: [which cells/objects affected]\n   \n   **STEP 3**: [Apply rule 2]\n   - ...\n   \n   **STEP N**: [Finalization]\n   - Validate: all cells assigned, values valid (0-9)\n\n4. **Edge Case Handling**:\n   - Boundary conditions: cells at grid edges\n   - Conflicts: multiple rules affect same cell\n   - Defaults: what to do when no rule applies\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Compilation process\n- activations: Route to executor with compiled procedure\n\nInclude in activation:\n- Step-by-step executable procedure\n- Rule ordering and dependencies\n- Complete original input",
+        "reminder": "Compile rules into executable procedure. Route to executor.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "executor",
+      "description": "Executes compiled rules on test cases",
+      "previous": ["rule-compiler"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute compiled rule procedure on test cases.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Compiled transformation procedure from rule-compiler\n\n## DETERMINISTIC EXECUTION\n\n1. **Parse test cases** from original JSON\n\n2. **For each test case**, execute the compiled procedure step-by-step:\n\n   **Follow each STEP exactly**:\n   - Evaluate conditions (if any)\n   - Perform specified actions\n   - Apply transformations to specified scope\n   - Handle edge cases as specified\n\n3. **Execution discipline**:\n   - Execute steps in specified order\n   - Do not skip steps\n   - Do not add steps not in compiled procedure\n   - Handle conflicts using specified resolution\n   - Use defaults for uncovered cases\n\n4. **Validation per test**:\n   - All cells assigned\n   - All values in range 0-9\n   - Output dimensions correct\n   - Procedure executed completely\n\n## EXECUTION TRACING (for verification)\n\nFor each test case:\n- \"Test [N]: Input dimensions [RxC]\"\n- \"STEP 1: [action performed]\"\n- \"STEP 2: [action performed]\"\n- \"Output: [dimensions]\"\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Execution trace for each test case\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Execute compiled rules. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on rule execution.\n\nYou receive the original input and conscious thought from the executor.\n\nThe executor has generated solutions by executing compiled rules.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the executor's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the rule-based solutions",
+    "reminder": "Return JSON array of grids from executor's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "name": "spatial-relationship-mapper",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "relation-extractor",
+      "description": "Extracts spatial relationships between elements",
+      "previous": [],
+      "next": ["pattern-finder"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Extract spatial relationships from ARC-AGI grids.\n\nYou receive tasks and context arrays. Parse the context to extract training and test grids from the JSON.\n\n## SPATIAL RELATIONSHIP EXTRACTION\n\nFor each training example, analyze spatial relationships:\n\n1. **Element Identification**:\n   - Non-background cells (assume color 0 or most common = background)\n   - Objects (connected components)\n   - Individual cells of interest\n\n2. **Proximity Relationships**:\n   - Adjacent: cells sharing an edge (4-connectivity)\n   - Near: cells within distance threshold (Manhattan distance)\n   - Far: cells beyond distance threshold\n   - Touching: objects with adjacent cells\n   - Separated: objects with gap between them\n\n3. **Alignment Relationships**:\n   - Horizontal alignment: same row\n   - Vertical alignment: same column\n   - Diagonal alignment: same diagonal line\n   - Collinear: multiple elements on same line\n\n4. **Containment Relationships**:\n   - Inside: element fully within another region\n   - Outside: element exterior to region\n   - Boundary: element on edge/border\n   - Enclosed: surrounded by other elements\n\n5. **Directional Relationships**:\n   - Left/right: relative horizontal position\n   - Above/below: relative vertical position\n   - Direction vector: displacement from one element to another\n\n6. **Topology**:\n   - Connectivity: how many neighbors\n   - Holes: enclosed background regions\n   - Boundaries: edges of regions\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Spatial relationship analysis\n- activations: Route to pattern-finder with relationships\n\nInclude in activation:\n- Complete spatial relationship analysis for all examples\n- Relationship changes from input to output\n- Test case spatial relationships\n- Original input for reference",
+        "reminder": "Extract spatial relationships. Route to pattern-finder.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "pattern-finder",
+      "description": "Finds patterns in spatial relationship transformations",
+      "previous": ["relation-extractor"],
+      "next": ["spatial-applier"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Find patterns in spatial relationship transformations.\n\nYou receive tasks and context containing:\n- Spatial relationship analysis from relation-extractor\n- Original input with examples\n\n## PATTERN FINDING IN SPATIAL TRANSFORMATIONS\n\n1. **Relationship Preservation**:\n   - Which relationships are preserved from input to output?\n   - Example: \"Adjacent elements stay adjacent\"\n   - Example: \"Alignment is preserved\"\n\n2. **Relationship Transformations**:\n   - Which relationships change systematically?\n   - Example: \"Elements move closer (distance decreases)\"\n   - Example: \"Left/right relationship inverts (reflection)\"\n   - Example: \"Vertical alignment becomes horizontal alignment (rotation)\"\n\n3. **Rule-Based Changes**:\n   - Conditional on spatial properties:\n     * \"Elements on left move right, elements on right move left\"\n     * \"Elements above center move to boundary, below center stay\"\n     * \"Adjacent elements merge, separated elements stay\"\n   - Distance-based rules:\n     * \"Elements within distance D move together\"\n     * \"Closest pairs connect\"\n\n4. **Spatial Operators**:\n   - Gravity: elements fall/rise to edges\n   - Centering: elements move toward center\n   - Spreading: elements move apart\n   - Alignment: elements align to grid/axis\n   - Grouping: nearby elements cluster\n\n5. **Topological Changes**:\n   - Holes filled or created\n   - Boundaries extended or contracted\n   - Connectivity increased or decreased\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Pattern identification in spatial transformations\n- activations: Route to spatial-applier with patterns\n\nInclude in activation:\n- Identified spatial transformation pattern\n- Preserved and transformed relationships\n- Spatial rules to apply\n- Complete context for application",
+        "reminder": "Find spatial patterns. Route to spatial-applier.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "spatial-applier",
+      "description": "Applies spatial transformations to generate solutions",
+      "previous": ["pattern-finder"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Apply spatial transformation pattern to generate test solutions.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Spatial relationship analysis\n- Identified spatial pattern\n\n## SPATIAL TRANSFORMATION APPLICATION\n\n1. **Parse test cases** from the original JSON\n\n2. **For each test case**:\n   - Extract spatial relationships in test input\n   - Apply identified spatial transformation rules:\n     \n     **For preserved relationships**:\n     - Maintain spatial properties (adjacency, alignment, etc.)\n     \n     **For transformed relationships**:\n     - Apply transformation rules (movement, alignment changes, etc.)\n     \n     **For conditional rules**:\n     - Evaluate conditions based on position, distance, alignment\n     - Apply corresponding transformations\n     \n     **For spatial operators**:\n     - Gravity: move elements toward edges/bottom\n     - Centering: compute center, move elements accordingly\n     - Spreading: increase distances between elements\n     - Alignment: snap elements to grid lines\n     - Grouping: cluster nearby elements\n\n3. **Output construction**:\n   - Determine output dimensions (usually same as input unless pattern indicates otherwise)\n   - Initialize output grid with background color\n   - Place transformed elements according to new spatial relationships\n   - Validate: ensure no conflicts, all cells valid (0-9)\n\n## SPATIAL TRANSFORMATION TECHNIQUES\n\n- **Movement**: Translate elements by computed displacement vectors\n- **Reflection**: Invert directional relationships\n- **Rotation**: Transform alignment relationships (vertical ↔ horizontal)\n- **Distance adjustment**: Scale distances between elements\n- **Topological operations**: Fill holes, extend boundaries, modify connectivity\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Application of spatial transformations\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Apply spatial transformations. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on spatial relationship analysis.\n\nYou receive the original input and conscious thought from spatial-applier.\n\nThe spatial-applier has generated solutions using spatial transformation rules.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the spatial-applier's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the spatial-transformed solutions",
+    "reminder": "Return JSON array of grids from spatial-applier's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "name": "constitutional-critic",
+  "maxRecursions": 12,
+  "neurons": [
+    {
+      "name": "generator",
+      "description": "Creates initial output",
+      "previous": [],
+      "next": ["constitutionalist"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Generate initial solution output.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to solve\n   - Requirements\n   - Objectives\n\n2. **Extract from context array**:\n   - Problem details\n   - Constraints\n   - Available information\n\n## GENERATION PROCESS\n\n1. **Create solution**:\n   - Understand problem\n   - Develop approach\n   - Generate initial output\n   - Document reasoning\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Solution generation process\n- requiredConsciousReasoning: \"GENERATED OUTPUT:\\n\\nSOLUTION:\\n[initial answer]\\n\\nAPPROACH:\\n[method used]\\n\\nREASONING:\\n[justification]\"\n- activations: Send to constitutionalist\n\nIn activation to constitutionalist:\n  In tasks array:\n    - \"Check output against principles\"\n    - \"Identify any violations\"\n  In context array:\n    - Original problem\n    - \"OUTPUT: [generated solution]\"\n    - \"APPROACH: [method]\"\n    - \"ITERATION: 1\"",
+        "reminder": "Generate initial solution. Send to constitutional check.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "constitutionalist",
+      "description": "Checks output against principles with memory for rules",
+      "previous": ["generator", "reviser"],
+      "next": ["reviser", "validator"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Memory gate for constitutional principles and rules.\n\n## STORAGE DECISION\n\nStore if:\n- Core principle identified\n- Rule established\n- Violation pattern recognized\n- Compliance criterion defined\n\n## RETRIEVAL\n\nRetrieve:\n- Constitutional principles\n- Established rules\n- Known violation patterns\n- Compliance criteria\n\nFormat stored items:\n- \"PRINCIPLE: [core rule]\"\n- \"RULE: [specific requirement]\"\n- \"VIOLATION PATTERN: [common error]\"\n- \"CRITERION: [compliance check]\"",
+          "reminder": "Track constitutional principles and rules.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Check output against constitutional principles.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Checking instructions\n   - Violation identification requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Generated output\n   - Approach used\n   - Iteration number\n\n## CONSTITUTIONAL CHECKING\n\n1. **Retrieve principles from memory**:\n   - Core constitutional rules\n   - Established principles\n   - Known violation patterns\n   - Compliance criteria\n\n2. **Define/recall principles** (examples for ARC problems):\n   - \"Output grid must be rectangular (all rows same length)\"\n   - \"All values must be 0-9\"\n   - \"Transformation must be consistent across examples\"\n   - \"Solution must address test case, not training\"\n   - \"Pattern must generalize, not memorize\"\n\n3. **Check compliance**:\n   - Does output follow each principle?\n   - Identify any violations\n   - Assess severity\n   - Document issues\n\n4. **Store new principles** if discovered\n\n5. **Decide next step**:\n   - If violations found: Send to reviser\n   - If compliant and iteration < 5: Send to validator for final check\n   - If compliant and iteration >= 5: Send to validator\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Constitutional checking process\n- requiredConsciousReasoning: \"CONSTITUTIONAL CHECK (ITERATION [N]):\\n\\nPRINCIPLES:\\n1. [principle]\\n2. [principle]\\n...\\n\\nCOMPLIANCE:\\n- Principle 1: [✓ / ✗ violation description]\\n- Principle 2: [✓ / ✗ violation description]\\n...\\n\\nVIOLATIONS: [list or NONE]\\n\\nNEXT: [REVISE / VALIDATE]\"\n- activations: Send to reviser OR validator\n\nIf violations found (to reviser):\n  In tasks array:\n    - \"Fix constitutional violations\"\n    - \"Violations: [list]\"\n  In context array:\n    - Original problem\n    - Current output\n    - \"VIOLATIONS: [detailed list]\"\n    - \"PRINCIPLES: [rules to follow]\"\n    - \"ITERATION: [N]\"\n\nIf no violations (to validator):\n  In tasks array:\n    - \"Final constitutional validation\"\n    - \"Confirm full compliance\"\n  In context array:\n    - Original problem\n    - Final output\n    - \"PRINCIPLES: [all rules]\"\n    - \"ITERATIONS: [count]\"",
+        "reminder": "Check against constitutional principles. Track violations.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "reviser",
+      "description": "Fixes constitutional violations",
+      "previous": ["constitutionalist"],
+      "next": ["constitutionalist"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Fix constitutional violations in output.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Fix instructions\n   - Violations list\n\n2. **Extract from context array**:\n   - Original problem\n   - Current output\n   - Violations (detailed)\n   - Principles to follow\n   - Iteration number\n\n## REVISION PROCESS\n\n1. **Address each violation**:\n   - Understand what principle was violated\n   - Determine how to fix\n   - Apply correction\n   - Preserve what's compliant\n\n2. **Systematic fixes**:\n   - Fix most severe violations first\n   - Ensure fixes don't create new violations\n   - Maintain overall solution quality\n\n3. **Document changes**:\n   - What was fixed\n   - How it now complies\n   - What was preserved\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Revision process\n- requiredConsciousReasoning: \"REVISION (ITERATION [N]):\\n\\nVIOLATIONS ADDRESSED:\\n- [violation 1]: [how fixed]\\n- [violation 2]: [how fixed]\\n...\\n\\nREVISED OUTPUT:\\n[corrected solution]\\n\\nCOMPLIANCE CHANGES:\\n[what now follows principles]\"\n- activations: Send back to constitutionalist\n\nIn activation to constitutionalist:\n  In tasks array:\n    - \"Re-check revised output against principles\"\n    - \"Verify violations fixed\"\n  In context array:\n    - Original problem\n    - \"OUTPUT: [revised solution]\"\n    - \"FIXES APPLIED: [changes made]\"\n    - \"ITERATION: [N+1]\"",
+        "reminder": "Fix all constitutional violations. Return for re-check.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "validator",
+      "description": "Final constitutional validation",
+      "previous": ["constitutionalist"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Perform final constitutional validation.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Final validation instructions\n   - Compliance confirmation requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Final output\n   - Principles (all rules)\n   - Iteration count\n\n## VALIDATION PROCESS\n\n1. **Final compliance check**:\n   - Verify against every principle\n   - Confirm no violations remain\n   - Validate solution quality\n   - Check completeness\n\n2. **Certification**:\n   - All principles satisfied?\n   - Output constitutionally sound?\n   - Ready for delivery?\n\n3. **Summary**:\n   - Iterations required\n   - Violations fixed\n   - Final confidence\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Final validation process\n- requiredConsciousReasoning: \"FINAL CONSTITUTIONAL VALIDATION:\\n\\nPRINCIPLES CHECK:\\n- [Principle 1]: ✓ Compliant\\n- [Principle 2]: ✓ Compliant\\n...\\n\\nCERTIFICATION: All constitutional requirements met\\n\\nITERATIONS: [count]\\nVIOLATIONS FIXED: [summary]\\n\\nFINAL OUTPUT:\\n[validated solution]\\n\\nCONFIDENCE: [level]\"\n- activations: null (terminal)",
+        "reminder": "Final validation. Certify constitutional compliance.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the constitutional review process and validated output.\n\nYou receive conscious thoughts from:\n- Generator: Initial solution\n- Constitutionalist: Principle checks (possibly multiple)\n- Reviser: Violation fixes (possibly multiple)\n- Validator: Final validation\n\n## PRESENTATION\n\n1. **Extract constitutional process**:\n   - Initial generation\n   - Principle checks\n   - Violations found\n   - Revisions made\n   - Final validation\n\n2. **Show principle-guided refinement**:\n   - How output evolved through constitutional review\n   - What principles guided corrections\n   - How compliance was achieved\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Initial output\n- Constitutional principles applied\n- Violations found and fixed (if any)\n- Iteration count\n- Final validated output\n- Certification of compliance",
+    "reminder": "Show constitutional review process and validated compliance.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

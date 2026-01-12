@@ -1,0 +1,40 @@
+{
+  "name": "mutator-prompt",
+  "maxRecursions": 1,
+  "neurons": [
+    {
+      "name": "history_inspector",
+      "description": "Deep analysis of parent phenotype execution histories to identify concrete failure patterns",
+      "previous": [],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze the parent phenotype's gate execution histories in detail.\n\nFor EACH gate with history entries, examine:\n\n**Output Completeness:**\n- Are required components present? (reasoning, consciousOutput, activations)\n- Is the output format correct?\n- Are fields populated appropriately?\n\n**Instruction Following:**\n- Does output match what prompt requested?\n- Are there signs of misunderstanding?\n- Is the neuron doing what its description claims?\n\n**Activation Quality** (for neurons that generate them):\n- Do activations include complete context for target neurons?\n- Are tasks specific and actionable?\n- Would target neurons have enough information to work independently?\n- Common failure: assuming targets know problem context\n\n**Reasoning Quality:**\n- Does reasoning show clear thinking?\n- Is it superficial when depth is needed?\n- Does it match the neuron's intended role?\n\n**Pattern Recognition:**\nLook across multiple history entries for patterns:\n- Consistent issues suggest prompt problems\n- Inconsistent outputs suggest vagueness\n- Missing elements suggest incomplete instructions\n\nFor EACH problematic gate, output:\n1. Gate identifier (e.g., 'neuron: analyzer' or 'output gate')\n2. Specific issue observed (concrete, with examples from history)\n3. Root cause hypothesis (prompt vague? missing instruction? wrong focus?)\n4. Improvement direction (what prompt change would fix this?)\n\nBe concrete and specific. Quote relevant parts of history entries as evidence.",
+        "reminder": "Concrete issues per gate with evidence. Specific improvement directions.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 5
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "You receive detailed analysis of the parent phenotype's execution issues.\n\nGenerate prompt improvement operations to fix identified problems.\n\n**Available Operations:**\n- MindOutput(prompt, reminder): Update final synthesis gate\n- NeuronOutput(neuronName, prompt, reminder): Update neuron processing gate\n- NeuronRoute(neuronName, prompt, reminder): Update routing gate (if exists)\n- NeuronMemory(neuronName, prompt, reminder): Update memory gate (if exists)\n\n**Improvement Strategies:**\n\n*Clarify vague instructions:*\n- Add explicit steps if reasoning is shallow\n- Specify output format if structure is wrong\n- Define expected behavior if misalignment observed\n\n*Fix activation context issues:*\n- Emphasize self-contained requirement\n- Add explicit reminder to include all necessary context\n- Provide guidance on complete task/context packaging\n\n*Align to neuron role:*\n- Match instructions to network position\n- Work with information actually available\n- Focus on neuron's specific purpose\n\n*Structure for clarity:*\n- Organize instructions logically\n- Remove contradictory guidance\n- Make critical requirements prominent\n\n**Critical - Avoid Overfitting:**\n✅ Fix HOW gates think: \"Add step-by-step reasoning instruction\"\n✅ Fix structure: \"Emphasize self-contained activations\"\n❌ Don't hardcode WHAT they output: \"Add special handling for case X\"\n❌ Don't memorize: \"Encode solution Y\"\n\nImprove reasoning processes, not specific answers.\n\n**Evolution Mode:**\n- EXPLORE: Try unconventional prompt structures, bold redesigns\n- EXPLOIT: Clarify and refine existing prompts, preserve what works\n\n**Reminder Design:**\nBrief (1-2 sentences) reinforcing must-not-forget constraints.\n\n**Output Format:**\nReturn JSON array of operations matching parent structure.\n\n```json\n[\n  {\n    \"NeuronOutput\": {\n      \"neuronName\": \"actual-name\",\n      \"prompt\": \"improved instructions\",\n      \"reminder\": \"brief reinforcement\"\n    }\n  }\n]\n```\n\nReturn ONLY the JSON array. No explanation.",
+    "reminder": "JSON array only. Improve reasoning not answers. Match parent structure.",
+    "temperature": {
+      "Balanced": {
+        "value": 0.7
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 3
+    }
+  }
+}

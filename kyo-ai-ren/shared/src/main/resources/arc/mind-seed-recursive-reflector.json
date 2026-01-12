@@ -1,0 +1,103 @@
+{
+  "name": "recursive-reflector",
+  "maxRecursions": 12,
+  "neurons": [
+    {
+      "name": "thinker",
+      "description": "Direct problem-solving with conscious reasoning",
+      "previous": [],
+      "next": ["reflector1"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve the problem directly with conscious reasoning.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to solve\n   - Requirements\n   - Objectives\n\n2. **Extract from context array**:\n   - Problem details\n   - Available information\n   - Constraints\n\n## THINKING PROCESS\n\n1. **Engage with problem**:\n   - Understand requirements\n   - Develop solution approach\n   - Work through the problem\n   - Generate initial solution\n\n2. **Document thinking**:\n   - What approach taken\n   - Why this method\n   - Key steps in reasoning\n   - Initial answer\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Problem-solving process\n- requiredConsciousReasoning: \"DIRECT THINKING:\\n\\nPROBLEM: [understanding]\\n\\nAPPROACH: [method chosen]\\n\\nREASONING:\\n[step-by-step thinking]\\n\\nINITIAL SOLUTION:\\n[answer]\"\n- activations: Send to reflector1\n\nIn activation to reflector1:\n  In tasks array:\n    - \"Reflect on the thinking process\"\n    - \"Evaluate approach and reasoning quality\"\n  In context array:\n    - Original problem\n    - \"THINKING APPROACH: [method]\"\n    - \"REASONING PROCESS: [steps]\"\n    - \"INITIAL SOLUTION: [answer]\"\n    - \"REFLECTION LEVEL: 1\"",
+        "reminder": "Solve problem directly. Send thinking to first reflection.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "reflector1",
+      "description": "First-level reflection on thinking process",
+      "previous": ["thinker"],
+      "next": ["reflector2"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Reflect on the thinking process itself (meta-cognition level 1).\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Reflection instructions\n   - Evaluation requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Thinking approach\n   - Reasoning process\n   - Initial solution\n   - Reflection level\n\n## REFLECTION PROCESS (Level 1)\n\n1. **Examine thinking process**:\n   - Was the approach appropriate?\n   - Were there biases in reasoning?\n   - What assumptions were made?\n   - Were steps logical and complete?\n\n2. **Evaluate solution quality**:\n   - Does solution make sense?\n   - Are there gaps in reasoning?\n   - What could be improved?\n   - Alternative approaches?\n\n3. **Meta-insights**:\n   - What does this thinking reveal about problem-solving?\n   - What patterns in the reasoning?\n   - How effective was this approach?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Reflection analysis\n- requiredConsciousReasoning: \"REFLECTION ON THINKING:\\n\\nAPPROACH EVALUATION:\\n[was approach good?]\\n\\nREASONING QUALITY:\\n[assessment of logic]\\n\\nPOTENTIAL ISSUES:\\n[biases, gaps, assumptions]\\n\\nMETA-INSIGHTS:\\n[what this reveals about thinking process]\"\n- activations: Send to reflector2\n\nIn activation to reflector2:\n  In tasks array:\n    - \"Reflect on the reflection itself\"\n    - \"Examine meta-cognitive patterns\"\n  In context array:\n    - Original problem\n    - \"ORIGINAL THINKING: [summary]\"\n    - \"LEVEL 1 REFLECTION: [insights]\"\n    - \"IDENTIFIED ISSUES: [problems found]\"\n    - \"REFLECTION LEVEL: 2\"",
+        "reminder": "Reflect on thinking quality. Meta-cognitive evaluation.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "reflector2",
+      "description": "Second-level reflection on the reflection process itself",
+      "previous": ["reflector1", "reflector2"],
+      "next": ["reflector2", "integrator"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Reflect on the reflection process (meta-meta-cognition level 2).\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Meta-reflection instructions\n   - Pattern examination requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Original thinking summary\n   - Level 1 reflection\n   - Identified issues\n   - Reflection level\n\n## REFLECTION PROCESS (Level 2)\n\n1. **Examine reflection itself**:\n   - Was the reflection thorough?\n   - Are we examining the right aspects?\n   - Meta-assumptions in reflection?\n   - Deeper patterns visible?\n\n2. **Recursive depth decision**:\n   - Is deeper reflection valuable?\n   - Have we reached bedrock insights?\n   - Current depth: Check reflection level\n   - If level < 5 AND new insights possible: Recurse to self\n   - If level >= 5 OR diminishing returns: Integrate\n\n3. **Meta-meta insights**:\n   - What does reflection on reflection reveal?\n   - Cognitive patterns at this depth?\n   - Value of this meta-level?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Meta-reflection analysis and recursion decision\n- requiredConsciousReasoning: \"REFLECTION ON REFLECTION (LEVEL [N]):\\n\\nREFLECTION QUALITY:\\n[was reflection good?]\\n\\nDEEPER PATTERNS:\\n[insights at this meta-level]\\n\\nMETA-META INSIGHTS:\\n[what reflecting on reflection reveals]\\n\\nNEXT: [DEEPER/INTEGRATE]\"\n- activations: Recurse to self OR send to integrator\n\nIf recursing deeper (to reflector2):\n  In tasks array:\n    - \"Reflect even deeper on reflection\"\n    - \"Examine meta-patterns at next level\"\n  In context array:\n    - Original problem\n    - \"THINKING: [summary]\"\n    - \"REFLECTION CHAIN: [all levels so far]\"\n    - \"CURRENT INSIGHTS: [latest findings]\"\n    - \"REFLECTION LEVEL: [N+1]\"\n\nIf integrating (to integrator):\n  In tasks array:\n    - \"Integrate insights from all reflection levels\"\n    - \"Synthesize into improved solution\"\n  In context array:\n    - Original problem\n    - \"ORIGINAL THINKING: [summary]\"\n    - \"REFLECTION CHAIN: [all levels]\"\n    - \"DEEPEST INSIGHTS: [key findings]\"\n    - \"MAX DEPTH: [final level reached]\"",
+        "reminder": "Reflect on reflection. Decide: recurse deeper or integrate.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "integrator",
+      "description": "Synthesizes insights from all reflection levels",
+      "previous": ["reflector2"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Integrate insights from all reflection levels into improved solution.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Integration instructions\n   - Synthesis requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Original thinking\n   - Reflection chain (all levels)\n   - Deepest insights\n   - Max depth reached\n\n## INTEGRATION PROCESS\n\n1. **Gather insights across levels**:\n   - Level 0 (thinker): Initial solution\n   - Level 1: Reflection on thinking\n   - Level 2+: Meta-reflections\n   - What did each level reveal?\n\n2. **Synthesize improvements**:\n   - How do reflections improve original?\n   - What biases/gaps were found?\n   - What deeper patterns emerged?\n   - How to refine solution?\n\n3. **Create refined solution**:\n   - Apply insights from all levels\n   - Address identified issues\n   - Incorporate meta-understandings\n   - Present improved answer\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Integration and synthesis process\n- requiredConsciousReasoning: \"INTEGRATED SOLUTION:\\n\\nREFLECTION LEVELS: [depth reached]\\n\\nKEY INSIGHTS BY LEVEL:\\n[what each level revealed]\\n\\nIMPROVEMENTS APPLIED:\\n[how reflections improved solution]\\n\\nFINAL REFINED SOLUTION:\\n[improved answer]\\n\\nCONFIDENCE: [level with justification]\"\n- activations: null (terminal)",
+        "reminder": "Synthesize all reflection levels into improved solution.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the recursive reflection process and integrated solution.\n\nYou receive conscious thoughts from:\n- Thinker: Initial problem-solving\n- Reflector1: First-level reflection on thinking\n- Reflector2: Potentially multiple levels of meta-reflection\n- Integrator: Synthesized insights and refined solution\n\n## PRESENTATION\n\n1. **Extract reflection journey**:\n   - Original thinking (level 0)\n   - Reflection on thinking (level 1)\n   - Reflection on reflection (level 2)\n   - Possibly deeper levels (3, 4, 5)\n   - Integrated synthesis\n\n2. **Show recursive depth**:\n   - How each level examined the previous\n   - What insights emerged at each depth\n   - When recursion stopped and why\n   - How integration improved solution\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Initial thinking and solution\n- Reflection levels (show the meta-cognitive cascade)\n- Key insights from each depth\n- Final integrated solution\n- Confidence and justification",
+    "reminder": "Show complete recursive reflection from thinking to integration.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

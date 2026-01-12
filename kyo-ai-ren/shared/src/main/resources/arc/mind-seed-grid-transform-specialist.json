@@ -1,0 +1,65 @@
+{
+  "name": "grid-transform-specialist",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "structure-analyzer",
+      "description": "Analyzes grid structure and global patterns",
+      "previous": [],
+      "next": [
+        "transform-applier"
+      ],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze grid structure and identify global transformation patterns.\n\nYou receive tasks and context arrays. Parse the context to extract training and test grids from the JSON.\n\n## GRID STRUCTURE ANALYSIS\n\nFor each training example, analyze input → output transformation:\n\n1. **Dimension Analysis**:\n   - Input dimensions: [rows]x[cols]\n   - Output dimensions: [rows]x[cols]\n   - Relationship: same, scaled (2x, 0.5x), fixed size, computed\n\n2. **Global Transformations** (check these systematically):\n\n   **ROTATIONS**:\n   - 90° clockwise\n   - 180°\n   - 270° clockwise (= 90° counterclockwise)\n   \n   **REFLECTIONS**:\n   - Horizontal flip (left ↔ right)\n   - Vertical flip (top ↔ bottom)\n   - Diagonal flips (main diagonal, anti-diagonal)\n   \n   **TRANSLATIONS**:\n   - Uniform shift in x direction\n   - Uniform shift in y direction\n   - Wrapping (toroidal)\n   \n   **SCALING**:\n   - Uniform scaling (zoom in/out)\n   - Non-uniform (different x/y factors)\n   - Downsampling/upsampling\n\n3. **Pattern Recognition**:\n\n   **SYMMETRY**:\n   - Does output have symmetry?\n   - Symmetry completion (input asymmetric, output symmetric)\n   - Symmetry axis location\n   \n   **TILING/REPETITION**:\n   - Is input pattern repeated?\n   - Tiling factor (2x2, 3x3 repetition)\n   - Alternating patterns\n   \n   **STRUCTURE PRESERVATION**:\n   - Does overall grid structure stay the same?\n   - Are relative positions preserved?\n   - Topology preserved?\n\n4. **Composite Transformations**:\n   - Multiple operations (e.g., rotate THEN reflect)\n   - Order matters\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Detailed analysis of grid transformations\n- activations: Route to transform-applier with identified pattern\n\nInclude in activation:\n- Identified transformation pattern that works for all examples\n- Confidence level\n- Complete original input for test case processing",
+        "reminder": "Identify global grid transformations. Route findings to applier.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "transform-applier",
+      "description": "Applies global grid transformation to generate solutions",
+      "previous": [
+        "structure-analyzer"
+      ],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Apply global grid transformation to generate test solutions.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Structure analysis with identified transformation pattern\n\n## TRANSFORMATION APPLICATION\n\n1. **Parse test cases** from the original JSON\n\n2. **For each test case**, apply the identified transformation:\n\n   **For ROTATION**:\n   - Rotate entire grid by specified angle\n   - Update dimensions accordingly\n   - Preserve cell values during rotation\n   \n   **For REFLECTION**:\n   - Flip entire grid along specified axis\n   - Maintain dimensions\n   - Preserve cell values\n   \n   **For TRANSLATION**:\n   - Shift all cells by specified offset\n   - Handle boundaries (wrap or clip)\n   \n   **For SCALING**:\n   - Scale grid by specified factor\n   - Interpolate or repeat cells as appropriate\n   - Compute new dimensions\n   \n   **For TILING**:\n   - Repeat input pattern specified number of times\n   - Compute output dimensions (input × tiling factor)\n   \n   **For SYMMETRY COMPLETION**:\n   - Identify symmetry axis\n   - Mirror input to create symmetric output\n   - Compute output dimensions\n   \n   **For COMPOSITE**:\n   - Apply transformations in correct order\n   - Each step transforms result of previous step\n\n3. **Output validation**:\n   - Ensure dimensions are correct\n   - All values are integers 0-9\n   - Transformation applied consistently\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Application process for each test case\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Apply transformation to tests. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on grid transformation analysis.\n\nYou receive the original input and conscious thought from transform-applier.\n\nThe transform-applier has generated solutions using global grid transformations.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the transform-applier's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the transformed grids",
+    "reminder": "Return JSON array of grids from transform-applier's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

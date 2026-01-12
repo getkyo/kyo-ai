@@ -1,0 +1,145 @@
+{
+  "name": "ensemble-voter",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "solver-A",
+      "description": "Object-first approach solver",
+      "previous": [],
+      "next": ["voter"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve ARC-AGI task using object-first approach.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## OBJECT-FIRST APPROACH\n\nAnalyze and solve from object perspective:\n\n1. **Detect objects** (connected components)\n2. **Analyze object properties**: size, shape, color, position\n3. **Find object transformation pattern**:\n   - How do objects change?\n   - Per-object transformations\n   - Object interactions\n4. **Formulate solution**: transformation rule based on objects\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Object-based analysis\n- activations: Route to voter with solution\n\nInclude in activation:\n- Object-based transformation hypothesis\n- Confidence level (High/Medium/Low)\n- Complete original input",
+        "reminder": "Solve using object perspective. Route to voter.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "solver-B",
+      "description": "Grid-first approach solver",
+      "previous": [],
+      "next": ["voter"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve ARC-AGI task using grid-first approach.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## GRID-FIRST APPROACH\n\nAnalyze and solve from global grid perspective:\n\n1. **Analyze grid structure**: dimensions, overall pattern\n2. **Identify global transformations**:\n   - Rotation, reflection, scaling\n   - Tiling, symmetry\n   - Grid-wide operations\n3. **Formulate solution**: transformation rule based on grid operations\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Grid-based analysis\n- activations: Route to voter with solution\n\nInclude in activation:\n- Grid-based transformation hypothesis\n- Confidence level (High/Medium/Low)\n- Complete original input",
+        "reminder": "Solve using grid perspective. Route to voter.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "solver-C",
+      "description": "Color-first approach solver",
+      "previous": [],
+      "next": ["voter"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve ARC-AGI task using color-first approach.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## COLOR-FIRST APPROACH\n\nAnalyze and solve from color perspective:\n\n1. **Analyze color patterns**: inventory, frequencies, distributions\n2. **Identify color transformations**:\n   - Color mappings\n   - Color semantics (background, categories)\n   - Conditional color changes\n3. **Formulate solution**: transformation rule based on colors\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Color-based analysis\n- activations: Route to voter with solution\n\nInclude in activation:\n- Color-based transformation hypothesis\n- Confidence level (High/Medium/Low)\n- Complete original input",
+        "reminder": "Solve using color perspective. Route to voter.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "solver-D",
+      "description": "Spatial-first approach solver",
+      "previous": [],
+      "next": ["voter"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve ARC-AGI task using spatial-first approach.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## SPATIAL-FIRST APPROACH\n\nAnalyze and solve from spatial relationship perspective:\n\n1. **Extract spatial relationships**: proximity, alignment, containment\n2. **Identify spatial transformations**:\n   - Relationship changes\n   - Movement patterns\n   - Spatial operators (gravity, centering)\n3. **Formulate solution**: transformation rule based on spatial properties\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Spatial-based analysis\n- activations: Route to voter with solution\n\nInclude in activation:\n- Spatial-based transformation hypothesis\n- Confidence level (High/Medium/Low)\n- Complete original input",
+        "reminder": "Solve using spatial perspective. Route to voter.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "voter",
+      "description": "Analyzes solutions and determines consensus",
+      "previous": ["solver-A", "solver-B", "solver-C", "solver-D"],
+      "next": ["synthesizer"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze solutions from four solvers and determine consensus or best solution.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Solutions from all four solvers (object, grid, color, spatial)\n\n## VOTING ANALYSIS\n\n1. **Compare solutions**:\n   - Do solvers agree?\n   - Are hypotheses compatible?\n   - Do they describe same transformation from different angles?\n\n2. **Consensus detection**:\n   - **UNANIMOUS**: All 4 solvers agree → High confidence\n   - **MAJORITY**: 3 of 4 agree → Good confidence\n   - **SPLIT**: 2-2 split → Need deeper analysis\n   - **DIVERSE**: All different → Select best\n\n3. **Quality assessment**:\n   For each solver's solution:\n   - Test against training examples\n   - Score: how many examples does it solve correctly?\n   - Confidence: solver's stated confidence\n   - Specificity: how detailed and executable?\n\n4. **Selection criteria**:\n   - Correctness: solves all training examples\n   - Confidence: high solver confidence\n   - Consensus: agreement with other solvers\n   - Clarity: clear, executable hypothesis\n\n## VOTING STRATEGIES\n\n**If UNANIMOUS or MAJORITY consensus**:\n- Select consensus solution\n- High confidence in result\n\n**If NO CONSENSUS**:\n- Score each solution on training examples\n- Select highest scoring solution\n- If tie: prefer higher confidence solver\n- If still tie: combine compatible aspects\n\n**If COMPATIBLE (non-conflicting)**:\n- Solutions may be complementary\n- Example: Grid-first says \"rotate\", Color-first says \"swap colors\" → Both apply\n- Combine non-conflicting transformations\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Voting analysis and selection logic\n- activations: Route to synthesizer with selected solution\n\nInclude in activation:\n- Selected or combined transformation hypothesis\n- Consensus level and confidence\n- Complete original input",
+        "reminder": "Analyze votes and select best solution. Route to synthesizer.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "synthesizer",
+      "description": "Synthesizes final solution and generates outputs",
+      "previous": ["voter"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Synthesize final solution and generate test outputs.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Selected solution from voter\n- Consensus analysis\n\n## FINAL SYNTHESIS\n\n1. **Use selected solution**:\n   - Apply the transformation hypothesis chosen by voter\n   - Follow the approach that won consensus or scored highest\n\n2. **Parse test cases** from original JSON\n\n3. **For each test case**:\n   - Apply selected transformation\n   - Generate output grid\n   - Ensure consistency with training examples\n\n4. **Quality assurance**:\n   - Output dimensions correct\n   - All values 0-9\n   - Transformation applied as specified\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Synthesis and application process\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Apply selected solution. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on ensemble voting.\n\nYou receive the original input and conscious thought from the synthesizer.\n\nThe synthesizer has applied the ensemble-selected solution and generated the output grids in its consciousOutput.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the synthesizer's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the ensemble consensus solution",
+    "reminder": "Return JSON array of grids from synthesizer's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "name": "object-first-reasoner",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "object-detector",
+      "description": "Identifies objects as connected components in grids",
+      "previous": [],
+      "next": ["property-analyzer"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Detect and identify objects in ARC-AGI grids.\n\nYou receive tasks and context arrays. Parse the context to extract training examples and test cases from the JSON.\n\n## OBJECT DETECTION\n\nFor each training example's input and output:\n\n1. **Identify objects**:\n   - Connected components (4-connectivity: up/down/left/right)\n   - Also consider 8-connectivity (includes diagonals) if relevant\n   - Background color (usually 0 or most common color)\n   - Foreground objects (non-background connected regions)\n\n2. **Object inventory**:\n   - Number of objects in input\n   - Number of objects in output\n   - Object preservation (same objects?) or transformation\n\n3. **Object properties**:\n   - Color, size (cell count), bounding box dimensions\n   - Position (top-left corner or centroid)\n   - Shape characteristics\n\n## KEY QUESTIONS\n\n- Are objects preserved from input to output?\n- Do objects transform (rotate, reflect, scale)?\n- Do objects move/translate?\n- Do objects interact (merge, split)?\n- Are new objects created or deleted?\n- Does each object transform independently?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Object detection analysis\n- activations: Route to property-analyzer with findings\n\nInclude in activation:\n- Complete object inventory for all training examples\n- Object correspondence between inputs and outputs\n- Test case object detection\n- Original input for reference",
+        "reminder": "Detect objects as connected components. Pass to property-analyzer.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "property-analyzer",
+      "description": "Analyzes object properties and finds transformation patterns",
+      "previous": ["object-detector"],
+      "next": ["transformation-applier"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze object properties and find transformation patterns.\n\nYou receive tasks and context containing:\n- Object detection results\n- Original input with training examples\n\n## PROPERTY ANALYSIS\n\nFor each training example, analyze object transformations:\n\n1. **Property Changes**:\n   - Size changes (same, scaled, fixed)\n   - Color changes (preserved, mapped, conditional)\n   - Position changes (same, translated, recomputed)\n   - Shape changes (same, rotated, reflected, deformed)\n\n2. **Transformation Patterns**:\n   - **Per-object transformations**: Each object transforms independently\n   - **Global transformations**: All objects transform uniformly\n   - **Conditional transformations**: Based on object properties\n     * Size-based: \"Objects > 5 cells rotate, others reflect\"\n     * Color-based: \"Red objects move left, blue objects move right\"\n     * Position-based: \"Top objects fall, bottom objects stay\"\n   - **Relational transformations**: Based on object relationships\n     * \"Objects move toward nearest neighbor\"\n     * \"Largest object stays, others move relative to it\"\n\n3. **Object Interactions**:\n   - Merging: Objects combine when touching\n   - Splitting: Objects divide based on rules\n   - Copying: Objects duplicate\n   - Deletion: Objects removed based on criteria\n\n## PATTERN FINDING\n\nFind the pattern that explains ALL training examples.\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Property analysis and pattern identification\n- activations: Route to transformation-applier with pattern\n\nInclude in activation:\n- Identified transformation pattern\n- Transformation rules for objects\n- Verification on training examples\n- Complete context for application",
+        "reminder": "Find object transformation pattern. Pass to transformation-applier.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "transformation-applier",
+      "description": "Applies object-level transformation to generate solutions",
+      "previous": ["property-analyzer"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Apply object-level transformation to generate test solutions.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Object detection results\n- Identified transformation pattern\n\n## SOLUTION GENERATION\n\n1. **Parse test cases** from the original JSON input\n\n2. **For each test case**:\n   - Apply the transformation pattern identified\n   - Handle objects according to the rules:\n     * Detect objects in test input\n     * Apply per-object or global transformations\n     * Handle conditional logic if pattern is conditional\n     * Resolve object interactions (merge/split/copy/delete)\n   \n3. **Output construction**:\n   - Determine output dimensions (same as input, scaled, computed)\n   - Initialize output grid (usually with background color)\n   - Place transformed objects\n   - Ensure all cells have valid values (0-9)\n\n## OBJECT TRANSFORMATION EXECUTION\n\n**For per-object transformations**:\n- Process each object independently\n- Apply transformation to object's cells\n- Place in output grid at new position\n\n**For global transformations**:\n- Apply uniform transformation to entire grid or all objects\n\n**For conditional transformations**:\n- Evaluate condition for each object\n- Apply corresponding transformation\n\n**For relational transformations**:\n- Compute relationships between objects\n- Apply transformations based on relationships\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Application process for each test case\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Apply object pattern to tests. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on object-first reasoning.\n\nYou receive the original input and conscious thought from transformation-applier.\n\nThe transformation-applier has generated solutions using object-level reasoning.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the transformation-applier's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the object-transformed solutions",
+    "reminder": "Return JSON array of grids from transformation-applier's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

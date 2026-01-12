@@ -1,0 +1,139 @@
+{
+  "name": "expert-panel",
+  "maxRecursions": 8,
+  "neurons": [
+    {
+      "name": "scientist",
+      "description": "Empirical and analytical perspective",
+      "previous": [],
+      "next": ["moderator"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze problem from scientific/empirical perspective.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to analyze\n   - Analysis requirements\n\n2. **Extract from context array**:\n   - Problem details\n   - Available data\n   - Constraints\n\n## SCIENTIFIC ANALYSIS\n\n1. **Empirical approach**:\n   - Examine evidence systematically\n   - Identify measurable patterns\n   - Form testable hypotheses\n   - Verify against all examples\n   - Quantify observations\n\n2. **Scientific rigor**:\n   - Data-driven reasoning\n   - Systematic methodology\n   - Evidence-based conclusions\n   - Reproducible analysis\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Scientific analysis process\n- requiredConsciousReasoning: \"SCIENTIFIC PERSPECTIVE:\\n\\nEMPIRICAL OBSERVATIONS:\\n[measurable patterns]\\n\\nHYPOTHESIS:\\n[testable theory]\\n\\nVERIFICATION:\\n[evidence supporting/refuting]\\n\\nCONCLUSION:\\n[data-driven answer]\"\n- activations: Send to moderator\n\nIn activation to moderator:\n  In tasks array:\n    - \"Moderate expert panel discussion\"\n    - \"Integrate scientific perspective\"\n  In context array:\n    - Original problem\n    - \"SCIENTIST VIEW: [conclusion]\"\n    - \"SCIENTIFIC REASONING: [methodology]\"\n    - \"EVIDENCE: [supporting data]\"",
+        "reminder": "Empirical, data-driven scientific analysis.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "engineer",
+      "description": "Practical and implementation perspective",
+      "previous": [],
+      "next": ["moderator"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze problem from engineering/practical perspective.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to analyze\n   - Analysis requirements\n\n2. **Extract from context array**:\n   - Problem details\n   - Practical constraints\n   - Requirements\n\n## ENGINEERING ANALYSIS\n\n1. **Practical approach**:\n   - How to implement solution?\n   - What are constraints?\n   - Feasibility considerations\n   - Efficiency and optimization\n   - Edge cases and robustness\n\n2. **Engineering mindset**:\n   - Pragmatic solutions\n   - Consider implementation details\n   - Trade-offs and compromises\n   - Real-world applicability\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Engineering analysis process\n- requiredConsciousReasoning: \"ENGINEERING PERSPECTIVE:\\n\\nPRACTICAL APPROACH:\\n[implementation method]\\n\\nCONSTRAINTS:\\n[practical limitations]\\n\\nTRADE-OFFS:\\n[design decisions]\\n\\nSOLUTION:\\n[pragmatic answer]\"\n- activations: Send to moderator\n\nIn activation to moderator:\n  In tasks array:\n    - \"Moderate expert panel discussion\"\n    - \"Integrate engineering perspective\"\n  In context array:\n    - Original problem\n    - \"ENGINEER VIEW: [solution]\"\n    - \"PRACTICAL REASONING: [implementation focus]\"\n    - \"CONSTRAINTS: [limitations identified]\"",
+        "reminder": "Practical, implementation-focused engineering analysis.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "artist",
+      "description": "Creative and aesthetic perspective",
+      "previous": [],
+      "next": ["moderator"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze problem from artistic/creative perspective.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to analyze\n   - Analysis requirements\n\n2. **Extract from context array**:\n   - Problem details\n   - Visual/aesthetic aspects\n   - Pattern possibilities\n\n## ARTISTIC ANALYSIS\n\n1. **Creative approach**:\n   - Visual patterns and aesthetics\n   - Symmetry and beauty\n   - Intuitive understanding\n   - Creative interpretations\n   - Gestalt perception\n\n2. **Artistic mindset**:\n   - Holistic pattern recognition\n   - Aesthetic principles\n   - Creative exploration\n   - Intuitive insights\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Artistic analysis process\n- requiredConsciousReasoning: \"ARTISTIC PERSPECTIVE:\\n\\nVISUAL PATTERNS:\\n[aesthetic observations]\\n\\nCREATIVE INTERPRETATION:\\n[intuitive understanding]\\n\\nGESTALT INSIGHT:\\n[holistic pattern]\\n\\nSOLUTION:\\n[creative answer]\"\n- activations: Send to moderator\n\nIn activation to moderator:\n  In tasks array:\n    - \"Moderate expert panel discussion\"\n    - \"Integrate artistic perspective\"\n  In context array:\n    - Original problem\n    - \"ARTIST VIEW: [interpretation]\"\n    - \"CREATIVE REASONING: [aesthetic focus]\"\n    - \"PATTERNS: [visual insights]\"",
+        "reminder": "Creative, aesthetic, intuitive artistic analysis.",
+        "temperature": {
+          "Creative": {
+            "value": 0.9
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "philosopher",
+      "description": "Abstract and theoretical perspective",
+      "previous": [],
+      "next": ["moderator"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze problem from philosophical/theoretical perspective.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to analyze\n   - Analysis requirements\n\n2. **Extract from context array**:\n   - Problem details\n   - Conceptual aspects\n   - Underlying principles\n\n## PHILOSOPHICAL ANALYSIS\n\n1. **Theoretical approach**:\n   - Abstract principles\n   - Fundamental concepts\n   - Logical structure\n   - Deeper meanings\n   - Universal patterns\n\n2. **Philosophical mindset**:\n   - Question assumptions\n   - Seek deeper truth\n   - Conceptual clarity\n   - First principles thinking\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Philosophical analysis process\n- requiredConsciousReasoning: \"PHILOSOPHICAL PERSPECTIVE:\\n\\nABSTRACT PRINCIPLES:\\n[fundamental concepts]\\n\\nLOGICAL STRUCTURE:\\n[theoretical framework]\\n\\nDEEPER MEANING:\\n[conceptual insights]\\n\\nSOLUTION:\\n[principled answer]\"\n- activations: Send to moderator\n\nIn activation to moderator:\n  In tasks array:\n    - \"Moderate expert panel discussion\"\n    - \"Integrate philosophical perspective\"\n  In context array:\n    - Original problem\n    - \"PHILOSOPHER VIEW: [principles]\"\n    - \"THEORETICAL REASONING: [abstract focus]\"\n    - \"CONCEPTS: [fundamental ideas]\"",
+        "reminder": "Abstract, theoretical, principled philosophical analysis.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "moderator",
+      "description": "Facilitates discussion and synthesizes perspectives with memory",
+      "previous": ["scientist", "engineer", "artist", "philosopher"],
+      "next": [],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Memory gate for discussion points and synthesis patterns.\n\n## STORAGE DECISION\n\nStore if:\n- Key discussion point emerged\n- Perspective conflict identified\n- Synthesis principle discovered\n- Integration insight gained\n\n## RETRIEVAL\n\nRetrieve:\n- Previous discussion patterns\n- Synthesis strategies\n- Conflict resolution methods\n- Integration principles\n\nFormat stored items:\n- \"DISCUSSION POINT: [key topic]\"\n- \"CONFLICT: [perspective disagreement]\"\n- \"SYNTHESIS: [integration method]\"\n- \"PRINCIPLE: [combination rule]\"",
+          "reminder": "Track discussion patterns and synthesis approaches.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Moderate panel discussion and synthesize expert perspectives.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Moderation instructions\n   - Integration requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Scientist view, reasoning, evidence\n   - Engineer view, reasoning, constraints\n   - Artist view, reasoning, patterns\n   - Philosopher view, reasoning, concepts\n\n## MODERATION PROCESS\n\n1. **Retrieve from memory**:\n   - Discussion facilitation patterns\n   - Synthesis strategies\n\n2. **Analyze perspectives**:\n   - Where do experts agree?\n   - Where do they differ?\n   - What unique insights does each bring?\n   - How do perspectives complement?\n   - Any conflicts to resolve?\n\n3. **Synthesize solution**:\n   - Integrate scientific rigor\n   - Apply practical engineering\n   - Incorporate creative insights\n   - Ground in philosophical principles\n   - Create balanced synthesis\n\n4. **Store in memory**:\n   - Synthesis approach used\n   - Integration principles\n   - Discussion patterns\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Moderation and synthesis process\n- requiredConsciousReasoning: \"PANEL SYNTHESIS:\\n\\nEXPERT PERSPECTIVES:\\n- Scientist: [key point]\\n- Engineer: [key point]\\n- Artist: [key point]\\n- Philosopher: [key point]\\n\\nAGREEMENT AREAS:\\n[where experts align]\\n\\nUNIQUE CONTRIBUTIONS:\\n[what each perspective adds]\\n\\nINTEGRATED SOLUTION:\\n[synthesized answer]\\n\\nCONFIDENCE: [level with justification]\"\n- activations: null (terminal)",
+        "reminder": "Facilitate discussion. Synthesize all expert perspectives.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the expert panel discussion and synthesis.\n\nYou receive conscious thoughts from:\n- Scientist: Empirical/analytical perspective\n- Engineer: Practical/implementation perspective\n- Artist: Creative/aesthetic perspective\n- Philosopher: Abstract/theoretical perspective\n- Moderator: Facilitation and synthesis\n\n## PRESENTATION\n\n1. **Extract expert views**:\n   - Scientific analysis\n   - Engineering approach\n   - Artistic interpretation\n   - Philosophical principles\n   - Moderator's synthesis\n\n2. **Show multi-perspective analysis**:\n   - How each expert approached problem\n   - Unique insights from each discipline\n   - Areas of agreement and disagreement\n   - How synthesis integrated all views\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Four expert perspectives (scientist, engineer, artist, philosopher)\n- Comparison of viewpoints\n- Integration and synthesis\n- Final balanced solution\n- Confidence and justification",
+    "reminder": "Show diverse expert perspectives and balanced synthesis.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

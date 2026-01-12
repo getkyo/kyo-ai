@@ -1,0 +1,97 @@
+{
+  "name": "color-semantics-expert",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "color-analyzer",
+      "description": "Analyzes color inventory and distributions",
+      "previous": [],
+      "next": ["semantic-interpreter"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze colors in ARC-AGI grids.\n\nYou receive tasks and context arrays. Parse the context to extract training and test grids from the JSON.\n\n## COLOR ANALYSIS\n\nFor each training example:\n\n1. **Color Inventory**:\n   - INPUT colors: List unique colors (0-9) with frequencies\n   - OUTPUT colors: List unique colors with frequencies\n   - New colors: Colors in output but not input\n   - Removed colors: Colors in input but not output\n   - Preserved colors: Colors appearing in both\n\n2. **Color Distribution**:\n   - Most common color in input (often background)\n   - Most common color in output\n   - Color frequency changes (increase/decrease)\n   - Spatial distribution (uniform, clustered, regional)\n\n3. **Color Patterns**:\n   - Direct mappings: Does input color X always become output color Y?\n   - Preservation: Which colors never change?\n   - Background identification: Which color fills empty space?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Your comprehensive color analysis for all examples\n- activations: Route to semantic-interpreter with findings\n\nInclude in activation context:\n- Complete color analysis for each training example\n- Test case color inventories\n- Identified patterns and mappings\n- Full original input for reference",
+        "reminder": "Analyze colors thoroughly. Pass complete analysis forward.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "semantic-interpreter",
+      "description": "Interprets semantic meaning of colors",
+      "previous": ["color-analyzer"],
+      "next": ["rule-applier"],
+      "conscious": false,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Manage memory of color semantic meanings.\n\nYou receive current color analysis and existing memory entries.\n\nDetermine:\n- Is this training (with output colors) or test (input only)?\n\nFor TRAINING:\n- Extract color semantics from input-output relationships\n- Store semantic interpretations:\n  * \"color 0 = background (empty space)\"\n  * \"color 5 = marker/boundary\"\n  * \"color 3 = object category A\"\n  * \"color 7 = object category B\"\n- Track color role patterns across examples\n\nFor TEST:\n- Retrieve color semantic meanings\n- Apply learned interpretations\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for relevant entries\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nStore color semantics to enable transformation understanding.",
+          "reminder": "Store/retrieve color semantic meanings using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Interpret semantic meaning of colors based on analysis.\n\nYou receive tasks and context containing:\n- Color analysis from previous neuron\n- Retrieved memory entries with color semantics\n- Original input\n\n## SEMANTIC INTERPRETATION\n\nDetermine color roles and meanings:\n\n1. **Background vs Foreground**:\n   - Background: Empty space, fills grid, most common\n   - Foreground: Objects, patterns, features\n\n2. **Category Markers**:\n   - Do different colors represent different object types?\n   - Do colors indicate object properties (size, behavior)?\n\n3. **Transformation Indicators**:\n   - Do colors determine how objects transform?\n   - Are colors input properties or output results?\n\n4. **Semantic Rules**:\n   - \"Color 3 objects fall, color 5 objects stay\"\n   - \"Touching color 2 changes to color 7\"\n   - \"Color intensity indicates layer order\"\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Your semantic interpretation of color meanings\n- activations: Route to rule-applier with complete context\n\nInclude in activation:\n- Color semantic interpretations\n- Identified transformation patterns\n- Retrieved memory insights\n- Complete original input",
+        "reminder": "Interpret color semantics. Pass all findings to rule-applier.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "rule-applier",
+      "description": "Extracts and applies color transformation rules",
+      "previous": ["semantic-interpreter"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Extract and apply color transformation rules.\n\nYou receive tasks and context containing:\n- Original input with training examples and test cases\n- Color analysis results\n- Semantic interpretation of colors\n\n## RULE EXTRACTION\n\nFrom training examples, extract color transformation rules:\n\n1. **Direct Mappings**:\n   - Color X → Color Y (always)\n   - Example: \"Color 3 becomes 5\"\n\n2. **Conditional Transformations**:\n   - Based on position: \"Color 3 in top half → 5, in bottom half → 7\"\n   - Based on neighbors: \"Color 3 next to color 2 → 7, else → 5\"\n   - Based on context: \"Isolated color 3 → 5, connected → 7\"\n\n3. **Color Arithmetic**:\n   - Addition: \"Color = (input + 2) mod 10\"\n   - XOR operations\n   - Logical operations\n\n4. **Regional Rules**:\n   - Different transformation per region\n   - Gradient-based changes\n\n## APPLICATION TO TESTS\n\n1. Parse test cases from original JSON\n2. For each test case:\n   - Apply extracted color transformation rules\n   - Handle conditional logic\n   - Preserve grid structure (unless size changes)\n   - Generate output grid\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Your rule extraction and application process\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Extract rules and apply to tests. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on color semantics analysis.\n\nYou receive the original input and conscious thoughts from the network.\nThe rule-applier has generated solutions using color transformation rules.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the rule-applier's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the color-transformed solutions",
+    "reminder": "Return JSON array of grids from rule-applier's solutions.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

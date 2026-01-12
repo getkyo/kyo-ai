@@ -1,0 +1,154 @@
+{
+  "name": "executive-controller",
+  "maxRecursions": 15,
+  "neurons": [
+    {
+      "name": "executive",
+      "description": "High-level strategic planning with memory",
+      "previous": ["monitor"],
+      "next": ["planner"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Executive memory for strategic decisions and high-level state.\n\n## STORAGE DECISION\n\nStore if:\n- Strategic decision made\n- High-level goal established\n- Major direction change\n- Critical milestone identified\n\n## RETRIEVAL\n\nRetrieve:\n- Strategic goals\n- Major decisions\n- Direction changes\n- Overall strategy state\n\nFormat stored items:\n- \"STRATEGY: [high-level approach]\"\n- \"GOAL: [major objective]\"\n- \"DECISION: [strategic choice]\"\n- \"MILESTONE: [key achievement]\"",
+          "reminder": "Track strategic decisions and goals.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Executive high-level strategic planning.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to solve OR feedback from monitor\n   - Strategic requirements\n\n2. **Extract from context array**:\n   - Problem details OR current state\n   - Progress if present\n   - Issues if present\n\n## EXECUTIVE PROCESS\n\n1. **Retrieve from memory**:\n   - Current strategy\n   - Strategic goals\n   - Previous decisions\n\n2. **Strategic thinking**:\n   - What's the overall approach?\n   - What are high-level goals?\n   - What's the strategy?\n   - Any course corrections needed?\n\n3. **Store in memory**:\n   - Strategic decisions\n   - Goals established\n   - Major directions\n\n4. **Delegate to planner**:\n   - Set direction\n   - Define what needs planning\n   - Establish success criteria\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Strategic decision process\n- requiredConsciousReasoning: \"EXECUTIVE STRATEGY:\\n\\nOBJECTIVE:\\n[high-level goal]\\n\\nSTRATEGIC APPROACH:\\n[overall strategy]\\n\\nSUCCESS CRITERIA:\\n[how to know when done]\\n\\nDIRECTION TO PLANNER:\\n[what needs detailed planning]\"\n- activations: Send to planner\n\nIn activation to planner:\n  In tasks array:\n    - \"Create detailed plan\"\n    - \"Direction: [strategic guidance]\"\n  In context array:\n    - Original problem\n    - \"STRATEGY: [approach]\"\n    - \"GOAL: [objective]\"\n    - \"SUCCESS CRITERIA: [targets]\"",
+        "reminder": "Strategic planning. Delegate to planner.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "planner",
+      "description": "Detailed tactical planning",
+      "previous": ["executive"],
+      "next": ["executor"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Create detailed tactical plan following executive direction.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Planning instructions\n   - Executive direction\n\n2. **Extract from context array**:\n   - Original problem\n   - Strategy from executive\n   - Goal and success criteria\n\n## PLANNING PROCESS\n\n1. **Detailed planning**:\n   - Break strategy into concrete steps\n   - Sequence actions\n   - Identify resources needed\n   - Define specific tasks\n\n2. **Create execution plan**:\n   - Step 1: [specific action]\n   - Step 2: [specific action]\n   - ...\n   - Clear, actionable steps\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Planning process\n- requiredConsciousReasoning: \"TACTICAL PLAN:\\n\\nSTRATEGY: [from executive]\\n\\nDETAILED STEPS:\\n1. [action]\\n2. [action]\\n...\\n\\nRESOURCES NEEDED:\\n[what's required]\\n\\nFIRST ACTION:\\n[immediate next step]\"\n- activations: Send to executor\n\nIn activation to executor:\n  In tasks array:\n    - \"Execute first action\"\n    - \"Action: [first step]\"\n  In context array:\n    - Original problem\n    - \"PLAN: [detailed steps]\"\n    - \"CURRENT STEP: 1\"\n    - \"STRATEGY: [from executive]\"",
+        "reminder": "Detailed tactical planning. Send first action to executor.",
+        "temperature": {
+          "Focused": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "executor",
+      "description": "Executes planned actions",
+      "previous": ["planner", "corrector"],
+      "next": ["monitor"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute the planned action.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Action to execute\n   - Execution instructions\n\n2. **Extract from context array**:\n   - Original problem\n   - Plan\n   - Current step\n   - Strategy\n   - Corrections if present\n\n## EXECUTION PROCESS\n\n1. **Carry out action**:\n   - Execute specific step\n   - Follow plan precisely\n   - Apply any corrections\n   - Document what was done\n\n2. **Record outcome**:\n   - What was executed?\n   - What was the result?\n   - Any issues encountered?\n   - What's next?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Execution process\n- requiredConsciousReasoning: \"EXECUTION:\\n\\nACTION TAKEN:\\n[what was executed]\\n\\nRESULT:\\n[outcome]\\n\\nSTATUS:\\n[success/issues]\\n\\nNEXT STEP:\\n[from plan or completion]\"\n- activations: Send to monitor\n\nIn activation to monitor:\n  In tasks array:\n    - \"Monitor execution and track progress\"\n    - \"Check for issues\"\n  In context array:\n    - Original problem\n    - \"EXECUTED: [action taken]\"\n    - \"RESULT: [outcome]\"\n    - \"PLAN: [remaining steps]\"\n    - \"CURRENT STEP: [number]\"\n    - \"STRATEGY: [overall approach]\"",
+        "reminder": "Execute action precisely. Report to monitor.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "monitor",
+      "description": "Tracks execution progress with memory",
+      "previous": ["executor"],
+      "next": ["executive", "corrector"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Monitor memory for progress tracking and issue detection.\n\n## STORAGE DECISION\n\nStore if:\n- Progress milestone reached\n- Issue detected\n- Execution result significant\n- Pattern in execution observed\n\n## RETRIEVAL\n\nRetrieve:\n- Progress history\n- Issues encountered\n- Execution patterns\n- Milestones reached\n\nFormat stored items:\n- \"PROGRESS: [milestone]\"\n- \"ISSUE: [problem detected]\"\n- \"RESULT: [execution outcome]\"\n- \"PATTERN: [execution observation]\"",
+          "reminder": "Track progress and detect issues.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Monitor execution progress and detect issues.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Monitoring instructions\n   - Issue checking requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Action executed\n   - Result\n   - Remaining plan\n   - Current step\n   - Strategy\n\n## MONITORING PROCESS\n\n1. **Retrieve from memory**:\n   - Progress history\n   - Previous issues\n   - Execution patterns\n\n2. **Track progress**:\n   - Where are we in plan?\n   - What's been accomplished?\n   - What remains?\n   - On track?\n\n3. **Detect issues**:\n   - Any problems?\n   - Deviations from plan?\n   - Need corrections?\n   - Strategic issues?\n\n4. **Store in memory**:\n   - Progress updates\n   - Issues found\n   - Patterns observed\n\n5. **Decide routing**:\n   - If issue detected: Send to corrector\n   - If major strategic issue: Escalate to executive\n   - If on track and complete: Escalate to executive with completion\n   - Otherwise: Continue to corrector for next step\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Monitoring analysis\n- requiredConsciousReasoning: \"PROGRESS MONITORING:\\n\\nCOMPLETED:\\n[what's done]\\n\\nREMAINING:\\n[what's left]\\n\\nISSUES:\\n[problems if any, or NONE]\\n\\nSTATUS:\\n[on-track/needs-correction/complete]\\n\\nNEXT: [CORRECT / EXECUTIVE / COMPLETE]\"\n- activations: Route to corrector OR executive\n\nIf issues (to corrector):\n  In tasks array:\n    - \"Correct execution issues\"\n    - \"Issues: [list]\"\n  In context array:\n    - Original problem\n    - \"ISSUES: [problems]\"\n    - \"PLAN: [remaining]\"\n    - \"PROGRESS: [status]\"\n\nIf strategic issue or complete (to executive):\n  In tasks array:\n    - \"Strategic adjustment needed\" OR \"Task complete\"\n  In context array:\n    - Original problem\n    - \"PROGRESS: [full status]\"\n    - \"ISSUES: [if any]\"\n    - \"STATUS: [state]\"",
+        "reminder": "Monitor progress. Detect issues. Route appropriately.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "corrector",
+      "description": "Adjusts execution based on monitoring feedback",
+      "previous": ["monitor"],
+      "next": ["executor"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Correct execution issues based on monitoring feedback.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Correction instructions\n   - Issues to address\n\n2. **Extract from context array**:\n   - Original problem\n   - Issues detected\n   - Plan\n   - Progress\n\n## CORRECTION PROCESS\n\n1. **Analyze issues**:\n   - What went wrong?\n   - Why did it happen?\n   - How to fix?\n\n2. **Determine corrections**:\n   - Adjust approach\n   - Modify next action\n   - Compensate for issues\n   - Maintain overall strategy\n\n3. **Plan correction**:\n   - Specific fixes needed\n   - Adjusted next action\n   - How to prevent recurrence\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Correction analysis and planning\n- requiredConsciousReasoning: \"CORRECTIONS:\\n\\nISSUES ANALYZED:\\n[what went wrong]\\n\\nCORRECTIVE ACTIONS:\\n[how to fix]\\n\\nADJUSTED NEXT STEP:\\n[corrected action]\\n\\nPREVENTION:\\n[how to avoid recurrence]\"\n- activations: Send back to executor\n\nIn activation to executor:\n  In tasks array:\n    - \"Execute corrected action\"\n    - \"Action: [adjusted step]\"\n  In context array:\n    - Original problem\n    - \"CORRECTIONS APPLIED: [fixes]\"\n    - \"PLAN: [adjusted plan]\"\n    - \"CURRENT STEP: [number]\"\n    - \"STRATEGY: [maintained approach]\"",
+        "reminder": "Analyze and correct issues. Send adjusted action to executor.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the hierarchical executive control process and solution.\n\nYou receive conscious thoughts from:\n- Executive: Strategic planning and high-level control\n- Planner: Detailed tactical planning\n- Executor: Action execution (possibly multiple)\n- Monitor: Progress tracking and issue detection (possibly multiple)\n- Corrector: Issue correction (possibly multiple)\n\n## PRESENTATION\n\n1. **Extract control hierarchy**:\n   - Executive strategy\n   - Tactical plan\n   - Execution sequence\n   - Monitoring feedback\n   - Corrections applied\n\n2. **Show hierarchical control**:\n   - How executive set direction\n   - How planner detailed approach\n   - How executor carried out actions\n   - How monitor tracked progress\n   - How corrector adjusted course\n   - Final outcome\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Executive strategy\n- Tactical plan\n- Execution trace (actions → monitoring → corrections loop)\n- Progress milestones\n- Final solution\n- Effectiveness of hierarchical control",
+    "reminder": "Show hierarchical control from strategy to execution.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

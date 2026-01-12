@@ -1,0 +1,82 @@
+{
+  "name": "analogical-mapper-simple",
+  "maxRecursions": 8,
+  "neurons": [
+    {
+      "name": "pattern-finder",
+      "description": "Identifies patterns in training examples",
+      "previous": [],
+      "next": ["mapper"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Find patterns in training examples for analogical reasoning.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Pattern finding instructions\n   - What to analyze\n\n2. **Extract from context array**:\n   - Training examples (input→output pairs)\n   - Problem context\n\n## PATTERN FINDING PROCESS\n\n1. **Examine training examples**:\n   - Look at each input→output transformation\n   - What changes?\n   - What stays the same?\n   - What's the relationship?\n\n2. **Identify abstract patterns**:\n   - Common transformations across examples\n   - Structural patterns\n   - Relational patterns\n   - Transformation rules\n\n3. **Categorize patterns**:\n   - Geometric patterns (rotation, flip, scale, etc.)\n   - Color patterns (mapping, inversion, etc.)\n   - Structural patterns (grouping, filling, etc.)\n   - Logical patterns (conditionals, rules, etc.)\n\n4. **Find analogical structure**:\n   - What makes examples similar?\n   - What's the underlying analogy?\n   - How do examples relate to each other?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Pattern discovery process\n- requiredConsciousReasoning: \"PATTERNS DISCOVERED:\\n\\nTRANSFORMATION PATTERNS:\\n- Pattern 1: [specific transformation]\\n- Pattern 2: [specific transformation]\\n...\\n\\nABSTRACT STRUCTURE:\\n[underlying analogical pattern]\\n\\nEXAMPLE ANALYSIS:\\n- Example 1: [how pattern applies]\\n- Example 2: [how pattern applies]\\n...\\n\\nANALOGICAL RELATIONSHIP:\\n[what examples teach us]\"\n- activations: Send to mapper\n\nIn activation to mapper:\n  In tasks array:\n    - \"Map discovered patterns to test case\"\n    - \"Apply analogical reasoning\"\n  In context array:\n    - Original problem\n    - Test case (input that needs output)\n    - \"PATTERNS: [discovered transformations]\"\n    - \"ABSTRACT STRUCTURE: [analogical pattern]\"\n    - \"EXAMPLES SHOW: [what training demonstrates]\"",
+        "reminder": "Find patterns in examples. Discover analogical structure.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "mapper",
+      "description": "Maps patterns to new test case",
+      "previous": ["pattern-finder"],
+      "next": ["applier"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Map discovered patterns to the test case using analogical reasoning.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Mapping instructions\n   - Application requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Test case input\n   - Patterns discovered\n   - Abstract structure\n   - What examples show\n\n## MAPPING PROCESS\n\n1. **Understand test case**:\n   - Analyze test input\n   - How is it similar to training examples?\n   - How is it different?\n   - What's analogous?\n\n2. **Map patterns analogically**:\n   - Which patterns apply?\n   - How do they map to test case structure?\n   - What needs to be adapted?\n   - Maintain analogical consistency\n\n3. **Reason about mapping**:\n   - Why does this pattern map here?\n   - Is mapping consistent with examples?\n   - Does analogy hold?\n   - Any edge cases in test?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analogical mapping process\n- requiredConsciousReasoning: \"ANALOGICAL MAPPING:\\n\\nTEST CASE ANALYSIS:\\n[how test relates to examples]\\n\\nPATTERN MAPPING:\\n- Pattern 1 maps to: [test case element]\\n- Pattern 2 maps to: [test case element]\\n...\\n\\nANALOGY:\nTraining examples : Test case\\n[relationship] : [corresponding relationship]\\n\\nMAPPED TRANSFORMATION:\\n[how to transform test input]\"\n- activations: Send to applier\n\nIn activation to applier:\n  In tasks array:\n    - \"Apply mapped patterns to test case\"\n    - \"Generate output using analogy\"\n  In context array:\n    - Original problem\n    - Test case input\n    - \"MAPPED PATTERNS: [how patterns apply to test]\"\n    - \"TRANSFORMATION: [mapped transformation rule]\"\n    - \"ANALOGY: [example::test relationship]\"",
+        "reminder": "Map patterns to test case through analogical reasoning.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "applier",
+      "description": "Applies mapped patterns to generate solution",
+      "previous": ["mapper"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Apply mapped patterns to generate test case solution.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Application instructions\n   - Output generation requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Test case input\n   - Mapped patterns\n   - Transformation rule\n   - Analogy relationship\n\n## APPLICATION PROCESS\n\n1. **Apply transformation**:\n   - Use mapped patterns\n   - Follow transformation rule\n   - Maintain analogical consistency\n   - Generate output\n\n2. **Verify analogical coherence**:\n   - Does output follow same pattern as examples?\n   - Is analogy maintained?\n   - Does transformation make sense?\n   - Consistent with training?\n\n3. **Validate solution**:\n   - Check output validity\n   - Verify pattern application\n   - Confirm analogical reasoning\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Application and validation process\n- requiredConsciousReasoning: \"PATTERN APPLICATION:\\n\\nTRANSFORMATION APPLIED:\\n[how patterns were applied]\\n\\nGENERATED OUTPUT:\\n[test case output]\\n\\nANALOGICAL VERIFICATION:\\nExample transformations : Test transformation\\n[training pattern] : [applied pattern]\\n✓ Analogy holds\\n\\nVALIDATION:\\n[correctness checks]\\n\\nCONFIDENCE: [level with justification]\"\n- activations: null (terminal)",
+        "reminder": "Apply patterns analogically. Verify and validate output.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the analogical reasoning process and solution.\n\nYou receive conscious thoughts from:\n- Pattern-finder: Patterns discovered in training examples\n- Mapper: Analogical mapping to test case\n- Applier: Pattern application and solution\n\n## PRESENTATION\n\n1. **Extract analogical reasoning**:\n   - Patterns found in examples\n   - How patterns mapped to test\n   - Application of analogy\n   - Final solution\n\n2. **Show analogical structure**:\n   - Training example patterns\n   - Test case structure\n   - Analogical relationship (A:B :: C:D)\n   - How analogy generated solution\n\n## FORMAT\n\nPresent:\n- Problem with training examples\n- Patterns discovered\n- Test case analysis\n- Analogical mapping (examples : test)\n- Pattern application\n- Final solution\n- Verification that analogy holds",
+    "reminder": "Show analogical reasoning from pattern discovery to application.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

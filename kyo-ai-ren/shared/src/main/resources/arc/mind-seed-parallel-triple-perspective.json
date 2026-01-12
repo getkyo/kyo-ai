@@ -1,0 +1,103 @@
+{
+  "name": "parallel-triple-perspective",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "color-specialist",
+      "description": "Analyzes color transformations in parallel",
+      "previous": [],
+      "next": ["integrator"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze color dimension of ARC-AGI transformation.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## COLOR PERSPECTIVE ANALYSIS\n\nFocus exclusively on color patterns and transformations:\n\n1. **Color Mappings**:\n   - Direct mappings: color X → color Y\n   - Conditional mappings: based on position, neighbors, context\n   - Color preservation: which colors never change\n\n2. **Color Operations**:\n   - Arithmetic: (color + N) mod 10, XOR operations\n   - Logical: color assignments based on boolean logic\n   - Statistical: most/least common color behaviors\n\n3. **Color Semantics**:\n   - Background vs foreground colors\n   - Color as category marker\n   - Color as instruction (e.g., \"color 5 = boundary\")\n\n4. **Color Patterns**:\n   - Color swaps, inversions\n   - Color spreading, propagation\n   - Color-based selection or filtering\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Color transformation analysis\n- activations: Route to integrator with findings\n\nInclude in activation:\n- Color transformation pattern identified\n- Confidence level\n- Complete original input",
+        "reminder": "Analyze color dimension. Route to integrator.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "geometry-specialist",
+      "description": "Analyzes geometric transformations in parallel",
+      "previous": [],
+      "next": ["integrator"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze geometry dimension of ARC-AGI transformation.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## GEOMETRY PERSPECTIVE ANALYSIS\n\nFocus exclusively on geometric patterns and transformations:\n\n1. **Spatial Transformations**:\n   - Rotations: 90°, 180°, 270° (clockwise/counterclockwise)\n   - Reflections: horizontal, vertical, diagonal axes\n   - Translations: shifts in x/y directions\n   - Scaling: enlargement or reduction\n\n2. **Structural Operations**:\n   - Grid reshaping: dimension changes\n   - Tiling: pattern repetition\n   - Cropping: region extraction\n   - Padding: border addition\n\n3. **Spatial Relationships**:\n   - Alignment: elements align to grid/axes\n   - Symmetry: symmetric pattern creation\n   - Proximity changes: distance modifications\n   - Topology: connectivity preservation/modification\n\n4. **Geometric Patterns**:\n   - Movement patterns (gravity, centering)\n   - Shape transformations\n   - Boundary operations\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Geometric transformation analysis\n- activations: Route to integrator with findings\n\nInclude in activation:\n- Geometric transformation pattern identified\n- Confidence level\n- Complete original input",
+        "reminder": "Analyze geometry dimension. Route to integrator.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "object-specialist",
+      "description": "Analyzes object-level transformations in parallel",
+      "previous": [],
+      "next": ["integrator"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze object dimension of ARC-AGI transformation.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## OBJECT PERSPECTIVE ANALYSIS\n\nFocus exclusively on object-level patterns and transformations:\n\n1. **Object Detection**:\n   - Connected components (4 or 8-connectivity)\n   - Object inventory: count, sizes, colors\n   - Object properties: shape, position, bounding box\n\n2. **Object Transformations**:\n   - Per-object operations: each object transforms independently\n   - Object movements: translation, repositioning\n   - Object modifications: rotation, reflection, scaling\n   - Object property changes: color, size, shape\n\n3. **Object Interactions**:\n   - Merging: objects combine\n   - Splitting: objects divide\n   - Copying: object duplication\n   - Deletion: object removal\n\n4. **Object-Based Rules**:\n   - Conditional on object properties (size, color, position)\n   - Object relationships (nearest, touching, aligned)\n   - Object sorting, grouping, organizing\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Object transformation analysis\n- activations: Route to integrator with findings\n\nInclude in activation:\n- Object transformation pattern identified\n- Confidence level\n- Complete original input",
+        "reminder": "Analyze object dimension. Route to integrator.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "integrator",
+      "description": "Integrates three parallel perspectives",
+      "previous": ["color-specialist", "geometry-specialist", "object-specialist"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Integrate three parallel perspectives and generate test solutions.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Color specialist analysis\n- Geometry specialist analysis  \n- Object specialist analysis\n\n## INTEGRATION\n\n1. **Synthesize perspectives**:\n   - What does color specialist say?\n   - What does geometry specialist say?\n   - What does object specialist say?\n\n2. **Find consensus**:\n   - Do perspectives agree?\n   - Do they describe the same transformation from different angles?\n   - Example: Color says \"swap colors\", Geometry says \"no spatial change\", Object says \"objects preserve position\" → Consensus: pure color swap\n\n3. **Resolve conflicts**:\n   - If perspectives disagree, which is primary?\n   - Can perspectives be combined?\n   - Example: Geometry says \"rotate\", Object says \"per-object transform\" → Maybe: each object rotates independently\n\n4. **Unified transformation**:\n   - Combine insights from all three perspectives\n   - Create integrated understanding\n   - Formulate complete transformation rule\n\n## INTEGRATION STRATEGIES\n\n**Consensus (all agree)**:\n- High confidence\n- Apply agreed transformation\n\n**Majority (2 of 3 agree)**:\n- Medium confidence\n- Apply majority transformation\n- Consider minority perspective as refinement\n\n**Conflict (all disagree)**:\n- Analyze which perspective best explains ALL training examples\n- Or combine: transformation has multiple aspects (color + geometry + object)\n\n**Complementary (non-conflicting)**:\n- Transformation has multiple dimensions\n- Example: \"Rotate grid (geometry) AND swap colors (color)\"\n- Apply all non-conflicting transformations\n\n## SOLUTION GENERATION\n\n1. **Parse test cases** from original JSON\n\n2. **For each test case**:\n   - Apply integrated transformation\n   - Combine color + geometry + object operations as determined\n   - Generate complete output\n\n3. **Validation**:\n   - Output dimensions correct\n   - All values 0-9\n   - Transformation applied consistently\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Integration process and unified transformation\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Integrate perspectives and apply. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on parallel triple perspective analysis.\n\nYou receive the original input and conscious thought from the integrator.\n\nThe integrator has synthesized color, geometry, and object perspectives and generated solutions.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the integrator's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the integrated transformation",
+    "reminder": "Return JSON array of grids from integrator's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "name": "adaptive-complexity-router",
+  "maxRecursions": 3,
+  "neurons": [
+    {
+      "name": "router",
+      "description": "Routes to appropriate complexity level solver",
+      "previous": [],
+      "next": [
+        "simple-solver",
+        "moderate-solver",
+        "complex-solver"
+      ],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Analyze task complexity and route to appropriate solver.\n\nYou receive inputs with tasks and context. Parse the context JSON to extract training examples.\n\n## COMPLEXITY ASSESSMENT\n\nAnalyze training examples to determine complexity:\n\n1. **SIMPLE indicators**:\n   - Single global operation (rotation, reflection)\n   - Direct color mapping (X→Y)\n   - Grid-wide uniform transformation\n   - No conditional logic\n   - Pattern is immediately obvious\n\n2. **MODERATE indicators**:\n   - Object-level operations\n   - Regional patterns (different rules for different areas)\n   - Conditional rules (if-then with simple conditions)\n   - Multi-object handling\n   - Moderate pattern complexity\n\n3. **COMPLEX indicators**:\n   - Multi-step transformations\n   - Compositional (multiple operations in sequence)\n   - Context-dependent rules\n   - Hierarchical structure\n   - Intricate conditional logic\n   - Non-obvious patterns\n\n## ROUTING DECISION\n\nStart with SIMPLE, escalate if needed:\n- First try: simple-solver\n- If simple fails: moderate-solver\n- If moderate fails: complex-solver\n\n## OUTPUT FORMAT\n\nGenerate routing with reasoning and activations:\n- reasoning: Your analysis of the complexity\n- activations: Route to the appropriate solver\n\nFor SIMPLE start, activate simple-solver.\nFor MODERATE, skip to moderate-solver.\nFor COMPLEX, route directly to complex-solver.\n\nWhen uncertain, start with simple-solver.",
+        "reminder": "Assess complexity and route. Include full original input in activations.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "simple-solver",
+      "description": "Tries simple transformations",
+      "previous": [
+        "router",
+        "validator"
+      ],
+      "next": [
+        "validator"
+      ],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve using simple transformation patterns.\n\nYou receive tasks and context arrays. The context contains the original input with training examples and any routing information.\n\n## SIMPLE TRANSFORMATIONS\n\nTry basic, single-operation transformations:\n\n1. **Geometric**:\n   - Rotate 90° clockwise\n   - Rotate 180°\n   - Rotate 90° counterclockwise\n   - Reflect horizontally\n   - Reflect vertically\n   - Reflect diagonally\n\n2. **Color**:\n   - Color swap: X ↔ Y\n   - Color mapping: X → Y, A → B\n   - Background/foreground swap\n\n3. **Structural**:\n   - Copy input to output (no change)\n   - Transpose grid\n   - Invert colors\n\nTest each simple pattern systematically on ALL training examples.\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis of which patterns work\n- consciousOutput: Your solution or failure indication\n- activations: Route to validator with your findings\n\nIf a pattern works on all examples, report success and activate validator.\nIf no pattern works, report failure and activate validator for escalation.",
+        "reminder": "Try simple single-operation transformations. Pass full context to validator.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "moderate-solver",
+      "description": "Tries moderate complexity transformations",
+      "previous": [
+        "router",
+        "validator"
+      ],
+      "next": [
+        "validator"
+      ],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve using moderate complexity patterns.\n\nYou receive tasks and context arrays containing the original input and routing information.\n\n## MODERATE TRANSFORMATIONS\n\nTry intermediate complexity patterns:\n\n1. **Object-based**:\n   - Detect objects (connected components)\n   - Object movements (gravity, sorting)\n   - Per-object transformations (each object rotates, scales)\n   - Object property-based rules (size, color, position)\n\n2. **Regional**:\n   - Different rules for different grid regions\n   - Quadrant-based transformations\n   - Row/column-specific rules\n\n3. **Conditional simple**:\n   - If position condition then transform\n   - If color condition then change\n   - Simple if-then logic\n\n4. **Pattern operations**:\n   - Tiling (2x2, 3x3 repetition)\n   - Flood fill (fill enclosed regions)\n   - Symmetry completion\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis of moderate patterns\n- consciousOutput: Your solution or failure indication\n- activations: Route to validator with your findings\n\nTest patterns on all training examples before declaring success.",
+        "reminder": "Try moderate complexity transformations. Include full context in activations.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "complex-solver",
+      "description": "Tries complex transformations",
+      "previous": [
+        "router",
+        "validator"
+      ],
+      "next": [
+        "validator"
+      ],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve using complex transformation patterns.\n\nYou receive tasks and context arrays with the original input and routing information.\n\n## COMPLEX TRANSFORMATIONS\n\nTry sophisticated, multi-step patterns:\n\n1. **Compositional**:\n   - Multi-step: Step 1 then Step 2 then Step 3\n   - Order matters\n   - Each step transforms result of previous step\n\n2. **Context-dependent**:\n   - Complex conditional logic\n   - Multiple conditions (AND, OR, NOT)\n   - Nested conditions\n   - State-dependent transformations\n\n3. **Hierarchical**:\n   - Multi-level processing\n   - Coarse to fine\n   - Recursive or iterative operations\n\n4. **Intricate patterns**:\n   - Path finding and drawing\n   - Complex object interactions\n   - Graph-based transformations\n   - Pattern synthesis\n\n5. **Analysis-intensive**:\n   - Deep pattern analysis\n   - Multiple perspectives integration\n   - Non-obvious rules\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Deep analysis of the pattern\n- consciousOutput: Your detailed solution\n- activations: Route to validator with complete solution\n\nThis is the highest complexity level - find a solution even if uncertain.",
+        "reminder": "Apply sophisticated pattern analysis. Pass complete solution to validator.",
+        "temperature": {
+          "Creative": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "validator",
+      "description": "Validates solution and escalates if needed",
+      "previous": [
+        "simple-solver",
+        "moderate-solver",
+        "complex-solver"
+      ],
+      "next": [
+        "moderate-solver",
+        "complex-solver"
+      ],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Track which complexity levels succeeded or failed.\n\nYou receive current validation results and existing memory entries.\n\n## MEMORY OPERATIONS\n\nStore results by complexity level:\n- Track which levels were attempted\n- Record success/failure patterns\n- Note which transformations worked\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Indices of relevant past attempts\n- updates: Optional array of memory operations\n\nUse Update operations:\n- Add: New attempt record\n- Replace: Update existing record\n- Remove: Clear outdated records",
+          "reminder": "Store complexity level results using proper Update operations.",
+          "temperature": {
+            "Precise": {
+              "value": 0.1
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Validate solution and escalate to next complexity level if needed.\n\nYou receive tasks and context arrays containing:\n- Original input with training examples and test cases\n- Solution from a solver (simple, moderate, or complex)\n- Information about which solver provided the solution\n- Retrieved memory about previous attempts\n\n## VALIDATION PROCESS\n\n1. **Parse the original input** to extract training examples\n2. **Apply the proposed transformation** to each training input\n3. **Compare with expected outputs**\n4. **Calculate accuracy**: how many training examples solved correctly\n\n## VALIDATION OUTCOMES\n\n**SUCCESS** (all training examples correct):\n- Apply the validated solution to test cases\n- Generate output grids for each test\n- Include solution in consciousOutput\n- No further routing needed\n\n**FAILURE** (some or no training examples correct):\n- Determine next complexity level:\n  * From simple → moderate-solver\n  * From moderate → complex-solver\n  * From complex → apply anyway (no higher level)\n- Activate next solver with escalation context\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Validation results and decision\n- consciousOutput: Either the solution grids (if success) or escalation notice (if failure)\n- activations: If escalating, route to next solver with full original input and failure context\n\nFor SUCCESS, consciousOutput should contain the actual grid solutions in JSON format.\nFor FAILURE, activate the next complexity level (unless already at complex).",
+        "reminder": "Validate thoroughly. Output grids on success, escalate on failure.",
+        "temperature": {
+          "Precise": {
+            "value": 0.1
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on validated solutions.\n\nYou receive the original input and conscious thoughts from the network, particularly the validator's output.\n\n## EXPECTED FORMAT\n\nThe validator has either:\n1. Successfully validated a solution and generated output grids\n2. Applied the best available solution even if imperfect (complex level)\n\n## OUTPUT REQUIREMENTS\n\nReturn a JSON array of grids - one grid per test case.\nEach grid is a 2D array of integers (0-9).\n\nExample format:\n[[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid maintains proper 2D array structure\n- All values are integers 0-9\n- Output exactly matches the validated solution",
+    "reminder": "Output JSON array of grids matching test case count.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

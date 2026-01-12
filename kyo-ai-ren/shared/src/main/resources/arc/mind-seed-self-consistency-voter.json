@@ -1,0 +1,124 @@
+{
+  "name": "self-consistency-voter",
+  "maxRecursions": 8,
+  "neurons": [
+    {
+      "name": "splitter",
+      "description": "Receives problem and distributes to parallel reasoning paths",
+      "previous": [],
+      "next": ["path1", "path2", "path3"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Distribute problem to multiple parallel reasoning paths for self-consistency voting.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Main task description\n   - Problem statement\n   - Expected output format\n\n2. **Extract from context array**:\n   - Complete problem details\n   - Training examples if present\n   - Test case if present\n\n## PROCESSING\n\n1. **Problem understanding**:\n   - Identify the core question\n   - Note any constraints or requirements\n   - Understand what constitutes a valid answer\n\n2. **Path preparation**:\n   - Formulate identical starting task for all paths\n   - Package all necessary information\n   - Ensure each path gets complete context\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Problem analysis and distribution strategy\n- activations: Activate all three paths in parallel\n\nFor each path activation (path1, path2, path3):\n  In tasks array:\n    - \"Solve: [complete problem statement]\"\n    - \"Provide complete solution with reasoning\"\n    - \"Path ID: [1/2/3]\"\n  In context array:\n    - Full problem details from input\n    - All training examples if applicable\n    - Test case if applicable\n    - \"Independent reasoning path [1/2/3]\"",
+        "reminder": "Distribute problem identically to all three parallel paths.",
+        "temperature": {
+          "Precise": {
+            "value": 0.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "path1",
+      "description": "First independent reasoning path with low temperature",
+      "previous": ["splitter"],
+      "next": ["voter"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute independent reasoning path 1 with focused, analytical approach.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem statement to solve\n   - Output format requirements\n   - Path identifier\n\n2. **Extract from context array**:\n   - Complete problem details\n   - Training examples\n   - Test case\n\n## REASONING APPROACH\n\n1. **Analysis** (Path 1 style - Focused & Analytical):\n   - Systematic examination of examples\n   - Identify patterns methodically\n   - Build logical rule step-by-step\n   - Verify against all training cases\n\n2. **Solution generation**:\n   - Apply discovered rule to test case\n   - Show clear logical steps\n   - Verify consistency\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Complete analytical process\n- requiredConsciousReasoning: \"PATH 1 SOLUTION:\\n[solution]\\n\\nREASONING:\\n[key steps]\\n\\nCONFIDENCE: [High/Medium/Low]\"\n- activations: Send to voter\n\nIn activation to voter:\n  In tasks array:\n    - \"Aggregate solutions from all paths\"\n    - \"Determine consensus answer\"\n  In context array:\n    - \"PATH 1: [solution]\" \n    - \"PATH 1 REASONING: [brief summary]\"\n    - \"PATH 1 CONFIDENCE: [level]\"\n    - Original problem statement",
+        "reminder": "Focused analytical reasoning. Send complete solution to voter.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "path2",
+      "description": "Second independent reasoning path with balanced temperature",
+      "previous": ["splitter"],
+      "next": ["voter"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute independent reasoning path 2 with balanced, flexible approach.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem statement to solve\n   - Output format requirements\n   - Path identifier\n\n2. **Extract from context array**:\n   - Complete problem details\n   - Training examples\n   - Test case\n\n## REASONING APPROACH\n\n1. **Analysis** (Path 2 style - Balanced & Flexible):\n   - Consider multiple interpretations\n   - Explore different pattern possibilities\n   - Balance systematic vs creative thinking\n   - Test hypotheses against examples\n\n2. **Solution generation**:\n   - Synthesize most likely rule\n   - Apply to test case\n   - Acknowledge alternatives if close call\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Complete balanced reasoning process\n- requiredConsciousReasoning: \"PATH 2 SOLUTION:\\n[solution]\\n\\nREASONING:\\n[key steps]\\n\\nCONFIDENCE: [High/Medium/Low]\"\n- activations: Send to voter\n\nIn activation to voter:\n  In tasks array:\n    - \"Aggregate solutions from all paths\"\n    - \"Determine consensus answer\"\n  In context array:\n    - \"PATH 2: [solution]\"\n    - \"PATH 2 REASONING: [brief summary]\"\n    - \"PATH 2 CONFIDENCE: [level]\"\n    - Original problem statement",
+        "reminder": "Balanced flexible reasoning. Send complete solution to voter.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "path3",
+      "description": "Third independent reasoning path with creative temperature",
+      "previous": ["splitter"],
+      "next": ["voter"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute independent reasoning path 3 with creative, exploratory approach.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem statement to solve\n   - Output format requirements\n   - Path identifier\n\n2. **Extract from context array**:\n   - Complete problem details\n   - Training examples\n   - Test case\n\n## REASONING APPROACH\n\n1. **Analysis** (Path 3 style - Creative & Exploratory):\n   - Look for unconventional patterns\n   - Consider abstract relationships\n   - Explore creative interpretations\n   - Test novel hypotheses\n\n2. **Solution generation**:\n   - Apply most promising creative insight\n   - Show innovative reasoning path\n   - Justify unconventional approach if used\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Complete creative reasoning process\n- requiredConsciousReasoning: \"PATH 3 SOLUTION:\\n[solution]\\n\\nREASONING:\\n[key steps]\\n\\nCONFIDENCE: [High/Medium/Low]\"\n- activations: Send to voter\n\nIn activation to voter:\n  In tasks array:\n    - \"Aggregate solutions from all paths\"\n    - \"Determine consensus answer\"\n  In context array:\n    - \"PATH 3: [solution]\"\n    - \"PATH 3 REASONING: [brief summary]\"\n    - \"PATH 3 CONFIDENCE: [level]\"\n    - Original problem statement",
+        "reminder": "Creative exploratory reasoning. Send complete solution to voter.",
+        "temperature": {
+          "Creative": {
+            "value": 1.1
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "voter",
+      "description": "Aggregates solutions from all paths and determines consensus",
+      "previous": ["path1", "path2", "path3"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Aggregate solutions from all reasoning paths and determine consensus answer.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Aggregation instructions\n   - Original problem reference\n\n2. **Extract from context array**:\n   - PATH 1 solution, reasoning, confidence\n   - PATH 2 solution, reasoning, confidence\n   - PATH 3 solution, reasoning, confidence\n   - Original problem statement\n\n## VOTING PROCESS\n\n1. **Compare solutions**:\n   - Identify agreements and disagreements\n   - Compare reasoning quality\n   - Assess confidence levels\n   - Look for clear consensus\n\n2. **Determine final answer**:\n   - If 2+ paths agree: Use consensus solution\n   - If all differ: Choose highest confidence OR most rigorous reasoning\n   - If tie: Prefer more analytical (lower temp) path\n\n3. **Justify selection**:\n   - Explain why this answer chosen\n   - Note agreement pattern\n   - Acknowledge any uncertainty\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Voting analysis and selection justification\n- requiredConsciousReasoning: \"CONSENSUS DECISION:\\n\\nFINAL SOLUTION: [chosen solution]\\n\\nVOTING RESULT: [X/3 paths agreed]\\n\\nJUSTIFICATION: [why this answer selected]\\n\\nPATH BREAKDOWN:\\n- Path 1: [solution summary]\\n- Path 2: [solution summary]\\n- Path 3: [solution summary]\"\n- activations: null (terminal)",
+        "reminder": "Aggregate all paths. Choose consensus or best-justified solution.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the self-consistency voting result with full transparency.\n\nYou receive conscious thoughts from:\n- Path 1: Focused analytical solution\n- Path 2: Balanced flexible solution  \n- Path 3: Creative exploratory solution\n- Voter: Consensus determination and final answer\n\n## PRESENTATION\n\n1. **Extract solutions** from all three paths\n2. **Extract voting decision** from voter\n3. **Present transparent summary**:\n   - Show all three path solutions\n   - Explain voting result\n   - Present final answer with justification\n   - Note confidence level\n\n## FORMAT\n\nPresent:\n- Brief problem statement\n- Three independent solutions with their approaches\n- Voting analysis (agreement pattern)\n- Final consensus answer\n- Confidence assessment",
+    "reminder": "Present all paths and consensus decision transparently.",
+    "temperature": {
+      "Precise": {
+        "value": 0.2
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

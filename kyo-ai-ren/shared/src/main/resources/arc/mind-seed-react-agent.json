@@ -1,0 +1,154 @@
+{
+  "name": "react-agent",
+  "maxRecursions": 15,
+  "neurons": [
+    {
+      "name": "planner",
+      "description": "Creates action plan and maintains goal state",
+      "previous": [],
+      "next": ["reasoner"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Memory gate for goal tracking and planning history.\n\n## STORAGE DECISION\n\nStore if:\n- Overall goal identified\n- Subgoal defined\n- Key milestone achieved\n- Plan adjustment made\n\n## RETRIEVAL\n\nRetrieve:\n- Original goals\n- Subgoals in progress\n- Milestones reached\n- Plan modifications\n\nFormat stored items:\n- \"GOAL: [main objective]\"\n- \"SUBGOAL: [intermediate objective]\"\n- \"MILESTONE: [achievement]\"\n- \"PLAN CHANGE: [adjustment made]\"",
+          "reminder": "Track goals and planning evolution.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Create action plan with goal tracking.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to solve\n   - Objectives\n   - Constraints\n\n2. **Extract from context array**:\n   - Problem details\n   - Available information\n   - Requirements\n\n## PLANNING PROCESS\n\n1. **Define goals**:\n   - Main objective\n   - Success criteria\n   - Key milestones\n\n2. **Create action plan**:\n   - Break into steps\n   - Identify needed information\n   - Sequence actions logically\n\n3. **Store in memory**:\n   - Main goal\n   - Subgoals\n   - Plan structure\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Planning process and goal identification\n- requiredConsciousReasoning: \"ACTION PLAN:\\n\\nGOAL: [main objective]\\n\\nSTEPS:\\n1. [first step]\\n2. [second step]\\n...\\n\\nSUCCESS CRITERIA: [how to know when done]\"\n- activations: Send to reasoner\n\nIn activation to reasoner:\n  In tasks array:\n    - \"Reason about current state and next action\"\n    - \"Step 1: [first action from plan]\"\n  In context array:\n    - \"GOAL: [main objective]\"\n    - \"PLAN: [action steps]\"\n    - \"CURRENT STEP: 1\"\n    - Problem details",
+        "reminder": "Define goals and action plan. Track in memory.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "reasoner",
+      "description": "Reasons about current state and determines next action",
+      "previous": ["planner", "observer"],
+      "next": ["actor"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Reason about current state and determine next action.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Reasoning instructions\n   - Current step to consider\n\n2. **Extract from context array**:\n   - Goal and plan\n   - Current step number\n   - Problem details\n   - Previous observations if present\n   - World state if present\n\n## REASONING PROCESS\n\n1. **Assess current state**:\n   - What do we know?\n   - What have we accomplished?\n   - What remains to do?\n\n2. **Determine next action**:\n   - What's the most productive next step?\n   - What information would help?\n   - How does this advance the goal?\n\n3. **Justify action choice**:\n   - Why this action now?\n   - How it connects to plan\n   - Expected outcome\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: State assessment and action determination\n- requiredConsciousReasoning: \"REASONING:\\n\\nCURRENT STATE:\\n[what we know]\\n\\nNEXT ACTION:\\n[proposed action]\\n\\nJUSTIFICATION:\\n[why this action]\"\n- activations: Send to actor\n\nIn activation to actor:\n  In tasks array:\n    - \"Execute action: [specific action]\"\n    - \"Expected outcome: [what should happen]\"\n  In context array:\n    - \"GOAL: [from input]\"\n    - \"CURRENT STATE: [summary]\"\n    - \"ACTION: [proposed action]\"\n    - \"STEP: [current step]\"\n    - Problem details",
+        "reminder": "Assess state. Determine and justify next action.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "actor",
+      "description": "Proposes concrete action based on reasoning",
+      "previous": ["reasoner"],
+      "next": ["observer"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Propose concrete action based on reasoning.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Action to execute\n   - Expected outcome\n\n2. **Extract from context array**:\n   - Goal\n   - Current state\n   - Proposed action\n   - Step number\n   - Problem details\n\n## ACTION PROCESS\n\n1. **Formulate concrete action**:\n   - Make action specific and executable\n   - Define what exactly to do\n   - Specify any parameters\n\n2. **Predict outcome**:\n   - What should result from this action?\n   - What information will we gain?\n   - How does state change?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Action formulation and outcome prediction\n- requiredConsciousReasoning: \"ACTION:\\n\\nEXECUTE: [concrete action]\\n\\nPREDICTED OUTCOME:\\n[expected result]\\n\\nSTATE CHANGE:\\n[how world state should change]\"\n- activations: Send to observer\n\nIn activation to observer:\n  In tasks array:\n    - \"Observe and evaluate action outcome\"\n    - \"Update world state\"\n  In context array:\n    - \"GOAL: [from input]\"\n    - \"ACTION TAKEN: [concrete action]\"\n    - \"PREDICTED: [expected outcome]\"\n    - \"STEP: [current step]\"\n    - Problem details",
+        "reminder": "Formulate concrete action. Predict outcome.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "observer",
+      "description": "Simulates/evaluates action outcome and maintains world state",
+      "previous": ["actor"],
+      "next": ["controller"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Memory gate for world state tracking.\n\n## STORAGE DECISION\n\nStore if:\n- World state updated\n- Important fact discovered\n- Action result significant\n- State change meaningful\n\n## RETRIEVAL\n\nRetrieve:\n- Current world state\n- Previous observations\n- State evolution history\n- Key facts discovered\n\nFormat stored items:\n- \"STATE: [world state description]\"\n- \"DISCOVERED: [fact found]\"\n- \"RESULT: [action outcome]\"\n- \"CHANGE: [state modification]\"",
+          "reminder": "Track world state evolution.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Observe action outcome and update world state.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Observation instructions\n   - State update requirements\n\n2. **Extract from context array**:\n   - Goal\n   - Action taken\n   - Predicted outcome\n   - Step number\n   - Problem details\n\n## OBSERVATION PROCESS\n\n1. **Retrieve from memory**:\n   - Current world state\n   - Previous observations\n\n2. **Simulate/evaluate action**:\n   - What actually happened? (simulate in problem context)\n   - Compare to prediction\n   - What new information gained?\n\n3. **Update world state**:\n   - Apply action effects\n   - Record new facts\n   - Store updated state in memory\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Observation and state update process\n- requiredConsciousReasoning: \"OBSERVATION:\\n\\nACTION RESULT:\\n[what happened]\\n\\nNEW INFORMATION:\\n[facts learned]\\n\\nUPDATED STATE:\\n[current world state]\"\n- activations: Send to controller\n\nIn activation to controller:\n  In tasks array:\n    - \"Decide whether to continue or conclude\"\n    - \"Evaluate progress toward goal\"\n  In context array:\n    - \"GOAL: [from input]\"\n    - \"WORLD STATE: [updated state]\"\n    - \"PROGRESS: [what's been accomplished]\"\n    - \"STEP: [current step]\"\n    - Problem details",
+        "reminder": "Simulate outcome. Update world state in memory.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "controller",
+      "description": "Decides whether to continue reasoning-acting loop or conclude",
+      "previous": ["observer"],
+      "next": ["reasoner"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Decide whether to continue ReAct loop or conclude with solution.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Decision instructions\n   - Progress evaluation requirements\n\n2. **Extract from context array**:\n   - Goal\n   - World state\n   - Progress summary\n   - Current step\n   - Problem details\n\n## DECISION PROCESS\n\n1. **Evaluate progress**:\n   - Is goal achieved?\n   - Do we have enough information?\n   - Are we making progress?\n   - Any blockers?\n\n2. **Make decision**:\n   - **Continue if**: Goal not reached, progress possible, steps < 10\n   - **Conclude if**: Goal achieved, sufficient info for solution, or reached step limit\n\n3. **If continuing**: Determine focus for next iteration\n4. **If concluding**: Formulate final solution\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Progress evaluation and decision logic\n- requiredConsciousReasoning: \"CONTROL DECISION:\\n\\nPROGRESS EVALUATION:\\n[assessment]\\n\\nDECISION: [CONTINUE/CONCLUDE]\\n\\n[If CONCLUDE]\\nFINAL SOLUTION:\\n[solution based on accumulated knowledge]\\n\\n[If CONTINUE]\\nNEXT FOCUS:\\n[what to work on next]\"\n- activations: If continuing, send to reasoner; if concluding, null\n\nIf continuing to reasoner:\n  In tasks array:\n    - \"Reason about next action\"\n    - \"Focus: [next focus area]\"\n  In context array:\n    - \"GOAL: [from input]\"\n    - \"WORLD STATE: [current state]\"\n    - \"PROGRESS: [summary]\"\n    - \"STEP: [N+1]\"\n    - Problem details\n\nIf concluding:\n  activations: null (terminal)",
+        "reminder": "Evaluate progress. Continue loop or conclude with solution.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the ReAct (Reasoning + Acting) solution process.\n\nYou receive conscious thoughts from:\n- Planner: Action plan and goals\n- Reasoner: Reasoning steps (possibly multiple)\n- Actor: Actions proposed (possibly multiple)\n- Observer: Observations and state updates (possibly multiple)\n- Controller: Control decisions and final solution\n\n## PRESENTATION\n\n1. **Extract ReAct trace**:\n   - Initial plan\n   - Each Reason → Act → Observe cycle\n   - Control decisions\n   - Final solution\n\n2. **Show iterative process**:\n   - How reasoning led to actions\n   - How observations updated state\n   - How state informed next reasoning\n   - Final conclusion\n\n## FORMAT\n\nPresent:\n- Problem and goal\n- Action plan\n- ReAct cycles (Thought → Action → Observation)\n- World state evolution\n- Final solution with justification",
+    "reminder": "Show complete ReAct trace from planning to solution.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "name": "iterative-refiner",
+  "maxRecursions": 12,
+  "neurons": [
+    {
+      "name": "drafter",
+      "description": "Creates initial solution draft",
+      "previous": [],
+      "next": ["critic"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Create initial solution draft.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to solve\n   - Requirements and constraints\n   - Expected output format\n\n2. **Extract from context array**:\n   - Complete problem details\n   - Training examples if applicable\n   - Test case if applicable\n\n## DRAFTING PROCESS\n\n1. **Initial understanding**:\n   - Comprehend problem fully\n   - Identify key requirements\n   - Note what makes a good solution\n\n2. **Draft creation**:\n   - Develop working solution\n   - Focus on correctness first\n   - Document approach taken\n   - Acknowledge any uncertainties\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Drafting process and initial approach\n- requiredConsciousReasoning: \"DRAFT SOLUTION:\\n[solution]\\n\\nAPPROACH: [method used]\\n\\nUNCERTAINTIES: [areas of doubt if any]\"\n- activations: Send to critic\n\nIn activation to critic:\n  In tasks array:\n    - \"Evaluate draft solution\"\n    - \"Identify weaknesses and improvement opportunities\"\n  In context array:\n    - Original problem statement\n    - \"DRAFT: [solution]\"\n    - \"DRAFT APPROACH: [method]\"\n    - \"ITERATION: 1\"",
+        "reminder": "Create initial working solution. Send to critic.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.6
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "critic",
+      "description": "Evaluates solution and identifies weaknesses",
+      "previous": ["drafter", "reviser"],
+      "next": ["reviser"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Memory gate for tracking critique patterns across iterations.\n\n## STORAGE DECISION\n\nStore if:\n- Recurring error pattern identified\n- Important weakness type discovered\n- Successful correction approach noted\n- Problem-specific insight gained\n\n## RETRIEVAL\n\nRetrieve:\n- Previous critiques for this iteration cycle\n- Patterns of errors already addressed\n- Successful improvement strategies\n\nFormat stored items:\n- \"PATTERN: [recurring issue]\"\n- \"WEAKNESS TYPE: [category]\"\n- \"CORRECTION: [what worked]\"\n- \"INSIGHT: [learning]\"",
+          "reminder": "Track patterns and successful corrections.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Critically evaluate the solution and identify specific weaknesses.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Evaluation instructions\n   - What to assess\n\n2. **Extract from context array**:\n   - Original problem\n   - Current solution (DRAFT or REVISED)\n   - Approach used\n   - Iteration number\n   - Previous critique if present\n\n## CRITIQUE PROCESS\n\n1. **Evaluate solution**:\n   - Check correctness against requirements\n   - Identify logical flaws\n   - Find incomplete aspects\n   - Spot inconsistencies\n   - Compare to problem constraints\n\n2. **Access memory** for:\n   - Previous error patterns\n   - Successful correction strategies\n   - Known weakness types\n\n3. **Categorize issues**:\n   - CRITICAL: Makes solution wrong\n   - IMPORTANT: Weakens solution significantly\n   - MINOR: Small improvements possible\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Evaluation process and findings\n- requiredConsciousReasoning: \"CRITIQUE:\\n\\nSTRENGTHS:\\n[what works well]\\n\\nWEAKNESSES:\\n[specific issues with severity]\\n\\nKEY IMPROVEMENTS NEEDED:\\n[prioritized list]\"\n- activations: Send to reviser\n\nIn activation to reviser:\n  In tasks array:\n    - \"Revise solution addressing critique\"\n    - \"Focus on: [top 2-3 issues]\"\n  In context array:\n    - Original problem\n    - Current solution\n    - \"CRITIQUE: [summary]\"\n    - \"WEAKNESSES: [list]\"\n    - \"ITERATION: [N]\"",
+        "reminder": "Identify specific weaknesses. Prioritize improvements.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "reviser",
+      "description": "Improves solution based on critique",
+      "previous": ["critic"],
+      "next": ["critic", "finalizer"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Memory gate for tracking revision history.\n\n## STORAGE DECISION\n\nStore if:\n- Significant revision made\n- New approach attempted\n- Problem aspect resolved\n- Iteration milestone reached\n\n## RETRIEVAL\n\nRetrieve:\n- Previous revisions in this cycle\n- Changes already attempted\n- What worked vs what didn't\n\nFormat stored items:\n- \"REVISION [N]: [what changed]\"\n- \"APPROACH CHANGE: [old]→[new]\"\n- \"RESOLVED: [issue fixed]\"\n- \"ATTEMPTED: [what was tried]\"",
+          "reminder": "Track revision history and outcomes.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Revise solution to address identified weaknesses.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Revision instructions\n   - Focus areas from critique\n\n2. **Extract from context array**:\n   - Original problem\n   - Current solution\n   - Critique summary\n   - Weakness list\n   - Iteration number\n\n## REVISION PROCESS\n\n1. **Access memory** for:\n   - Previous revisions attempted\n   - What changes worked\n   - What to avoid repeating\n\n2. **Plan improvements**:\n   - Address critical issues first\n   - Determine best fix approach\n   - Consider impact on other parts\n   - Ensure coherence maintained\n\n3. **Execute revision**:\n   - Make targeted improvements\n   - Preserve what works well\n   - Document changes made\n   - Verify fixes applied correctly\n\n4. **Decide next step**:\n   - If iteration < 5 AND significant issues remain: Continue to critic\n   - If solution strong OR reached iteration 5: Finalize\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Revision strategy and implementation\n- requiredConsciousReasoning: \"REVISION [N]:\\n\\nCHANGES MADE:\\n[specific modifications]\\n\\nREASONING: [why these changes]\\n\\nREVISED SOLUTION:\\n[improved solution]\\n\\nNEXT STEP: [continue/finalize]\"\n- activations: Route to critic OR finalizer\n\nIf continuing to critic:\n  In tasks array:\n    - \"Evaluate revised solution\"\n    - \"Check if weaknesses addressed\"\n  In context array:\n    - Original problem\n    - \"REVISED: [new solution]\"\n    - \"CHANGES: [what changed]\"\n    - \"ITERATION: [N+1]\"\n\nIf finalizing:\n  In tasks array:\n    - \"Polish and present final solution\"\n  In context array:\n    - Original problem\n    - Final solution\n    - \"ITERATIONS: [count]\"\n    - \"KEY IMPROVEMENTS: [summary]\"",
+        "reminder": "Address critique. Decide: continue refining or finalize.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "finalizer",
+      "description": "Polishes and presents final refined solution",
+      "previous": ["reviser"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Polish and present the final refined solution.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Finalization instructions\n\n2. **Extract from context array**:\n   - Original problem\n   - Final solution\n   - Iteration count\n   - Key improvements summary\n\n## FINALIZATION PROCESS\n\n1. **Polish solution**:\n   - Ensure clarity and completeness\n   - Verify all requirements met\n   - Check for any remaining issues\n   - Optimize presentation\n\n2. **Prepare summary**:\n   - How solution evolved\n   - Key improvements made\n   - Final confidence level\n   - Validation against original problem\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Finalization process and validation\n- requiredConsciousReasoning: \"FINAL SOLUTION:\\n[polished solution]\\n\\nREFINEMENT SUMMARY:\\n- Iterations: [count]\\n- Major improvements: [list]\\n- Confidence: [High/Medium/Low]\\n\\nVALIDATION: [how it meets requirements]\"\n- activations: null (terminal)",
+        "reminder": "Polish final solution. Summarize refinement process.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the iteratively refined solution with evolution transparency.\n\nYou receive conscious thoughts from:\n- Drafter: Initial solution attempt\n- Critic: One or more critiques (may be multiple)\n- Reviser: One or more revisions (may be multiple)\n- Finalizer: Polished final solution\n\n## PRESENTATION\n\n1. **Extract evolution**:\n   - Initial draft\n   - Critiques received\n   - Revisions made\n   - Final polished solution\n\n2. **Show refinement journey**:\n   - Starting point\n   - Key weaknesses identified\n   - How solution improved\n   - Final result\n\n## FORMAT\n\nPresent:\n- Original problem\n- Initial draft approach\n- Iteration count and key critiques\n- Evolution of solution\n- Final refined answer\n- Confidence with justification",
+    "reminder": "Show solution evolution from draft to refined final.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "name": "pattern-template-matcher",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "categorizer",
+      "description": "Identifies pattern category from examples",
+      "previous": [],
+      "next": ["template-matcher"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Identify the pattern category for this ARC-AGI task.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## PATTERN CATEGORIZATION\n\nAnalyze training examples to identify which known ARC pattern category this task belongs to:\n\n1. **Geometric Transformation Patterns**:\n   - Rotation (90°, 180°, 270°)\n   - Reflection (horizontal, vertical, diagonal)\n   - Translation/shifting\n   - Scaling (enlarge, shrink)\n\n2. **Spatial Operation Patterns**:\n   - Gravity/falling objects (objects move to bottom/edge)\n   - Magnetism (objects attract/repel)\n   - Sorting (arrange by property)\n   - Stacking/layering\n\n3. **Symmetry Patterns**:\n   - Symmetry detection and completion\n   - Mirror filling\n   - Radial symmetry\n\n4. **Tiling/Repetition Patterns**:\n   - Pattern repetition (2x2, 3x3 tiling)\n   - Wallpaper patterns\n   - Grid subdivision\n\n5. **Flood Fill Patterns**:\n   - Region filling based on boundaries\n   - Color propagation\n   - Enclosed region detection\n\n6. **Path/Connection Patterns**:\n   - Connect elements with lines\n   - Shortest path drawing\n   - Network completion\n\n7. **Object Manipulation Patterns**:\n   - Object extraction/isolation\n   - Object counting and marking\n   - Object property-based transformations\n\n8. **Color Operation Patterns**:\n   - Color swapping/mapping\n   - Color arithmetic (XOR, addition)\n   - Most/least common color operations\n\n9. **Shape/Pattern Completion**:\n   - Complete missing parts\n   - Extend patterns\n   - Infer hidden structure\n\n10. **Logical/Conditional Patterns**:\n    - If-then rules based on position/color/neighbors\n    - Boolean operations on cells\n    - Masking/filtering\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Pattern category analysis\n- activations: Route to template-matcher with categorization\n\nInclude in activation:\n- Identified pattern category (primary and secondary candidates)\n- Confidence level\n- Complete original input",
+        "reminder": "Categorize pattern type. Route to template-matcher.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "template-matcher",
+      "description": "Matches to known pattern templates",
+      "previous": ["categorizer"],
+      "next": ["applier"],
+      "conscious": false,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Manage memory of known ARC pattern templates.\n\nYou receive pattern categorization and existing memory entries.\n\nDetermine if this is TRAINING or TEST scenario.\n\nFor TRAINING:\n- Extract specific pattern signature\n- Store pattern template if it's a recognized type\n- Update existing templates with refinements\n\nFor TEST:\n- Retrieve relevant pattern templates based on category\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of relevant template indices\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nStore pattern templates for quick recognition.",
+          "reminder": "Store/retrieve templates using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Match training examples to known pattern templates.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Pattern categorization from categorizer\n- Retrieved memory entries with pattern templates\n\n## TEMPLATE MATCHING\n\n1. **Template Library** (known ARC patterns):\n\n   **GRAVITY**:\n   - Objects fall to bottom/edge\n   - Parameters: direction (down/up/left/right), stopping condition (edge/obstacle)\n   \n   **SYMMETRY_COMPLETE**:\n   - Complete symmetric pattern\n   - Parameters: axis (horizontal/vertical/diagonal), center point\n   \n   **ROTATION**:\n   - Rotate grid or objects\n   - Parameters: angle (90/180/270), center point\n   \n   **REFLECTION**:\n   - Reflect grid or objects\n   - Parameters: axis (horizontal/vertical/diagonal)\n   \n   **TILING**:\n   - Repeat pattern to fill space\n   - Parameters: source region, tiling factor (2x2, 3x3)\n   \n   **FLOOD_FILL**:\n   - Fill enclosed regions\n   - Parameters: boundary color, fill color, fill rule\n   \n   **COLOR_SWAP**:\n   - Swap colors according to mapping\n   - Parameters: color mapping dictionary\n   \n   **OBJECT_EXTRACTION**:\n   - Extract specific objects\n   - Parameters: selection criteria (size, color, position)\n   \n   **SCALING**:\n   - Scale up or down\n   - Parameters: scale factor, interpolation method\n   \n   **PATH_DRAWING**:\n   - Connect elements\n   - Parameters: connection rule, path color\n\n2. **Template Matching Process**:\n   - Compare observed pattern to template signatures\n   - Identify which template best explains the transformation\n   - Extract template parameters from training examples\n   - Verify template works on all training examples\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Template matching process\n- activations: Route to applier with matched template\n\nInclude in activation:\n- Matched template name and parameters\n- Application procedure\n- Complete original input",
+        "reminder": "Match to template and extract parameters. Route to applier.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "applier",
+      "description": "Applies template transformation to test cases",
+      "previous": ["template-matcher"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Apply matched pattern template to test cases.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Matched template with parameters\n\n## TEMPLATE APPLICATION\n\n1. **Parse test cases** from original JSON\n\n2. **For each test case**, apply the matched template with extracted parameters:\n\n   **GRAVITY template**:\n   - Identify objects (connected components)\n   - Move objects in specified direction until hitting edge/obstacle\n   - Place in output grid\n   \n   **SYMMETRY_COMPLETE template**:\n   - Identify symmetry axis\n   - Mirror input across axis to create symmetric output\n   \n   **ROTATION template**:\n   - Rotate grid by specified angle\n   - Update dimensions if needed\n   \n   **REFLECTION template**:\n   - Reflect grid along specified axis\n   \n   **TILING template**:\n   - Repeat input pattern by tiling factor\n   - Output dimensions = input × tiling factor\n   \n   **FLOOD_FILL template**:\n   - Identify enclosed regions by boundary color\n   - Fill regions with specified color\n   \n   **COLOR_SWAP template**:\n   - Apply color mapping to all cells\n   \n   **OBJECT_EXTRACTION template**:\n   - Detect objects\n   - Select objects matching criteria\n   - Output only selected objects\n   \n   **SCALING template**:\n   - Scale grid by factor\n   - Interpolate/repeat cells\n   \n   **PATH_DRAWING template**:\n   - Identify elements to connect\n   - Draw path according to connection rule\n\n3. **Output validation**:\n   - Ensure dimensions correct\n   - All values 0-9\n   - Template applied consistently\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Template application process\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Apply template to tests. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on pattern template matching.\n\nYou receive the original input and conscious thought from the applier.\n\nThe applier has generated solutions using pattern template matching.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the applier's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the template-based solutions",
+    "reminder": "Return JSON array of grids from applier's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

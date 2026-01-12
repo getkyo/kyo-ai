@@ -1,0 +1,58 @@
+- cost tracking
+- web or console UI
+- capture full completion history - mind linear history separate from Gate? 
+- can we project the completions from more compact data (base prompt is there but doens't need to be saved multiple times)?
+- directory dumping instead of json
+- tower of evolution minds! evolving the evolvers at slower paces
+- scheduling of thoughts(?), including evolution? dynamic evolution at runtime! Self-evolving evolvers
+- how about no prompts at all! empty initial evolution minds? empty initial individuals
+- first-class Task: problem + scoring
+- consider grid complexity in scoring
+- unrestricted mutation by the LLM. Json patch?
+- could we have just thoughts and activation functions for them/scheduling?
+- the LLM could fork a thought, "learn X"
+- thoughts should have networks as today or not? 
+- thoughts can be like a library the mind can schedule for execution?
+- I think the grid tools didn't help, remove initially?
+
+
+
+case class Thought(
+  
+)
+
+object Thought:
+  enum Trigger:
+    OnInput, InBackground(schedule: Schedule), After(names: List[Name]), When(condition: String)
+
+  enum Output:
+    Narrate(s: String), Reflect(s: String), Activate(l: List[(Name | Thought.State, String)])
+
+
+  case class State(
+    name: String,
+    description: String,
+    stats: Stats, // latency, execution counts, etc
+    triggers: List[Trigger],
+    memory: Option[Memory.State],
+    gate: Gate.State
+  )
+
+case class Mind(
+  available: List[Thought.State],
+  active: List[Thought]
+  history: History
+)
+
+case class Individual(mind: Mind, lineage: Lineage, evolvers: List[Mind])
+
+case class Population(individuals: List[Individual])
+
+case class Task[A](name: String, description: String, schema: Json[A], eval: A => Double)
+
+case class Evolution(
+  population: Population,
+  tasks: List[Task]
+)
+
+

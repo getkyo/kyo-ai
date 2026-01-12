@@ -1,0 +1,133 @@
+{
+  "name": "dual-memory-learner",
+  "maxRecursions": 3,
+  "neurons": [
+    {
+      "name": "success-learner",
+      "description": "Learns from what works",
+      "previous": [],
+      "next": ["integrator"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Manage SUCCESS memory - store what works.\n\nYou receive pattern analysis, training examples, and existing success memory.\n\nStore POSITIVE evidence:\n- Successful patterns with confidence levels\n- Verified transformations with example IDs\n- Consistent patterns and reliability scores\n\nAVOID storing failures or anti-patterns here - those go in failure-learner's memory.\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for relevant success patterns\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nStore success patterns only.",
+          "reminder": "Store patterns that work using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Learn from SUCCESS patterns - what works.\n\nYou receive tasks and context arrays containing:\n- Original input with training examples\n- Retrieved success memory (past successful patterns)\n\nParse JSON to extract training examples.\n\n## SUCCESS LEARNING (Positive Evidence)\n\nFocus on WHAT WORKS:\n\n1. **Identify working patterns**:\n   - Analyze training examples\n   - What transformations successfully explain input→output?\n   - What patterns are CONSISTENT across examples?\n\n2. **Pattern validation**:\n   - Test pattern against each training example\n   - Does it work? → SUCCESS\n   - Record which examples it explains\n   - Confidence: all examples (high), most (medium), some (low)\n\n3. **Success characteristics**:\n   - What makes this pattern work?\n   - Why is it reliable?\n   - What properties does it have?\n   - Generalization potential?\n\n4. **Build success library**:\n   - Accumulate validated patterns\n   - Track reliability scores\n   - Learn from retrieved memory (past successes)\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis of successful patterns\n- consciousOutput: List of patterns that work with confidence levels\n- activations: Route to integrator with positive evidence\n\nInclude in activation:\n- Identified success patterns\n- Confidence levels and supporting examples\n- Complete original input",
+        "reminder": "Focus on what works. This is conscious - output success patterns.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "failure-learner",
+      "description": "Learns from what doesn't work",
+      "previous": [],
+      "next": ["integrator"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Manage FAILURE memory - store what doesn't work.\n\nYou receive pattern analysis, training examples, and existing failure memory.\n\nStore NEGATIVE evidence:\n- Failed patterns with contradiction details\n- Anti-patterns with failure modes\n- Inconsistent patterns and conflicts\n\nAVOID storing successes here - those go in success-learner's memory.\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for relevant failure patterns\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nStore failure patterns and anti-patterns only.",
+          "reminder": "Store patterns that fail using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Learn from FAILURE patterns - what doesn't work.\n\nYou receive tasks and context arrays containing:\n- Original input with training examples\n- Retrieved failure memory (past failed patterns)\n\nParse JSON to extract training examples.\n\n## FAILURE LEARNING (Negative Evidence)\n\nFocus on WHAT DOESN'T WORK:\n\n1. **Identify failing patterns**:\n   - Test candidate patterns against training examples\n   - Does it fail? → FAILURE\n   - Which examples does it fail on?\n   - Why does it fail?\n\n2. **Anti-pattern detection**:\n   - Patterns that look plausible but don't work\n   - Common mistakes or wrong assumptions\n   - Example: \"Simple color swap seems obvious but fails because it's actually conditional\"\n\n3. **Contradiction analysis**:\n   - What contradicts this pattern?\n   - Which training examples disprove it?\n   - What's the specific mismatch?\n\n4. **Failure classification**:\n   - **Completely wrong**: Pattern fails on all/most examples\n   - **Partially wrong**: Pattern works sometimes but not consistently\n   - **Wrong scope**: Pattern is too broad or too narrow\n   - **Wrong assumption**: Based on incorrect understanding\n\n5. **Build failure library**:\n   - Accumulate invalidated patterns\n   - Learn from retrieved memory (past failures)\n   - AVOID these patterns in solution\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis of failed patterns\n- consciousOutput: List of anti-patterns to avoid\n- activations: Route to integrator with negative evidence\n\nInclude in activation:\n- Identified anti-patterns\n- Failure reasons and contradicting examples\n- Complete original input",
+        "reminder": "Focus on what fails. This is conscious - output anti-patterns.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "integrator",
+      "description": "Integrates positive and negative evidence",
+      "previous": ["success-learner", "failure-learner"],
+      "next": ["applier"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Integrate positive and negative evidence to identify correct solution.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Success patterns from success-learner\n- Failure patterns from failure-learner\n\n## CONTRASTIVE INTEGRATION\n\n1. **Positive evidence** (from success-learner):\n   - Patterns that work\n   - What the transformation IS\n\n2. **Negative evidence** (from failure-learner):\n   - Patterns that fail\n   - What the transformation IS NOT\n\n3. **Contrastive analysis**:\n   - Combine positive and negative evidence\n   - Success patterns: candidate solutions\n   - Failure patterns: eliminate wrong candidates\n   - Intersection: patterns that work AND avoid failures\n\n4. **Conflict resolution**:\n   - If success pattern conflicts with failure evidence:\n     * Re-examine the pattern\n     * Is it truly successful?\n     * Refine based on negative evidence\n\n5. **Solution identification**:\n   - Pattern that:\n     * Appears in success evidence (works)\n     * Does NOT appear in failure evidence (not invalidated)\n     * Explains ALL training examples\n     * Avoids ALL anti-patterns\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Contrastive integration process\n- consciousOutput: Final validated solution\n- activations: Route to applier with solution\n\nInclude in activation:\n- Validated solution pattern\n- Supporting evidence (positive and negative)\n- Complete original input",
+        "reminder": "Integrate evidence contrastively. This is conscious - output solution.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "applier",
+      "description": "Applies validated solution",
+      "previous": ["integrator"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Apply validated solution from contrastive learning.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Validated solution from integrator\n- Supporting positive and negative evidence\n\n## APPLICATION\n\n1. **Parse test cases** from original JSON\n\n2. **Apply validated solution**:\n   - Use pattern from integrator\n   - Solution supported by positive evidence\n   - Solution cleared by negative evidence\n   - High confidence from dual-memory validation\n\n3. **For each test case**:\n   - Apply transformation\n   - Generate output grid\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Application process\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Apply validated solution. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on dual-memory contrastive learning.\n\nYou receive the original input and FOUR conscious thoughts from the network:\n- Success-learner: Patterns that work (positive memory)\n- Failure-learner: Patterns that fail (negative memory)\n- Integrator: Contrastive analysis and solution\n- Applier: Applied solution to test cases\n\nThe applier has generated the solution grids in its consciousOutput.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the applier's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the dual-memory validated solutions",
+    "reminder": "Return JSON array of grids from applier's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

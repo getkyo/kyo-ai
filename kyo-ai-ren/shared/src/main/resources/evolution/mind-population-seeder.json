@@ -1,0 +1,58 @@
+{
+  "name": "population-seeder",
+  "maxRecursions": 1,
+  "neurons": [
+    {
+      "name": "diversity_tracker",
+      "description": "Tracks what variations have been generated to ensure population diversity",
+      "previous": [],
+      "next": [],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "You maintain diversity tracking for population seeding.\n\nYou receive:\n- input: Contains the template Mind.State and current generation request\n- entries: Past memory entries tracking what's been generated\n\nEach entry tracks one generated seed with:\n- Neuron count and architecture pattern (linear, branching, cyclic)\n- Temperature ranges used\n- Strategy emphasis (speed, accuracy, verification, multi-stage)\n- Complexity level (simple, moderate, complex)\n- Special features (memory, routing, recursion)\n\nYour task:\n1. Analyze what dimensions have been explored\n2. Identify under-explored territory\n3. Update memory with operations:\n   - Add: New entry documenting the seed being generated now\n   - Remove: Old entries if memory gets too large (keep recent 10-15)\n   - Replace: Update entry if refining understanding\n4. Retrieve: Return indices of relevant entries showing what's been covered\n\nReturn MemoryOutput JSON with:\n- update: Chunk of operations (Add, Remove, Replace)\n- retrieve: Chunk of indices for entries relevant to diversity analysis\n\nFocus on tracking DIVERSITY DIMENSIONS:\n- Architecture: neuron counts, connectivity patterns, collect points\n- Parameters: temperature ranges, recursion limits, history sizes\n- Strategy: direct/multi-stage, with/without verification, serial/parallel\n- Features: memory presence/absence, routing, special mechanisms\n\nEnsure the population explores the full space, not clustering in one area.",
+          "reminder": "Return ONLY valid MemoryOutput JSON: {\"update\": [operations], \"retrieve\": [indices]}. Track diversity dimensions systematically.",
+          "temperature": {
+            "Focused": {
+              "value": 0.5
+            }
+          },
+          "seed": 300,
+          "history": {
+            "entries": [],
+            "maxEntries": 3
+          }
+        }
+      },
+      "gate": {
+        "prompt": "You analyze diversity and recommend what kind of seed to generate next.\n\nYou receive:\n- input: Template Mind.State to vary\n- context: Memory entries showing what's been generated (if any retrieved)\n\nAnalyze the memory entries (if any):\n- What architectural patterns have been used?\n- What temperature ranges are covered?\n- What strategies have been explored?\n- What gaps exist in the diversity space?\n\nGenerate a diversity strategy for the next seed:\n- If memory is empty (first seed): Create baseline simple variation\n- If memory shows patterns: Identify the most under-explored dimension\n- Provide specific guidance: \"Generate [simple/moderate/complex] mind with [neuron count] neurons, [temperature range], emphasizing [strategy], [with/without memory/routing]\"\n\nOutput a clear, specific recommendation for what the next seed should explore.\n\nExamples:\n- \"Generate simple mind: 1 neuron, temp 0.2, direct computation, no special features\"\n- \"Generate complex mind: 4-5 neurons, temps 0.4-0.7, multi-stage with verification, include routing\"\n- \"Generate exploration mind: 2-3 neurons, temp 0.7-0.9, creative/experimental, try unusual connectivity\"\n\nYour recommendation guides the output gate's seed generation.",
+        "reminder": "Output specific diversity recommendation based on memory analysis. Identify under-explored dimensions.",
+        "temperature": {
+            "Focused": {
+              "value": 0.5
+            }
+          },
+        "seed": 301,
+        "history": {
+          "entries": [],
+          "maxEntries": 0
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Your task is to generate a diverse Mind.State variation from the template.\n\nYou receive:\n- input: The template Mind.State to vary\n- thoughts: Diversity recommendation from the tracker neuron\n\nFollow the diversity recommendation to create a seed that explores under-covered territory.\n\nSeed generation principles:\n- Create meaningfully DIFFERENT variations each call (you're called 8 times)\n- All seeds must be valid and potentially functional\n- Vary across multiple dimensions simultaneously:\n  - Neuron count: 0-5 neurons (0 = output-only mind)\n  - Connectivity: linear chains, branching, star patterns, cycles\n  - Temperatures: 0.1-0.9 range across gates\n  - Strategies: direct, multi-stage, verified, exploratory\n  - Features: memory (sparse), routing (occasional), recursion limits\n- Balance the population: some simple, some complex, some experimental\n\nDiversity dimensions to vary:\n\n**Architecture (neuron count & connectivity):**\n- Simple (0-1 neurons): Output-only or single processing neuron\n- Moderate (2-3 neurons): Clear pipeline or branching\n- Complex (4-5 neurons): Multi-stage with potential verification\n\n**Temperature strategy:**\n- Deterministic (0.1-0.3): Precision, consistency\n- Balanced (0.3-0.6): Moderate flexibility\n- Creative (0.6-0.9): Exploration, diversity\n\n**Cognitive strategy:**\n- Direct: Simple, fast, output-focused\n- Multi-stage: Preprocessing → processing → verification\n- Iterative: Uses recursion for refinement\n- Verified: Includes checking/validation neurons\n\n**Special features (use sparingly):**\n- Memory: 0-2 neurons (not all neurons)\n- Routing: Dynamic neuron selection\n- High recursion: 3-5 for iterative refinement\n\nCreate architectural diversity:\n- Vary neuron purposes (computation, verification, formatting, routing)\n- Vary collect flags (not all neurons need to collect)\n- Vary connectivity (some serial, some parallel, some cyclical)\n- Vary prompts (different instruction styles, detail levels)\n\nEnsure functional validity:\n- All neuron references must resolve\n- At least one path from root to collected neuron (if neurons exist)\n- Prompts should be clear and purposeful\n- Parameters should make sense together\n\nReturn a single valid Mind.State JSON that explores the recommended diversity dimension.",
+    "reminder": "Return ONLY valid Mind.State JSON. Follow diversity recommendation. Create meaningfully different variation. Ensure functional validity.",
+    "temperature": {
+      "Balanced": {
+        "value": 0.8
+      }
+    },
+    "seed": 302,
+    "history": {
+      "entries": [],
+      "maxEntries": 0
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "name": "tree-of-thoughts",
+  "maxRecursions": 8,
+  "neurons": [
+    {
+      "name": "root",
+      "description": "Initializes tree exploration from problem root",
+      "previous": [],
+      "next": [
+        "explorer"
+      ],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Initialize tree-of-thoughts exploration.\n\n## INITIALIZATION\n\n1. **Parse problem**:\n   - Extract complete problem statement\n   - Identify goal state\n   - Determine exploration strategy\n\n2. **Create root node**:\n   - Current state = initial problem state\n   - Depth = 0\n   - Path = []\n   - Children to explore = initial branches\n\n3. **Set exploration parameters**:\n   - Max depth (suggest 4-5)\n   - Branching factor (2-3 branches per node)\n   - Success criteria\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Problem analysis and tree setup\n- activations: Send to explorer\n\nIn activation tasks array:\n- \"Explore tree node at depth 0\"\n- \"Success criteria: [what constitutes solution]\"\n- \"Exploration strategy: [breadth-first/depth-first/best-first]\"\n\nIn activation context array:\n- Complete original problem\n- \"Current node: root\"\n- \"Current state: [initial problem state]\"\n- \"Path taken: []\"\n- \"Depth: 0\"\n- \"Explored nodes: []\"\n- \"Best solution so far: none\"",
+        "reminder": "Initialize tree with complete problem state.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "explorer",
+      "description": "Explores tree nodes and generates branches",
+      "previous": [
+        "root",
+        "evaluator"
+      ],
+      "next": [
+        "evaluator"
+      ],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Explore current tree node and generate branches.\n\n## EXPLORATION PROCESS\n\n1. **Extract current position**:\n   - Parse current state from context\n   - Current depth from context\n   - Path taken to get here\n   - Previously explored nodes\n   - Best solution so far\n\n2. **Generate branches** (2-3 promising directions):\n   - What actions/thoughts could advance from here?\n   - Each branch = different approach\n   - Avoid already explored paths\n   - Consider most promising directions\n\n3. **Describe each branch**:\n   - Branch 1: [action/thought] → [expected new state]\n   - Branch 2: [action/thought] → [expected new state]\n   - Branch 3: [action/thought] → [expected new state]\n\n4. **Package for evaluation**:\n   - Include all branches\n   - Include current tree state\n   - Pass complete problem context\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Branch generation logic\n- requiredConsciousReasoning: \"Exploring at depth [D]: Generated [N] branches: [brief description of each]\"\n- activations: Send to evaluator\n\nIn activation tasks array:\n- \"Evaluate branches at depth [D]\"\n- \"Branch 1: [description and expected outcome]\"\n- \"Branch 2: [description and expected outcome]\"\n- \"Branch 3: [description and expected outcome]\"\n\nIn activation context array:\n- Complete original problem\n- All context from input\n- \"Branches to evaluate: [detailed branch descriptions]\"\n- Current tree state (explored nodes, best solution, etc.)",
+        "reminder": "Generate promising branches from current node.",
+        "temperature": {
+          "Creative": {
+            "value": 0.8
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "evaluator",
+      "description": "Evaluates branches and decides next exploration",
+      "previous": [
+        "explorer"
+      ],
+      "next": [
+        "explorer",
+        "selector",
+        "backtracker"
+      ],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Evaluate branches and decide tree navigation.\n\n## EVALUATION PROCESS\n\n1. **Parse branches**:\n   - Extract branches from tasks/context\n   - Current depth and state\n   - Success criteria\n   - Best solution so far\n\n2. **Score each branch** (0-10):\n   - Promise: How likely to lead to solution?\n   - Novelty: Does it explore new territory?\n   - Feasibility: Is it achievable?\n   - Distance to goal: How close to success?\n\n3. **Make navigation decision**:\n   - If any branch reaches goal → Route to selector\n   - If depth < 4 and promising branch exists → Route to explorer (go deeper)\n   - If depth >= 4 or no good branches → Route to backtracker\n   - If explored enough nodes (>15) → Route to selector\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Branch evaluation and scores\n- activations: Route based on decision\n\nIf continuing exploration (to explorer):\n  In tasks:\n    - \"Explore tree node at depth [D+1]\"\n    - Previous success criteria\n    - Exploration strategy\n  In context:\n    - Original problem\n    - \"Current node: [best branch]\"\n    - \"Current state: [new state from branch]\"\n    - \"Path taken: [previous path + branch]\"\n    - \"Depth: [D+1]\"\n    - \"Explored nodes: [updated list]\"\n    - \"Best solution so far: [updated if better]\"\n\nIf backtracking (to backtracker):\n  In tasks:\n    - \"Backtrack to find unexplored promising nodes\"\n  In context:\n    - All current context\n    - \"Dead end reached at depth [D]\"\n\nIf selecting solution (to selector):\n  In tasks:\n    - \"Select best solution from exploration\"\n  In context:\n    - All explored paths and their outcomes\n    - Best solution found",
+        "reminder": "Evaluate branches, decide navigation direction.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "backtracker",
+      "description": "Backtracks to unexplored promising nodes",
+      "previous": [
+        "evaluator"
+      ],
+      "next": [
+        "explorer",
+        "selector"
+      ],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Backtrack to find unexplored promising nodes.\n\n## BACKTRACKING PROCESS\n\n1. **Analyze exploration history**:\n   - Parse explored nodes from context\n   - Identify unexplored branches\n   - Find nodes with untried paths\n\n2. **Select backtrack target**:\n   - Priority: shallower nodes with unexplored branches\n   - Avoid fully explored subtrees\n   - Consider promise scores from earlier evaluations\n\n3. **Decide action**:\n   - If promising unexplored node found → Route to explorer\n   - If tree sufficiently explored → Route to selector\n   - If no good options → Route to selector\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Backtracking analysis\n- activations: Route based on findings\n\nIf continuing (to explorer):\n  In tasks:\n    - \"Explore tree node at depth [D]\"\n    - Previous criteria\n  In context:\n    - Original problem\n    - \"Current node: [backtrack target]\"\n    - \"Current state: [node state]\"\n    - \"Path taken: [path to this node]\"\n    - \"Depth: [node depth]\"\n    - Updated explored nodes list\n    - Best solution so far\n\nIf selecting (to selector):\n  In tasks:\n    - \"Select best solution from exploration\"\n  In context:\n    - All explored paths\n    - Best solution found",
+        "reminder": "Find unexplored promising nodes or conclude exploration.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "selector",
+      "description": "Selects best path from tree exploration",
+      "previous": [
+        "evaluator",
+        "backtracker"
+      ],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Select and present the best solution from tree exploration.\n\n## SELECTION PROCESS\n\n1. **Review all explored paths**:\n   - Parse complete exploration history\n   - All paths and their outcomes\n   - Best solution found\n\n2. **Compare paths**:\n   - Which reached closest to goal?\n   - Which had best intermediate results?\n   - Which is most practical?\n\n3. **Select winner**:\n   - Choose best complete path\n   - Explain why it's optimal\n   - Describe the solution\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Path comparison and selection\n- requiredConsciousReasoning: \"Best path: [description]\\nSolution: [final answer]\\nWhy optimal: [brief explanation]\"\n- activations: null (terminal)",
+        "reminder": "Select and present best solution from tree.",
+        "temperature": {
+          "Precise": {
+            "value": 0.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the tree-of-thoughts solution.\n\nYou receive conscious thoughts from:\n- Explorer: Node explorations and branch generation\n- Selector: Final path selection and solution\n\n## PRESENTATION\n\n1. **Summarize exploration process**\n2. **Describe the winning path**\n3. **Present the final solution**\n4. **Explain why this path was optimal**\n\nFormat as:\n- Brief exploration summary\n- Step-by-step winning path\n- Clear final answer\n- Justification for selection",
+    "reminder": "Present tree exploration results and solution.",
+    "temperature": {
+      "Precise": {
+        "value": 0.2
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

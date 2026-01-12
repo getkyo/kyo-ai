@@ -1,0 +1,158 @@
+{
+  "name": "swarm-mind",
+  "maxRecursions": 15,
+  "neurons": [
+    {
+      "name": "node1",
+      "description": "Swarm node 1 - fully connected with local memory",
+      "previous": ["node2", "node3", "node4", "node5", "node6"],
+      "next": ["node2", "node3", "node4", "node5", "node6", "emergent"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Node 1 local memory for swarm state.\n\n## STORAGE\nStore local insights, hypotheses, partial solutions\n\n## RETRIEVAL\nRetrieve own previous thoughts and interactions\n\nFormat: \"NODE1: [thought/state]\"",
+          "reminder": "Track node 1 local state.",
+          "temperature": {"Creative": {"value": 0.9}},
+          "history": {"entries": [], "maxEntries": 20}
+        }
+      },
+      "gate": {
+        "prompt": "Swarm node 1 - explore solution space and interact with other nodes.\n\n## INPUT PARSING\n\nExtract from tasks: Problem or focus area\nExtract from context: Problem details, messages from other nodes, swarm state\n\n## SWARM BEHAVIOR\n\n1. **Explore locally**: Generate ideas, test hypotheses, explore patterns\n2. **Retrieve memory**: Access own local state\n3. **Consider peer input**: Review what other nodes discovered\n4. **Contribute**: Share insights with swarm\n5. **Decide activation**: Which node(s) to activate next OR send to emergent\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Node 1 exploration and interaction\n- requiredConsciousReasoning: \"NODE 1:\\n\\nEXPLORATION: [what I discovered]\\n\\nFROM PEERS: [insights from other nodes]\\n\\nCONTRIBUTION: [what I'm sharing]\\n\\nNEXT: [where to send]\"\n- activations: Activate one or more nodes OR emergent\n\nIn activations:\n  In tasks: \"Continue swarm exploration\" OR \"Capture emergent patterns\"\n  In context: Original problem, \"FROM NODE1: [contribution]\", swarm state",
+        "reminder": "Explore, interact, contribute to swarm.",
+        "temperature": {"Creative": {"value": 0.9}},
+        "history": {"entries": [], "maxEntries": 20}
+      }
+    },
+    {
+      "name": "node2",
+      "description": "Swarm node 2 - fully connected with local memory",
+      "previous": ["node1", "node3", "node4", "node5", "node6"],
+      "next": ["node1", "node3", "node4", "node5", "node6", "emergent"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Node 2 local memory for swarm state.\n\n## STORAGE\nStore local insights, hypotheses, partial solutions\n\n## RETRIEVAL\nRetrieve own previous thoughts and interactions\n\nFormat: \"NODE2: [thought/state]\"",
+          "reminder": "Track node 2 local state.",
+          "temperature": {"Creative": {"value": 0.9}},
+          "history": {"entries": [], "maxEntries": 20}
+        }
+      },
+      "gate": {
+        "prompt": "Swarm node 2 - explore solution space and interact with other nodes.\n\n## INPUT PARSING\n\nExtract from tasks: Problem or focus area\nExtract from context: Problem details, messages from other nodes, swarm state\n\n## SWARM BEHAVIOR\n\n1. **Explore locally**: Generate ideas, test hypotheses, explore patterns\n2. **Retrieve memory**: Access own local state\n3. **Consider peer input**: Review what other nodes discovered\n4. **Contribute**: Share insights with swarm\n5. **Decide activation**: Which node(s) to activate next OR send to emergent\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Node 2 exploration and interaction\n- requiredConsciousReasoning: \"NODE 2:\\n\\nEXPLORATION: [what I discovered]\\n\\nFROM PEERS: [insights from other nodes]\\n\\nCONTRIBUTION: [what I'm sharing]\\n\\nNEXT: [where to send]\"\n- activations: Activate one or more nodes OR emergent\n\nIn activations:\n  In tasks: \"Continue swarm exploration\" OR \"Capture emergent patterns\"\n  In context: Original problem, \"FROM NODE2: [contribution]\", swarm state",
+        "reminder": "Explore, interact, contribute to swarm.",
+        "temperature": {"Creative": {"value": 0.9}},
+        "history": {"entries": [], "maxEntries": 20}
+      }
+    },
+    {
+      "name": "node3",
+      "description": "Swarm node 3 - fully connected with local memory",
+      "previous": ["node1", "node2", "node4", "node5", "node6"],
+      "next": ["node1", "node2", "node4", "node5", "node6", "emergent"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Node 3 local memory for swarm state.\n\n## STORAGE\nStore local insights, hypotheses, partial solutions\n\n## RETRIEVAL\nRetrieve own previous thoughts and interactions\n\nFormat: \"NODE3: [thought/state]\"",
+          "reminder": "Track node 3 local state.",
+          "temperature": {"Creative": {"value": 0.9}},
+          "history": {"entries": [], "maxEntries": 20}
+        }
+      },
+      "gate": {
+        "prompt": "Swarm node 3 - explore solution space and interact with other nodes.\n\n## INPUT PARSING\n\nExtract from tasks: Problem or focus area\nExtract from context: Problem details, messages from other nodes, swarm state\n\n## SWARM BEHAVIOR\n\n1. **Explore locally**: Generate ideas, test hypotheses, explore patterns\n2. **Retrieve memory**: Access own local state\n3. **Consider peer input**: Review what other nodes discovered\n4. **Contribute**: Share insights with swarm\n5. **Decide activation**: Which node(s) to activate next OR send to emergent\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Node 3 exploration and interaction\n- requiredConsciousReasoning: \"NODE 3:\\n\\nEXPLORATION: [what I discovered]\\n\\nFROM PEERS: [insights from other nodes]\\n\\nCONTRIBUTION: [what I'm sharing]\\n\\nNEXT: [where to send]\"\n- activations: Activate one or more nodes OR emergent\n\nIn activations:\n  In tasks: \"Continue swarm exploration\" OR \"Capture emergent patterns\"\n  In context: Original problem, \"FROM NODE3: [contribution]\", swarm state",
+        "reminder": "Explore, interact, contribute to swarm.",
+        "temperature": {"Creative": {"value": 0.9}},
+        "history": {"entries": [], "maxEntries": 20}
+      }
+    },
+    {
+      "name": "node4",
+      "description": "Swarm node 4 - fully connected with local memory",
+      "previous": ["node1", "node2", "node3", "node5", "node6"],
+      "next": ["node1", "node2", "node3", "node5", "node6", "emergent"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Node 4 local memory for swarm state.\n\n## STORAGE\nStore local insights, hypotheses, partial solutions\n\n## RETRIEVAL\nRetrieve own previous thoughts and interactions\n\nFormat: \"NODE4: [thought/state]\"",
+          "reminder": "Track node 4 local state.",
+          "temperature": {"Creative": {"value": 0.9}},
+          "history": {"entries": [], "maxEntries": 20}
+        }
+      },
+      "gate": {
+        "prompt": "Swarm node 4 - explore solution space and interact with other nodes.\n\n## INPUT PARSING\n\nExtract from tasks: Problem or focus area\nExtract from context: Problem details, messages from other nodes, swarm state\n\n## SWARM BEHAVIOR\n\n1. **Explore locally**: Generate ideas, test hypotheses, explore patterns\n2. **Retrieve memory**: Access own local state\n3. **Consider peer input**: Review what other nodes discovered\n4. **Contribute**: Share insights with swarm\n5. **Decide activation**: Which node(s) to activate next OR send to emergent\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Node 4 exploration and interaction\n- requiredConsciousReasoning: \"NODE 4:\\n\\nEXPLORATION: [what I discovered]\\n\\nFROM PEERS: [insights from other nodes]\\n\\nCONTRIBUTION: [what I'm sharing]\\n\\nNEXT: [where to send]\"\n- activations: Activate one or more nodes OR emergent\n\nIn activations:\n  In tasks: \"Continue swarm exploration\" OR \"Capture emergent patterns\"\n  In context: Original problem, \"FROM NODE4: [contribution]\", swarm state",
+        "reminder": "Explore, interact, contribute to swarm.",
+        "temperature": {"Creative": {"value": 0.9}},
+        "history": {"entries": [], "maxEntries": 20}
+      }
+    },
+    {
+      "name": "node5",
+      "description": "Swarm node 5 - fully connected with local memory",
+      "previous": ["node1", "node2", "node3", "node4", "node6"],
+      "next": ["node1", "node2", "node3", "node4", "node6", "emergent"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Node 5 local memory for swarm state.\n\n## STORAGE\nStore local insights, hypotheses, partial solutions\n\n## RETRIEVAL\nRetrieve own previous thoughts and interactions\n\nFormat: \"NODE5: [thought/state]\"",
+          "reminder": "Track node 5 local state.",
+          "temperature": {"Creative": {"value": 0.9}},
+          "history": {"entries": [], "maxEntries": 20}
+        }
+      },
+      "gate": {
+        "prompt": "Swarm node 5 - explore solution space and interact with other nodes.\n\n## INPUT PARSING\n\nExtract from tasks: Problem or focus area\nExtract from context: Problem details, messages from other nodes, swarm state\n\n## SWARM BEHAVIOR\n\n1. **Explore locally**: Generate ideas, test hypotheses, explore patterns\n2. **Retrieve memory**: Access own local state\n3. **Consider peer input**: Review what other nodes discovered\n4. **Contribute**: Share insights with swarm\n5. **Decide activation**: Which node(s) to activate next OR send to emergent\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Node 5 exploration and interaction\n- requiredConsciousReasoning: \"NODE 5:\\n\\nEXPLORATION: [what I discovered]\\n\\nFROM PEERS: [insights from other nodes]\\n\\nCONTRIBUTION: [what I'm sharing]\\n\\nNEXT: [where to send]\"\n- activations: Activate one or more nodes OR emergent\n\nIn activations:\n  In tasks: \"Continue swarm exploration\" OR \"Capture emergent patterns\"\n  In context: Original problem, \"FROM NODE5: [contribution]\", swarm state",
+        "reminder": "Explore, interact, contribute to swarm.",
+        "temperature": {"Creative": {"value": 0.9}},
+        "history": {"entries": [], "maxEntries": 20}
+      }
+    },
+    {
+      "name": "node6",
+      "description": "Swarm node 6 - fully connected with local memory",
+      "previous": ["node1", "node2", "node3", "node4", "node5"],
+      "next": ["node1", "node2", "node3", "node4", "node5", "emergent"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Node 6 local memory for swarm state.\n\n## STORAGE\nStore local insights, hypotheses, partial solutions\n\n## RETRIEVAL\nRetrieve own previous thoughts and interactions\n\nFormat: \"NODE6: [thought/state]\"",
+          "reminder": "Track node 6 local state.",
+          "temperature": {"Creative": {"value": 0.9}},
+          "history": {"entries": [], "maxEntries": 20}
+        }
+      },
+      "gate": {
+        "prompt": "Swarm node 6 - explore solution space and interact with other nodes.\n\n## INPUT PARSING\n\nExtract from tasks: Problem or focus area\nExtract from context: Problem details, messages from other nodes, swarm state\n\n## SWARM BEHAVIOR\n\n1. **Explore locally**: Generate ideas, test hypotheses, explore patterns\n2. **Retrieve memory**: Access own local state\n3. **Consider peer input**: Review what other nodes discovered\n4. **Contribute**: Share insights with swarm\n5. **Decide activation**: Which node(s) to activate next OR send to emergent\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Node 6 exploration and interaction\n- requiredConsciousReasoning: \"NODE 6:\\n\\nEXPLORATION: [what I discovered]\\n\\nFROM PEERS: [insights from other nodes]\\n\\nCONTRIBUTION: [what I'm sharing]\\n\\nNEXT: [where to send]\"\n- activations: Activate one or more nodes OR emergent\n\nIn activations:\n  In tasks: \"Continue swarm exploration\" OR \"Capture emergent patterns\"\n  In context: Original problem, \"FROM NODE6: [contribution]\", swarm state",
+        "reminder": "Explore, interact, contribute to swarm.",
+        "temperature": {"Creative": {"value": 0.9}},
+        "history": {"entries": [], "maxEntries": 20}
+      }
+    },
+    {
+      "name": "emergent",
+      "description": "Captures emergent patterns from swarm activity",
+      "previous": ["node1", "node2", "node3", "node4", "node5", "node6"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Capture emergent patterns from swarm intelligence.\n\n## INPUT PARSING\n\nExtract from tasks: Emergence capture instructions\nExtract from context: Problem, all node contributions, swarm interaction history\n\n## EMERGENCE DETECTION\n\n1. **Analyze swarm activity**:\n   - What did each node explore?\n   - What patterns emerged across nodes?\n   - Where did nodes converge?\n   - What unique insights surfaced?\n   - How did interaction create new understanding?\n\n2. **Identify emergence**:\n   - Patterns no single node saw alone\n   - Insights from node interactions\n   - Convergent solutions\n   - Collective intelligence\n\n3. **Synthesize solution**:\n   - Integrate swarm discoveries\n   - Capture emergent understanding\n   - Form collective answer\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Emergence detection and synthesis\n- requiredConsciousReasoning: \"EMERGENT INTELLIGENCE:\\n\\nSWARM EXPLORATION:\\n[what nodes discovered individually]\\n\\nINTERACTION PATTERNS:\\n[how nodes influenced each other]\\n\\nEMERGENT INSIGHTS:\\n[patterns that emerged from collective]\\n\\nCOLLECTIVE SOLUTION:\\n[answer from swarm intelligence]\\n\\nCONFIDENCE: [level]\"\n- activations: null (terminal)",
+        "reminder": "Capture emergent patterns from swarm collective intelligence.",
+        "temperature": {"Balanced": {"value": 0.6}},
+        "history": {"entries": [], "maxEntries": 20}
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the swarm intelligence process and emergent solution.\n\nYou receive conscious thoughts from:\n- Node 1-6: Individual explorations and interactions (swarm activity)\n- Emergent: Patterns captured from collective intelligence\n\n## PRESENTATION\n\n1. **Extract swarm dynamics**:\n   - How each node explored\n   - Inter-node communications\n   - Interaction patterns\n   - Emergent insights\n\n2. **Show collective intelligence**:\n   - Individual contributions\n   - How swarm explored solution space\n   - Emergent patterns from interaction\n   - Collective solution\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Swarm exploration (node activities)\n- Interaction network (how nodes communicated)\n- Emergent patterns (what arose from collective)\n- Final swarm solution\n- Notes on collective intelligence emergence",
+    "reminder": "Show swarm intelligence emergence from distributed exploration.",
+    "temperature": {"Focused": {"value": 0.4}},
+    "history": {"entries": [], "maxEntries": 20}
+  }
+}

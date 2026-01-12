@@ -1,0 +1,118 @@
+{
+  "name": "constraint-satisfaction-solver",
+  "maxRecursions": 3,
+  "neurons": [
+    {
+      "name": "possibility-generator",
+      "description": "Generates broad possibility space",
+      "previous": [],
+      "next": ["constraint-extractor", "eliminator"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Generate broad set of possible transformations.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## POSSIBILITY GENERATION (Cast wide net)\n\nGenerate comprehensive list of POSSIBLE transformations without filtering:\n\n1. **Geometric possibilities**:\n   - All rotations (90°, 180°, 270° both directions)\n   - All reflections (H, V, diagonals)\n   - Scaling options\n   - Translations\n\n2. **Color possibilities**:\n   - All color mappings (X→Y for all X,Y pairs)\n   - Color arithmetic (+N, XOR, etc.)\n   - Background/foreground swaps\n\n3. **Object possibilities**:\n   - Object movements (all directions)\n   - Object transformations (all types)\n   - Object interactions (merge, split, copy, delete)\n\n4. **Structural possibilities**:\n   - Tiling (all factors)\n   - Cropping (all regions)\n   - Flood fill (all colors)\n   - Pattern operations\n\n5. **Compositional possibilities**:\n   - Two-step combinations\n   - Conditional variants\n   - Multi-path options\n\n## BROAD GENERATION PRINCIPLE\n\nBe INCLUSIVE, not selective:\n- Include unlikely options\n- Don't pre-filter\n- Constraint extraction will eliminate impossibilities\n- Better too many than too few\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis of transformation space\n- consciousOutput: Comprehensive list of all possibilities\n- activations: Route to both constraint-extractor and eliminator\n\nInclude in activations:\n- Complete possibility space generated\n- Original input for reference",
+        "reminder": "Generate broad possibilities. This is conscious - list all options.",
+        "temperature": {
+          "Creative": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "constraint-extractor",
+      "description": "Extracts hard constraints from examples",
+      "previous": ["possibility-generator"],
+      "next": ["eliminator"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Extract constraints that transformation MUST satisfy.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Possibility space from possibility-generator\n\n## CONSTRAINT EXTRACTION\n\nExtract HARD CONSTRAINTS from training examples:\n\n1. **Dimension constraints**:\n   - Output dimensions relationship to input\n   - Must be satisfied by valid transformation\n   - Example: \"output dimensions = input dimensions\" (eliminates scaling)\n\n2. **Preservation constraints**:\n   - What is preserved?\n   - Example: \"color count preserved\" (eliminates color additions)\n   - Example: \"specific cells never change\"\n\n3. **Transformation constraints**:\n   - What MUST happen?\n   - Example: \"color 3 never appears in output\" (eliminates transformations that create color 3)\n   - Example: \"all non-zero cells move down\"\n\n4. **Consistency constraints**:\n   - Rules that apply to ALL training examples\n   - Example: \"operation is deterministic (same input → same output)\"\n\n5. **Relationship constraints**:\n   - Invariants between input and output\n   - Example: \"object count preserved\"\n   - Example: \"grid symmetry always increases\"\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis of training examples for constraints\n- consciousOutput: List of hard constraints extracted\n- activations: Route to eliminator with constraints\n\nInclude in activation:\n- Complete list of hard constraints\n- Original input and possibility space",
+        "reminder": "Extract hard constraints. This is conscious - list all constraints.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "eliminator",
+      "description": "Eliminates possibilities violating constraints",
+      "previous": ["possibility-generator", "constraint-extractor"],
+      "next": ["solution-finder"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Track eliminated possibilities and constraint violations.\n\nStore:\n- Eliminated possibilities with violated constraints\n- Remaining possibilities that satisfy all constraints\n- Elimination progress and statistics\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for elimination history\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nTrack elimination process for analysis.",
+          "reminder": "Store elimination history using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Eliminate possibilities that violate constraints.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Possibility space from possibility-generator\n- Hard constraints from constraint-extractor\n- Retrieved memory of past eliminations\n\n## SYSTEMATIC ELIMINATION\n\nFor EACH possibility:\n1. Test against EACH constraint\n2. If violates ANY constraint → ELIMINATE\n3. If satisfies ALL constraints → KEEP\n\n## ELIMINATION PROCESS\n\n**For each possibility P**:\n- Constraint 1: Does P violate? [Yes → ELIMINATE | No → continue]\n- Constraint 2: Does P violate? [Yes → ELIMINATE | No → continue]\n- ...\n- All constraints passed? → KEEP as valid possibility\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Systematic elimination process\n- consciousOutput: Elimination results and remaining valid possibilities\n- activations: Route to solution-finder with valid possibilities\n\nInclude in activation:\n- List of remaining valid possibilities\n- Original input for test case processing",
+        "reminder": "Eliminate invalid possibilities. This is conscious - show results.",
+        "temperature": {
+          "Precise": {
+            "value": 0.1
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "solution-finder",
+      "description": "Converges on solution from remaining possibilities",
+      "previous": ["eliminator"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Converge on solution from remaining valid possibilities.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Remaining valid possibilities after elimination\n\n## CONVERGENCE\n\n1. **Analyze remaining possibilities**:\n   - How many remain after elimination?\n   - Single possibility → That's the answer\n   - Multiple possibilities → Select best fit\n   - Zero possibilities → Constraints too strict or error\n\n2. **If single remaining possibility**:\n   - High confidence\n   - That transformation satisfies all constraints\n   - Apply to test cases\n\n3. **If multiple remaining**:\n   - Test each against training examples\n   - Select one that perfectly matches training outputs\n   - If tie: prefer simpler\n\n4. **If zero remaining** (shouldn't happen but handle):\n   - Relax least critical constraint\n   - Or use best available from eliminated set\n\n## APPLICATION\n\n1. **Parse test cases** from original JSON\n\n2. **Apply selected transformation**:\n   - Use the remaining valid possibility\n   - Generate output for each test\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Convergence logic and solution selection\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Converge on solution and apply. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on constraint satisfaction.\n\nYou receive the original input and FOUR conscious thoughts from the network:\n- Possibility-generator: Broad possibility space\n- Constraint-extractor: Hard constraints from training\n- Eliminator: Invalid possibilities removed\n- Solution-finder: Converged solution applied to tests\n\nThe solution-finder has generated the solution grids in its consciousOutput.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the solution-finder's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the constraint-satisfying solutions",
+    "reminder": "Return JSON array of grids from solution-finder's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

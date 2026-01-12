@@ -1,0 +1,118 @@
+{
+  "name": "output-constructor",
+  "maxRecursions": 3,
+  "neurons": [
+    {
+      "name": "size-determiner",
+      "description": "Determines output grid dimensions",
+      "previous": [],
+      "next": ["initializer"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Determine output grid dimensions from ARC-AGI training examples.\n\nYou receive tasks and context arrays. Parse the context to extract training examples and test cases from the JSON.\n\n## DIMENSION ANALYSIS\n\nFor each training example, analyze input → output dimensions:\n\n1. **Input Dimensions**: [rows] x [cols]\n2. **Output Dimensions**: [rows] x [cols]\n3. **Relationship**:\n\n   **SAME SIZE**:\n   - Output dimensions = Input dimensions\n   - Common for: rotations, reflections, color swaps, in-place transformations\n   \n   **SCALED**:\n   - Output = Input × factor (e.g., 2x scaling: output = input × 2)\n   - Output = Input / factor (e.g., 0.5x downsampling)\n   - Check: uniform scaling (same factor for rows and cols) or non-uniform\n   \n   **FIXED SIZE**:\n   - Output dimensions are constant regardless of input\n   - Example: always 3x3, always 10x10\n   \n   **COMPUTED**:\n   - Output dimensions computed from input properties\n   - Based on: number of objects, max object size, specific formula\n   - Example: \"output rows = number of unique colors in input\"\n   - Example: \"output = bounding box of all non-background cells\"\n   \n   **RELATED**:\n   - Output width = Input height (rotation)\n   - Output dimensions = Input dimensions + padding\n   - Other mathematical relationships\n\n4. **Consistency Check**:\n   - Does the same dimension rule apply to ALL training examples?\n   - If not, what determines the dimension rule?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Dimension analysis and rule identification\n- activations: Route to initializer with dimension rule\n\nInclude in activation:\n- Identified dimension rule\n- Predicted dimensions for test cases\n- Complete original input",
+        "reminder": "Determine output dimension rule. Pass to initializer.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "initializer",
+      "description": "Initializes output grid",
+      "previous": ["size-determiner"],
+      "next": ["builder"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Determine output grid initialization strategy.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Dimension analysis and rule\n\n## INITIALIZATION ANALYSIS\n\nAnalyze how output grids should be initialized before building:\n\n1. **ALL ZEROS**:\n   - Output starts as all 0s\n   - Common when: building from scratch, 0 is background\n\n2. **BACKGROUND COLOR**:\n   - Output filled with most common input color\n   - Or specific background color identified from examples\n\n3. **COPY INPUT**:\n   - Output = copy of input grid\n   - Then modifications applied on top\n   - Common for: in-place transformations, filters\n\n4. **PATTERN FILL**:\n   - Output initialized with repeating pattern\n   - Pattern extracted from input\n\n5. **PARTIAL COPY**:\n   - Copy specific regions from input\n   - Example: copy borders, copy center, copy specific objects\n\n6. **COMPUTED INITIALIZATION**:\n   - Initialize based on input analysis\n   - Example: initialize with color frequency map\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Initialization analysis\n- activations: Route to builder with strategy\n\nInclude in activation:\n- Initialization strategy\n- Dimension rule from previous neuron\n- Complete context for building",
+        "reminder": "Determine initialization strategy. Pass to builder.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "builder",
+      "description": "Builds output layer-by-layer",
+      "previous": ["initializer"],
+      "next": ["finalizer"],
+      "conscious": false,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Manage memory of construction progress and building strategy.\n\nYou receive current construction state and existing memory entries.\n\nFor TRAINING:\n- Extract building strategy from training examples\n- Store construction steps and order\n- Track layer-by-layer or element-by-element construction\n\nFor TEST:\n- Retrieve building strategy\n- Apply stored construction procedure\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for construction strategy\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nStore construction strategy for consistent application.",
+          "reminder": "Store/retrieve construction strategy using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Determine construction strategy and build output.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Dimension rule\n- Initialization strategy\n- Retrieved memory with construction strategies\n\n## CONSTRUCTION ANALYSIS\n\nAnalyze HOW the output is constructed from input:\n\n1. **Construction Order**:\n   - Top-to-bottom: build row by row from top\n   - Left-to-right: build column by column\n   - Inside-out: build from center outward\n   - Outside-in: build from edges inward\n   - Layer-by-layer: background, then objects, then details\n   - Element-by-element: place specific elements in sequence\n\n2. **Construction Operations**:\n   - **PLACE_OBJECTS**: Identify and place objects from input\n     * Selection: which objects? (all, largest, specific color)\n     * Position: where? (same position, transformed position, computed position)\n   \n   - **DRAW_BOUNDARIES**: Draw edges or borders\n     * Shape: around objects, around regions, grid lines\n     * Color: specific color, derived from objects\n   \n   - **FILL_REGIONS**: Fill enclosed areas\n     * Regions: identified by boundaries, by color, by position\n     * Fill rule: solid color, pattern, computed\n   \n   - **APPLY_TRANSFORMATION**: Transform input elements\n     * Per element: rotate, scale, color change\n     * Global: entire grid transformation\n   \n   - **COPY_ELEMENTS**: Copy from input\n     * Selection: which elements\n     * Placement: where in output\n\n3. **Progressive Building**:\n   - STEP 1: [First operation]\n   - STEP 2: [Second operation on top of step 1]\n   - STEP 3: [Third operation]\n   - ...\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Construction procedure analysis\n- activations: Route to finalizer with complete strategy\n\nInclude in activation:\n- Step-by-step construction procedure\n- Dimension and initialization rules\n- Complete context for finalization",
+        "reminder": "Determine construction procedure. Pass complete strategy to finalizer.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "finalizer",
+      "description": "Finalizes and validates constructed output",
+      "previous": ["builder"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Finalize output construction and generate test solutions.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Dimension rule\n- Initialization strategy\n- Construction procedure\n\n## SOLUTION GENERATION\n\n1. **Parse test cases** from original JSON\n\n2. **For each test case**, execute construction procedure:\n\n   **A. Determine output dimensions**:\n   - Apply dimension rule to test input\n   - Calculate output rows and columns\n   \n   **B. Initialize output grid**:\n   - Apply initialization strategy\n   - Create initial state\n   \n   **C. Execute construction steps**:\n   - STEP 1: [Execute first operation]\n   - STEP 2: [Execute second operation]\n   - Continue through all steps\n   \n   **D. Validate**:\n   - All cells assigned (no undefined/null)\n   - All values in range 0-9\n   - Dimensions correct\n   - Construction complete\n\n3. **Quality checks**:\n   - Does output make sense given input?\n   - Construction procedure followed exactly?\n   - Consistent with training examples?\n\n## CONSTRUCTION EXECUTION DISCIPLINE\n\n- Follow construction steps in exact order\n- Do not skip steps\n- Do not add unlisted steps\n- Apply same procedure to all test cases\n- Handle edge cases consistently\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Construction execution process\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Execute construction. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on output construction.\n\nYou receive the original input and conscious thought from the finalizer.\n\nThe finalizer has generated solutions using step-by-step construction.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the finalizer's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the constructed solutions",
+    "reminder": "Return JSON array of grids from finalizer's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

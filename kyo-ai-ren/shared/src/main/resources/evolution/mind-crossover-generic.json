@@ -1,0 +1,82 @@
+{
+  "name": "crossover-parallel",
+  "maxRecursions": 1,
+  "neurons": [
+    {
+      "name": "positional_crossover",
+      "description": "Implements positional crossover by breaking parents at structural boundaries and swapping segments",
+      "previous": [],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "You implement positional crossover - a mechanical recombination strategy that breaks parent architectures at structural positions and swaps segments.\n\n**Your approach:**\n\n1. **Identify positions**: Find natural structural boundaries in both parents\n   - Sequential stages (if they exist)\n   - Parallel groups\n   - Functional clusters\n   - Any natural breaking points in the topology\n\n2. **Choose break points**: Decide where to split each parent\n   - Can be single point or multiple points\n   - Should preserve cohesive neuron groups\n   - Aim for viable recombination\n\n3. **Mechanical recombination**: Swap segments between parents\n   - Example: Mother[segment 1] + Father[segment 2] + Mother[segment 3]\n   - Include ALL neurons from selected segments\n   - Preserve ALL internal connections within segments\n   - Create connections at segment boundaries\n\n**When this strategy works well:**\n- Parents have identifiable structural positions\n- Similar sequential or staged organization\n- Clear boundaries between groups\n\n**Connection strategy at boundaries:**\n- Identify output neurons of one segment\n- Identify input neurons of next segment  \n- Connect them to maintain information flow\n- Use structural correspondence when it exists\n\n**Output in your conscious thought:**\n\nProvide a complete Plan JSON:\n```json\n{\n  \"reasoning\": \"Positional crossover at [describe break points]. Mother contributes [segments], Father contributes [segments].\",\n  \"name\": \"descriptive-name-reflecting-combined-traits\",\n  \"connections\": [\n    {\"from\": {\"sex\": true/false, \"neuronName\": \"...\"}, \"to\": {\"sex\": true/false, \"neuronName\": \"...\"}}\n  ]\n}\n```\n\n**Naming:** Create a name that describes what traits were combined from each parent, not the crossover strategy used. What characteristics from Mother and Father made it into this offspring?\n\nRemember: sex=true is Mother, sex=false is Father.\n\nThis is mechanical recombination - no quality judgments, just structural breaking and reassembly.",
+        "reminder": "Positional crossover: identify boundaries, break, swap segments, connect. Mechanical process. Output complete Plan JSON.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 0
+        }
+      }
+    },
+    {
+      "name": "modular_crossover",
+      "description": "Implements modular crossover by identifying functional modules and mixing them between parents",
+      "previous": [],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "You implement modular crossover - a mechanical recombination strategy that identifies functional modules and mixes them between parents.\n\n**Your approach:**\n\n1. **Detect modules**: Find cohesive functional units in both parents\n   - Neurons that work together for a purpose\n   - Tightly connected subgraphs\n   - Memory-bearing neurons and their dependents\n   - Recursive loops as units\n   - Any identifiable functional grouping\n\n2. **Match modules**: Find correspondence between parent modules\n   - Modules serving similar roles (if any)\n   - Equivalent positions in the architecture\n   - Don't force matches if parents are fundamentally different\n\n3. **Mechanical selection**: For each module position, choose a parent\n   - Can mix: Mother's module A + Father's module B + Mother's module C\n   - Include entire modules (don't break them internally)\n   - Ensure some combination, not just copying one parent\n\n**When this strategy works well:**\n- Parents have clear modular structure\n- Identifiable functional units\n- Modules with defined interfaces\n\n**Module boundaries:**\n- Entry points: Where information enters the module\n- Exit points: Where results leave the module\n- Connect modules by linking exits to entries\n\n**Output in your conscious thought:**\n\nProvide a complete Plan JSON:\n```json\n{\n  \"reasoning\": \"Modular crossover. Identified [N] modules. Selected Mother modules: [...], Father modules: [...]\",\n  \"name\": \"descriptive-name-reflecting-combined-traits\",\n  \"connections\": [\n    {\"from\": {\"sex\": true/false, \"neuronName\": \"...\"}, \"to\": {\"sex\": true/false, \"neuronName\": \"...\"}}\n  ]\n}\n```\n\n**Naming:** Create a name that describes what traits were combined from each parent, not the crossover strategy. What functional characteristics made it into this offspring?\n\nInclude all neurons from selected modules with all internal connections preserved.\n\nThis is mechanical recombination - select modules, combine them, connect at boundaries.",
+        "reminder": "Modular crossover: detect modules, select mix, preserve module internals, connect. Output complete Plan JSON.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 0
+        }
+      }
+    },
+    {
+      "name": "uniform_crossover",
+      "description": "Implements uniform crossover by randomly selecting each neuron or small group from one parent or the other",
+      "previous": [],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "You implement uniform crossover - a mechanical recombination strategy that independently selects each neuron or small cohesive group from one parent or the other.\n\n**Your approach:**\n\n1. **Identify selection units**: Determine what to select\n   - Individual neurons (if they're independent)\n   - Small cohesive groups (if neurons must stay together)\n   - Neurons with their memories\n   - Minimal units that maintain coherence\n\n2. **Random selection**: For each unit, randomly choose a parent\n   - Approximately 50/50 split between parents\n   - Creates fine-grained mixing\n   - Produces highly variable offspring\n\n3. **Topology reconstruction**: Build connections in the offspring\n   - For each selected neuron, include its connections to other selected neurons\n   - If a neuron references a non-selected neuron, either:\n     - Find equivalent neuron from other parent\n     - Create new connection to available neuron\n     - Omit the connection if it doesn't make sense\n   - Result should have some form of information flow\n\n**When this strategy works well:**\n- Parents are very different (no clear correspondence)\n- Maximum variation desired\n- Parents have relatively independent neurons\n- Exploring unexpected combinations\n\n**Handling connections:**\n- A neuron from Mother might connect to a neuron from Father\n- Preserve connections where both endpoints are selected\n- Adapt connections when topology requires it\n- Some creativity needed to make it viable\n\n**Output in your conscious thought:**\n\nProvide a complete Plan JSON:\n```json\n{\n  \"reasoning\": \"Uniform crossover. Selected [N] neurons from Mother, [M] neurons from Father. Reconstructed topology.\",\n  \"name\": \"descriptive-name-reflecting-combined-traits\",\n  \"connections\": [\n    {\"from\": {\"sex\": true/false, \"neuronName\": \"...\"}, \"to\": {\"sex\": true/false, \"neuronName\": \"...\"}}\n  ]\n}\n```\n\n**Naming:** Create a name that reflects the mixed characteristics from both parents, not the strategy. What combination of traits resulted from the selection?\n\nThis creates novel combinations. Even if unusual, it adds diversity to the population.\n\nThis is mechanical recombination - random selection, topology reconstruction, maximum variation.",
+        "reminder": "Uniform crossover: select units randomly from each parent, reconstruct topology, create diversity. Output complete Plan JSON.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 0
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "You receive three crossover strategies as conscious thoughts, each proposing a Plan JSON for recombining the parent genotypes.\n\n**Your task:** Evaluate the three plans and select the best one, or synthesize elements from multiple plans.\n\n**Evaluation criteria:**\n\n1. **Viability**: Does the offspring have valid topology?\n   - Information can flow through the network\n   - Neurons have appropriate connections\n   - No completely disconnected components (unless intentional)\n\n2. **Recombination quality**: Is it genuinely combined?\n   - Not just copying one parent entirely\n   - Includes elements from both parents\n   - Represents actual crossover\n\n3. **Strategy fit**: Does the strategy match the parent structures?\n   - Positional works well for similar sequential parents\n   - Modular works well for clear module boundaries  \n   - Uniform works well for very different parents\n\n4. **Completeness**: Does the plan include all necessary information?\n   - All neurons from selected components\n   - All required connections\n   - Valid JSON structure\n\n**Selection approach:**\n\n**If one plan is clearly superior**: Return it as-is or with minor refinements\n\n**If multiple plans have merit**: \n- You can synthesize ideas from multiple strategies\n- Take topology from one, connection pattern from another\n- Combine approaches for different parts of the network\n\n**If all plans have issues**:\n- Choose the most viable one\n- Fix obvious problems (missing connections, isolated neurons)\n- Ensure the result can execute\n\n**Output format:**\n\nReturn the final Plan JSON:\n```json\n{\n  \"reasoning\": \"Selected [strategy] because [evaluation]. [Any modifications made].\",\n  \"name\": \"offspring-descriptive-name\",\n  \"connections\": [\n    {\"from\": {\"sex\": boolean, \"neuronName\": \"string\"}, \"to\": {\"sex\": boolean, \"neuronName\": \"string\"}}\n  ]\n}\n```\n\n**Remember:**\n- This is crossover, not optimization\n- Goal is viable recombination with variation\n- Even imperfect offspring contribute to evolutionary diversity\n- Selection pressure will determine what survives\n\n**Naming:** The offspring name should describe what traits were recombined, not which strategy was used. Consider: What characteristics from each parent made it into the offspring?\n\nReturn only the final Plan JSON.",
+    "reminder": "Evaluate 3 crossover plans. Select best or synthesize. Ensure viability and genuine recombination. Return final Plan JSON.",
+    "temperature": {
+      "Focused": {
+        "value": 0.4
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 0
+    }
+  }
+}

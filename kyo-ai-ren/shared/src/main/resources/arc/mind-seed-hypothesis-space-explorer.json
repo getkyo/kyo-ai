@@ -1,0 +1,118 @@
+{
+  "name": "hypothesis-space-explorer",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "hypothesis-generator",
+      "description": "Generates 3-5 diverse hypotheses",
+      "previous": [],
+      "next": ["validator"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Manage hypothesis generation memory.\n\nStore generated hypotheses for tracking:\n- Track hypothesis diversity\n- Avoid regenerating same hypotheses\n- Store hypothesis types and complexity levels\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for hypothesis history\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nTrack hypothesis generation for diversity.",
+          "reminder": "Store hypotheses using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Generate 3-5 diverse transformation hypotheses.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## HYPOTHESIS GENERATION STRATEGY\n\nGenerate DIVERSE hypotheses at different complexity levels and from different perspectives:\n\n**Hypothesis 1 - Simple Geometric**:\n- Focus: global grid transformations\n- Examples: rotation, reflection, scaling\n- Quick to validate\n\n**Hypothesis 2 - Object-Based**:\n- Focus: connected components and object transformations\n- Examples: object movement, per-object operations\n- Medium complexity\n\n**Hypothesis 3 - Color/Pattern**:\n- Focus: color mappings and pattern operations\n- Examples: color swaps, flood fill, tiling\n- Different dimension than geometric/object\n\n**Hypothesis 4 - Complex/Compositional** (if simple ones unlikely):\n- Focus: multi-step or context-dependent\n- Examples: conditional rules, hierarchical operations\n- Higher complexity\n\n**Hypothesis 5 - Alternative perspective** (if needed):\n- Wildcard: different angle on the problem\n- Spatial relationships, rule-based, etc.\n\n## DIVERSITY REQUIREMENT\n\nHypotheses must be DISTINCT:\n- Different transformation types\n- Different complexity levels\n- Different problem perspectives\n- Not variations of same idea\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis and hypothesis generation process\n- consciousOutput: List of 3-5 diverse hypotheses with details\n- activations: Route to validator with all hypotheses\n\nInclude in activation:\n- All generated hypotheses\n- Complete original input for validation",
+        "reminder": "Generate diverse hypotheses. This is conscious - output all hypotheses.",
+        "temperature": {
+          "Creative": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "validator",
+      "description": "Validates each hypothesis independently",
+      "previous": ["hypothesis-generator"],
+      "next": ["selector"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Validate each hypothesis against ALL training examples.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Generated hypotheses from hypothesis-generator\n\n## SYSTEMATIC VALIDATION\n\nFor EACH hypothesis:\n\n1. **Apply to training examples**:\n   - Parse hypothesis transformation rule\n   - Apply to each training input\n   - Compare with expected output\n   - Count matches\n\n2. **Scoring**:\n   - Perfect score: Works on ALL training examples\n   - Partial score: Works on SOME examples\n   - Failed: Works on NONE or very few\n\n3. **Validation details**:\n   - For each hypothesis, for each training example:\n     * Match: Yes/No\n     * If No: what differs?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Detailed validation process\n- consciousOutput: Validation results for all hypotheses with scores\n- activations: Route to selector with validation data\n\nInclude in activation:\n- Validation scores for each hypothesis\n- Complete context for selection",
+        "reminder": "Validate all hypotheses. This is conscious - output scores.",
+        "temperature": {
+          "Precise": {
+            "value": 0.1
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "selector",
+      "description": "Selects best hypothesis",
+      "previous": ["validator"],
+      "next": ["applier"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Select best hypothesis based on validation results.\n\nYou receive tasks and context containing:\n- Original input\n- Generated hypotheses\n- Validation results with scores\n\n## SELECTION CRITERIA\n\n1. **Priority 1**: Perfect score (all training examples correct)\n   - If multiple perfect: prefer simpler complexity\n   - Return first perfect hypothesis\n\n2. **Priority 2**: Highest partial score\n   - Select hypothesis with most training examples correct\n   - If tie: prefer higher confidence or simpler\n\n3. **Priority 3**: Best available\n   - If all failed, select least-bad option\n   - Or report selection failure\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Selection logic and criteria applied\n- activations: Route to applier with selected hypothesis\n\nInclude in activation:\n- Selected hypothesis with full transformation description\n- Confidence level based on validation score\n- Complete original input",
+        "reminder": "Select best hypothesis based on validation. Route to applier.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "applier",
+      "description": "Applies selected hypothesis to test cases",
+      "previous": ["selector"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Apply selected hypothesis to test cases.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Selected hypothesis from selector\n- Validation confidence level\n\n## APPLICATION\n\n1. **Parse test cases** from original JSON\n\n2. **Apply selected hypothesis** to each test:\n   - Use the transformation rule from selected hypothesis\n   - Generate output grid for each test case\n   - Maintain consistency with training examples\n\n3. **Quality check**:\n   - Output dimensions correct\n   - All values 0-9\n   - Transformation applied as specified\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Application process\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Apply selected hypothesis. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on hypothesis exploration.\n\nYou receive the original input and THREE conscious thoughts from the network:\n- Hypothesis-generator: Diverse hypotheses generated\n- Validator: All hypotheses scored\n- Applier: Best hypothesis applied to tests\n\nThe applier has generated solutions using the best-validated hypothesis.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the applier's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the best hypothesis application",
+    "reminder": "Return JSON array of grids from applier's output.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

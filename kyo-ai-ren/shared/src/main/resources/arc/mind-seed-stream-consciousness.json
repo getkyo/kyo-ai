@@ -1,0 +1,139 @@
+{
+  "name": "stream-consciousness",
+  "maxRecursions": 10,
+  "neurons": [
+    {
+      "name": "stream1",
+      "description": "First parallel unconscious processing stream",
+      "previous": [],
+      "next": ["capturer"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Process problem through unconscious stream 1 - free association and divergent thinking.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to process\n   - Processing instructions\n\n2. **Extract from context array**:\n   - Problem details\n   - Information to process\n\n## STREAM PROCESSING (Unconscious - High Entropy)\n\n1. **Free-flowing thought**:\n   - Let associations emerge naturally\n   - Don't constrain or judge\n   - Follow tangents\n   - Explore intuitions\n   - Generate diverse possibilities\n\n2. **Stream characteristics**:\n   - Highly exploratory\n   - Non-linear connections\n   - Pattern recognition at subconscious level\n   - Multiple simultaneous threads\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Free-flowing stream of consciousness processing\n- activations: Send stream output to capturer\n\nIn activation to capturer:\n  In tasks array:\n    - \"Capture and sample stream outputs\"\n    - \"Record stream 1 processing\"\n  In context array:\n    - Original problem\n    - \"STREAM 1 OUTPUT: [raw stream thoughts]\"\n    - \"STREAM 1 ASSOCIATIONS: [connections made]\"\n    - \"STREAM 1 PATTERNS: [intuitive patterns noticed]\"",
+        "reminder": "Free-flowing unconscious processing. Explore without constraint.",
+        "temperature": {
+          "Exploratory": {
+            "value": 1.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "stream2",
+      "description": "Second parallel unconscious processing stream",
+      "previous": [],
+      "next": ["capturer"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Process problem through unconscious stream 2 - pattern synthesis and creative connections.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to process\n   - Processing instructions\n\n2. **Extract from context array**:\n   - Problem details\n   - Information to process\n\n## STREAM PROCESSING (Unconscious - High Entropy)\n\n1. **Pattern synthesis**:\n   - Find hidden connections\n   - Synthesize novel patterns\n   - Combine disparate ideas\n   - Generate creative insights\n   - Follow unexpected paths\n\n2. **Stream characteristics**:\n   - Creative pattern matching\n   - Unconventional combinations\n   - Emergent structures\n   - Spontaneous insights\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Stream of consciousness pattern synthesis\n- activations: Send stream output to capturer\n\nIn activation to capturer:\n  In tasks array:\n    - \"Capture and sample stream outputs\"\n    - \"Record stream 2 processing\"\n  In context array:\n    - Original problem\n    - \"STREAM 2 OUTPUT: [raw stream thoughts]\"\n    - \"STREAM 2 CONNECTIONS: [creative links]\"\n    - \"STREAM 2 INSIGHTS: [emergent patterns]\"",
+        "reminder": "Pattern synthesis stream. Creative unconscious connections.",
+        "temperature": {
+          "Exploratory": {
+            "value": 1.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "stream3",
+      "description": "Third parallel unconscious processing stream",
+      "previous": [],
+      "next": ["capturer"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Process problem through unconscious stream 3 - intuitive exploration and lateral thinking.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to process\n   - Processing instructions\n\n2. **Extract from context array**:\n   - Problem details\n   - Information to process\n\n## STREAM PROCESSING (Unconscious - High Entropy)\n\n1. **Intuitive exploration**:\n   - Follow hunches\n   - Lateral thinking\n   - Analogical reasoning\n   - Explore metaphors\n   - Trust intuition\n\n2. **Stream characteristics**:\n   - Highly intuitive\n   - Lateral connections\n   - Metaphorical thinking\n   - Subconscious pattern detection\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Stream of consciousness intuitive exploration\n- activations: Send stream output to capturer\n\nIn activation to capturer:\n  In tasks array:\n    - \"Capture and sample stream outputs\"\n    - \"Record stream 3 processing\"\n  In context array:\n    - Original problem\n    - \"STREAM 3 OUTPUT: [raw stream thoughts]\"\n    - \"STREAM 3 INTUITIONS: [hunches followed]\"\n    - \"STREAM 3 METAPHORS: [analogies explored]\"",
+        "reminder": "Intuitive lateral thinking stream. Follow hunches.",
+        "temperature": {
+          "Exploratory": {
+            "value": 1.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "capturer",
+      "description": "Samples streams and maintains stream history",
+      "previous": ["stream1", "stream2", "stream3"],
+      "next": ["weaver"],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Memory gate for stream history tracking.\n\n## STORAGE DECISION\n\nStore if:\n- Valuable insight from stream\n- Novel pattern detected\n- Important connection made\n- Recurring theme across streams\n\n## RETRIEVAL\n\nRetrieve:\n- Previous stream samples\n- Recurring themes\n- Valuable insights captured\n- Pattern evolution\n\nFormat stored items:\n- \"STREAM INSIGHT: [key finding]\"\n- \"PATTERN: [detected pattern]\"\n- \"THEME: [recurring element]\"\n- \"CONNECTION: [important link]\"",
+          "reminder": "Track stream history and valuable insights.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Capture and sample outputs from all three unconscious streams.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Capture instructions\n   - Recording requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Stream 1 output, associations, patterns\n   - Stream 2 output, connections, insights\n   - Stream 3 output, intuitions, metaphors\n\n## CAPTURE PROCESS\n\n1. **Sample each stream**:\n   - Extract key thoughts from stream 1\n   - Extract key insights from stream 2\n   - Extract key intuitions from stream 3\n   - Identify commonalities\n   - Note unique contributions\n\n2. **Access memory** for:\n   - Previous stream samples\n   - Recurring themes\n   - Pattern evolution\n\n3. **Store valuable findings**:\n   - Novel insights\n   - Important connections\n   - Recurring patterns\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Stream sampling and analysis\n- requiredConsciousReasoning: \"STREAM CAPTURE:\\n\\nFROM STREAM 1:\\n[key associations]\\n\\nFROM STREAM 2:\\n[key patterns]\\n\\nFROM STREAM 3:\\n[key intuitions]\\n\\nCOMMON THEMES:\\n[cross-stream patterns]\\n\\nUNIQUE INSIGHTS:\\n[stream-specific findings]\"\n- activations: Send to weaver\n\nIn activation to weaver:\n  In tasks array:\n    - \"Weave stream insights into coherent output\"\n    - \"Integrate unconscious processing\"\n  In context array:\n    - Original problem\n    - \"STREAM 1 CAPTURE: [sampled thoughts]\"\n    - \"STREAM 2 CAPTURE: [sampled patterns]\"\n    - \"STREAM 3 CAPTURE: [sampled intuitions]\"\n    - \"COMMON THEMES: [cross-stream findings]\"\n    - \"UNIQUE INSIGHTS: [distinct contributions]\"",
+        "reminder": "Sample all streams. Track in memory. Send to weaver.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "weaver",
+      "description": "Integrates captured stream thoughts into coherent output",
+      "previous": ["capturer"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Weave stream insights into coherent solution.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Weaving instructions\n   - Integration requirements\n\n2. **Extract from context array**:\n   - Original problem\n   - Stream 1 captured thoughts\n   - Stream 2 captured patterns\n   - Stream 3 captured intuitions\n   - Common themes\n   - Unique insights\n\n## WEAVING PROCESS\n\n1. **Integrate stream outputs**:\n   - Synthesize common themes\n   - Combine complementary insights\n   - Resolve contradictions\n   - Build coherent narrative\n\n2. **Extract solution**:\n   - What do streams collectively suggest?\n   - Which insights are most valuable?\n   - How to combine into answer?\n   - What emerged from unconscious processing?\n\n3. **Create coherent output**:\n   - Integrate unconscious insights\n   - Form logical structure\n   - Present solution clearly\n   - Acknowledge creative process\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Integration and weaving process\n- requiredConsciousReasoning: \"WOVEN SOLUTION:\\n\\nINTEGRATED INSIGHTS:\\n[synthesized from streams]\\n\\nKEY PATTERNS:\\n[emergent from unconscious processing]\\n\\nFINAL SOLUTION:\\n[coherent answer]\\n\\nEMERGENCE NOTES:\\n[what unconscious processing revealed]\"\n- activations: null (terminal)",
+        "reminder": "Integrate all stream insights into coherent solution.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the stream of consciousness synthesis.\n\nYou receive conscious thoughts from:\n- Capturer: Sampled insights from three unconscious streams\n- Weaver: Integrated coherent solution\n\nNote: Stream 1, 2, 3 are unconscious - their outputs don't appear directly, only through capturer.\n\n## PRESENTATION\n\n1. **Extract stream processing**:\n   - Captured thoughts from all streams\n   - Common themes identified\n   - Unique insights from each stream\n   - Woven synthesis\n\n2. **Show emergence**:\n   - How unconscious processing explored problem\n   - What patterns emerged across streams\n   - How capturer distilled insights\n   - How weaver created coherence\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Stream consciousness outputs (via capturer)\n- Cross-stream patterns and themes\n- Unique contributions from each stream\n- Final woven solution\n- Notes on emergent insights",
+    "reminder": "Show stream consciousness emergence and synthesis.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

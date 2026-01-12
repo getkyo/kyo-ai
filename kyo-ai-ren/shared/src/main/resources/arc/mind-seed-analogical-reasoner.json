@@ -1,0 +1,82 @@
+{
+  "name": "analogical-reasoner",
+  "maxRecursions": 2,
+  "neurons": [
+    {
+      "name": "analogy-finder",
+      "description": "Finds analogical relationships in training examples",
+      "previous": [],
+      "next": ["relation-mapper"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Find analogical relationships in training examples.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## ANALOGICAL REASONING: \"A is to B as C is to D\"\n\nFor each training example (input A → output B):\n\n1. **Identify the relationship**:\n   - What is the nature of transformation from A to B?\n   - Not just \"what changed\" but \"HOW they relate\"\n   - Example: \"Input is to Output as Raw is to Processed\"\n   - Example: \"Input is to Output as Question is to Answer\"\n\n2. **Structural similarity**:\n   - Identify structure in Input A\n   - Identify structure in Output B\n   - How do structures map?\n   - What's preserved? What's transformed?\n\n3. **Proportional relationships**:\n   - Ratios, scales, proportions\n   - Example: \"Output width is to Input width as 2 is to 1\" (doubled)\n   - Example: \"Object count in output is to object count in input as 1 is to 2\" (halved)\n\n4. **Functional relationships**:\n   - Input serves function F, Output serves function G\n   - Relationship between F and G?\n   - Example: \"Input is pattern template, Output is pattern instance\"\n\n5. **Analogical patterns across examples**:\n   - Does same analogical relationship hold for ALL training examples?\n   - Example 1: A₁ : B₁ :: structure : modification\n   - Example 2: A₂ : B₂ :: structure : modification (same relationship)\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Your analysis of analogical relationships\n- activations: Route to relation-mapper with findings\n\nInclude in activation:\n- The consistent analogical relationship found\n- Invariant relationships identified\n- Transfer rule for new inputs\n- Complete original input for reference",
+        "reminder": "Find A:B :: C:D patterns. Pass complete context forward.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "relation-mapper",
+      "description": "Maps analogical relationships to test cases",
+      "previous": ["analogy-finder"],
+      "next": ["applier"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Map analogical relationships to test cases.\n\nYou receive tasks and context arrays containing:\n- Original input with training examples and test cases\n- Analogical relationships from analogy-finder\n\n## ANALOGICAL MAPPING\n\nGiven: Analogical relationship from training (A : B :: X : Y)\nGoal: Apply to test input C to produce output D, where C : D :: X : Y\n\n1. **Identify structure in test input C**:\n   - Parse test cases from original input\n   - Identify structures analogous to training inputs A\n   - Map structural elements\n\n2. **Apply analogical relationship**:\n   - If training showed: Input A has structure S₁, Output B has structure S₂\n   - And: S₁ : S₂ :: original : transformed\n   - Then: Test input C has structure S₁', Output D should have structure S₂'\n   - Where: S₁' : S₂' maintains same analogical relationship\n\n3. **Relationship transfer**:\n   - Preserve proportions\n   - Preserve structural correspondences\n   - Preserve invariant relationships\n   - Transform variant aspects analogously\n\n## EXAMPLE MAPPING\n\nTraining analogy: \"Input objects doubled in size → Output\"\nMeaning: Input : Output :: 1 : 2 (in terms of object size)\n\nTest mapping:\n- Test input C has objects of size X\n- Apply analogy: objects should become size 2X\n- Output D has objects of size 2X\n- C : D :: 1 : 2 (same proportional relationship)\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: How analogical relationships map to test cases\n- consciousOutput: Description of mapped relationships for each test\n- activations: Route to applier with complete mappings\n\nInclude in activation:\n- Mapped relationships for each test case\n- Structural correspondences identified\n- Complete original input\n- Transformation instructions",
+        "reminder": "Map relationships to tests. This is conscious - provide consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "applier",
+      "description": "Applies analogical transformation to generate solutions",
+      "previous": ["relation-mapper"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Apply analogical transformation to generate test outputs.\n\nYou receive tasks and context arrays containing:\n- Original input with test cases\n- Analogical relationships identified\n- Mapped relationships for each test case\n\n## ANALOGICAL APPLICATION\n\n1. **Parse test cases** from original JSON\n\n2. **For each test case**:\n   - Use mapped relationship from relation-mapper\n   - Apply analogical transformation\n   - Preserve structural correspondence\n   - Maintain proportional relationships\n   - Generate output that maintains the analogy\n\n3. **Validation**:\n   - Does test input : test output maintain same analogical relationship as training?\n   - Structural similarity preserved?\n   - Proportions correct?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: How you applied the analogical transformations\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions as a JSON array.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- One grid per test case\n- Each grid is a 2D array of integers (0-9)\n- Analogical relationships are preserved",
+        "reminder": "Apply transformations. Output JSON array of grids in consciousOutput.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on analogical reasoning.\n\nYou receive the original input and conscious thoughts from the network:\n- Relation-mapper: Mapped analogical relationships to test cases\n- Applier: Generated solutions using analogical transformations\n\nThe applier has already generated the solution grids in its consciousOutput.\n\n## OUTPUT REQUIREMENTS\n\nExtract and return the JSON array of grids from the applier's output.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the analogically-derived solutions",
+    "reminder": "Return JSON array of grids from applier's solutions.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

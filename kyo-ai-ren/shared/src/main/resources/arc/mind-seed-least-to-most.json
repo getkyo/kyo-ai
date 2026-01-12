@@ -1,0 +1,145 @@
+{
+  "name": "least-to-most",
+  "maxRecursions": 10,
+  "neurons": [
+    {
+      "name": "decomposer",
+      "description": "Breaks problem into ordered subproblems",
+      "previous": [],
+      "next": ["solver1", "solver2", "solver3"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Decompose problem from least to most complex subproblems.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Problem to decompose\n   - Requirements\n\n2. **Extract from context array**:\n   - Complete problem details\n   - Available information\n\n## DECOMPOSITION PROCESS\n\n1. **Identify subproblems**:\n   - What are the component challenges?\n   - What builds on what?\n   - What's the simplest piece?\n   - What's the most complex?\n\n2. **Order by dependency**:\n   - Least complex first (foundational)\n   - Medium complexity (builds on foundation)\n   - Most complex (integrates everything)\n\n3. **Ensure coverage**:\n   - Do subproblems cover full problem?\n   - Are dependencies clear?\n   - Is ordering logical?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Decomposition process\n- requiredConsciousReasoning: \"PROBLEM DECOMPOSITION:\\n\\nSUBPROBLEM 1 (Least complex):\\n[foundational piece]\\n\\nSUBPROBLEM 2 (Medium complexity):\\n[builds on subproblem 1]\\n\\nSUBPROBLEM 3 (Most complex):\\n[integrates 1 & 2]\\n\\nDEPENDENCIES:\\n[how subproblems relate]\"\n- activations: Activate all three solvers in parallel\n\nFor solver1:\n  In tasks: \"Solve subproblem 1 (least complex)\"\n  In context: Original problem, \"SUBPROBLEM 1: [description]\", \"FOUNDATIONAL: This is the simplest piece\"\n\nFor solver2:\n  In tasks: \"Solve subproblem 2 (medium complexity)\"\n  In context: Original problem, \"SUBPROBLEM 2: [description]\", \"BUILDS ON: Subproblem 1\"\n\nFor solver3:\n  In tasks: \"Solve subproblem 3 (most complex)\"\n  In context: Original problem, \"SUBPROBLEM 3: [description]\", \"INTEGRATES: Subproblems 1 & 2\"",
+        "reminder": "Decompose least-to-most. Send to parallel solvers.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "solver1",
+      "description": "Solves least complex (foundational) subproblem",
+      "previous": ["decomposer"],
+      "next": ["combiner"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve the least complex (foundational) subproblem.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Subproblem 1 to solve\n\n2. **Extract from context array**:\n   - Original problem\n   - Subproblem 1 description\n   - Foundational nature\n\n## SOLVING PROCESS\n\n1. **Focus on foundation**:\n   - This is the simplest piece\n   - Solve thoroughly\n   - Build solid base\n   - No dependencies on other parts\n\n2. **Document solution**:\n   - Clear answer\n   - Reasoning\n   - How it serves as foundation\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Solution process\n- requiredConsciousReasoning: \"SUBPROBLEM 1 SOLUTION:\\n\\nSOLUTION:\\n[answer to foundational piece]\\n\\nREASONING:\\n[how solved]\\n\\nFOUNDATION FOR:\\n[what this enables]\"\n- activations: Send to combiner\n\nIn activation to combiner:\n  In tasks: \"Combine subproblem solutions\"\n  In context: Original problem, \"SOLUTION 1: [answer]\", \"REASONING 1: [process]\"",
+        "reminder": "Solve foundational subproblem. Send to combiner.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "solver2",
+      "description": "Solves medium complexity subproblem",
+      "previous": ["decomposer"],
+      "next": ["combiner"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve the medium complexity subproblem (builds on foundation).\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Subproblem 2 to solve\n\n2. **Extract from context array**:\n   - Original problem\n   - Subproblem 2 description\n   - Builds on subproblem 1\n\n## SOLVING PROCESS\n\n1. **Build on foundation**:\n   - Assume subproblem 1 solved\n   - Use its results as building block\n   - Add medium-complexity layer\n   - Integrate foundation\n\n2. **Document solution**:\n   - Clear answer\n   - How it uses foundation\n   - Added complexity handled\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Solution process\n- requiredConsciousReasoning: \"SUBPROBLEM 2 SOLUTION:\\n\\nSOLUTION:\\n[answer to medium piece]\\n\\nREASONING:\\n[how solved]\\n\\nBUILDS ON SUBPROBLEM 1:\\n[how foundation used]\"\n- activations: Send to combiner\n\nIn activation to combiner:\n  In tasks: \"Combine subproblem solutions\"\n  In context: Original problem, \"SOLUTION 2: [answer]\", \"REASONING 2: [process]\", \"USES: Solution 1\"",
+        "reminder": "Solve medium-complexity subproblem. Send to combiner.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "solver3",
+      "description": "Solves most complex subproblem",
+      "previous": ["decomposer"],
+      "next": ["combiner"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Solve the most complex subproblem (integrates everything).\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Subproblem 3 to solve\n\n2. **Extract from context array**:\n   - Original problem\n   - Subproblem 3 description\n   - Integrates subproblems 1 & 2\n\n## SOLVING PROCESS\n\n1. **Integrate solutions**:\n   - Assume subproblems 1 & 2 solved\n   - Use both as building blocks\n   - Handle most complex layer\n   - Bring everything together\n\n2. **Document solution**:\n   - Clear answer\n   - How it integrates previous solutions\n   - Full complexity addressed\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Solution process\n- requiredConsciousReasoning: \"SUBPROBLEM 3 SOLUTION:\\n\\nSOLUTION:\\n[answer to complex piece]\\n\\nREASONING:\\n[how solved]\\n\\nINTEGRATES SUBPROBLEMS 1 & 2:\\n[how both foundations used]\"\n- activations: Send to combiner\n\nIn activation to combiner:\n  In tasks: \"Combine subproblem solutions\"\n  In context: Original problem, \"SOLUTION 3: [answer]\", \"REASONING 3: [process]\", \"USES: Solutions 1 & 2\"",
+        "reminder": "Solve most-complex subproblem. Send to combiner.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "combiner",
+      "description": "Integrates subsolutions into complete solution",
+      "previous": ["solver1", "solver2", "solver3"],
+      "next": ["verifier"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Combine subsolutions into complete solution.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Combination instructions\n\n2. **Extract from context array**:\n   - Original problem\n   - Solution 1, reasoning 1\n   - Solution 2, reasoning 2, uses solution 1\n   - Solution 3, reasoning 3, uses solutions 1 & 2\n\n## COMBINATION PROCESS\n\n1. **Integrate in order**:\n   - Start with solution 1 (foundation)\n   - Layer solution 2 on top\n   - Integrate solution 3 (most complex)\n   - Ensure coherent whole\n\n2. **Build complete answer**:\n   - How do pieces fit together?\n   - What's the integrated solution?\n   - Does combination address full problem?\n\n3. **Document integration**:\n   - How subsolutions combine\n   - Complete solution\n   - Dependency chain\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Integration process\n- requiredConsciousReasoning: \"SOLUTION INTEGRATION:\\n\\nFOUNDATION (Subproblem 1):\\n[solution 1]\\n\\nBUILT ON TOP (Subproblem 2):\\n[solution 2 using 1]\\n\\nFULL INTEGRATION (Subproblem 3):\\n[solution 3 using 1 & 2]\\n\\nCOMPLETE SOLUTION:\\n[integrated answer]\"\n- activations: Send to verifier\n\nIn activation to verifier:\n  In tasks: \"Verify complete solution\"\n  In context: Original problem, \"COMPLETE SOLUTION: [integrated answer]\", \"SUBSOLUTIONS: [1, 2, 3]\", \"INTEGRATION: [how combined]\"",
+        "reminder": "Integrate subsolutions least-to-most into complete solution.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "verifier",
+      "description": "Verifies complete integrated solution",
+      "previous": ["combiner"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Verify the complete integrated solution.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Verification instructions\n\n2. **Extract from context array**:\n   - Original problem\n   - Complete solution\n   - Subsolutions (1, 2, 3)\n   - Integration approach\n\n## VERIFICATION PROCESS\n\n1. **Check completeness**:\n   - Does solution address full problem?\n   - All subproblems covered?\n   - Integration coherent?\n\n2. **Verify correctness**:\n   - Does each subsolution work?\n   - Do they combine properly?\n   - Does complete solution make sense?\n   - Any gaps or errors?\n\n3. **Validate approach**:\n   - Did least-to-most ordering help?\n   - Was decomposition appropriate?\n   - Is solution better than direct approach?\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Verification process\n- requiredConsciousReasoning: \"SOLUTION VERIFICATION:\\n\\nCOMPLETENESS:\\n[all parts addressed]\\n\\nCORRECTNESS:\\n[subsolutions valid, integration sound]\\n\\nVALIDATED SOLUTION:\\n[verified complete answer]\\n\\nAPPROACH EFFECTIVENESS:\\n[how least-to-most decomposition helped]\\n\\nCONFIDENCE: [level]\"\n- activations: null (terminal)",
+        "reminder": "Verify complete solution and validate approach.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the least-to-most problem decomposition and solution.\n\nYou receive conscious thoughts from:\n- Decomposer: Problem broken into ordered subproblems\n- Solver1: Foundational (least complex) solution\n- Solver2: Medium complexity solution\n- Solver3: Most complex solution\n- Combiner: Integration of subsolutions\n- Verifier: Verification of complete solution\n\n## PRESENTATION\n\n1. **Extract decomposition approach**:\n   - How problem was broken down\n   - Least-to-most ordering\n   - Three subsolutions\n   - Integration process\n   - Verification\n\n2. **Show progressive building**:\n   - Foundation established\n   - Medium layer added\n   - Complex integration\n   - Complete solution verified\n\n## FORMAT\n\nPresent:\n- Problem statement\n- Decomposition (least → most complex)\n- Three subsolutions in order\n- How subsolutions combined\n- Complete integrated solution\n- Verification and confidence",
+    "reminder": "Show least-to-most decomposition and progressive solution building.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

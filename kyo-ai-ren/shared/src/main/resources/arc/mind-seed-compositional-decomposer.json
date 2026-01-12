@@ -1,0 +1,130 @@
+{
+  "name": "compositional-decomposer",
+  "maxRecursions": 3,
+  "neurons": [
+    {
+      "name": "operation-identifier",
+      "description": "Identifies atomic operations",
+      "previous": [],
+      "next": [
+        "sequencer"
+      ],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Identify atomic operations in transformation.\n\nYou receive tasks and context arrays. Parse the context to extract training examples from the JSON.\n\n## COMPOSITIONAL DECOMPOSITION\n\nDecompose transformation into ATOMIC OPERATIONS:\n\n1. **Atomic operations catalog**:\n   - **ROTATE(angle)**: rotate grid by angle\n   - **REFLECT(axis)**: reflect along axis\n   - **SCALE(factor)**: scale by factor\n   - **TRANSLATE(dx, dy)**: shift by offset\n   - **RECOLOR(mapping)**: change colors according to mapping\n   - **EXTRACT(condition)**: extract elements meeting condition\n   - **FILTER(condition)**: remove elements meeting condition\n   - **COPY(source, dest)**: copy region\n   - **OVERLAY(layer1, layer2)**: combine layers\n   - **FILL(region, color)**: fill region with color\n   - **BOUNDARY(object, color)**: draw boundary around object\n   - **MOVE(object, direction)**: move object\n   - **SORT(objects, key)**: sort objects by key\n\n2. **Decomposition analysis**:\n   - Analyze training examples\n   - Which atomic operations are involved?\n   - Is transformation single-operation or multi-operation?\n   - Example: Input → Output might be ROTATE(90) then RECOLOR({3:5})\n\n3. **Operation identification**:\n   - List atomic operations present in transformation\n   - For each operation: parameters/arguments\n   - Example: \"ROTATE(90°)\", \"RECOLOR({3→5, 5→3})\", \"SCALE(2.0)\"\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Analysis of transformation and atomic operations\n- consciousOutput: List of identified operations with details\n- activations: Route to sequencer with findings\n\nInclude in activation context:\n- Identified atomic operations with parameters\n- Operation count and composition type\n- Complete original input for reference",
+        "reminder": "Identify atomic operations. This is conscious - provide detailed operation list.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "sequencer",
+      "description": "Determines operation sequence",
+      "previous": [
+        "operation-identifier"
+      ],
+      "next": [
+        "step-executor"
+      ],
+      "conscious": true,
+      "memory": {
+        "entries": [],
+        "gate": {
+          "prompt": "Track operation sequencing decisions.\n\nStore:\n- Sequence of operations determined\n- Dependencies between operations\n- Ordering logic (sequential/parallel/conditional)\n\n## OUTPUT FORMAT\n\nReturn MemoryOutput with:\n- retrieve: Array of indices for relevant sequencing history\n- updates: Optional array of Update operations\n\nUse proper Update variants:\n- Add: {\"afterIndex\": index or null, \"content\": string}\n- Replace: {\"index\": index, \"content\": string}\n- Remove: {\"indices\": [array of indices]}\n\nStore sequencing decisions for consistency.",
+          "reminder": "Store operation sequences using proper Update operations.",
+          "temperature": {
+            "Focused": {
+              "value": 0.3
+            }
+          },
+          "history": {
+            "entries": [],
+            "maxEntries": 20
+          }
+        }
+      },
+      "gate": {
+        "prompt": "Determine operation sequence and dependencies.\n\nYou receive tasks and context containing:\n- Original input with training examples\n- Identified atomic operations from operation-identifier\n- Retrieved memory about past sequencing\n\n## OPERATION SEQUENCING\n\n1. **Dependency analysis**:\n   - Does operation B depend on operation A's output?\n   - Example: EXTRACT must happen before MOVE if moving extracted objects\n   - Example: ROTATE and RECOLOR are independent (can be any order or parallel)\n\n2. **Sequence determination**:\n   - **Sequential**: Operations must happen in specific order\n     * Step 1: Op A\n     * Step 2: Op B (uses result of A)\n     * Step 3: Op C (uses result of B)\n   \n   - **Parallel**: Operations are independent\n     * Step 1: Op A and Op B simultaneously\n     * Step 2: Op C (uses results of both)\n   \n   - **Conditional**: Operation depends on condition\n     * If condition: Op A, Else: Op B\n\n3. **Sequence validation**:\n   - Test sequence on training examples\n   - Apply operations in determined order\n   - Verify output matches expected\n   - If mismatch: adjust sequence\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Dependency analysis and sequencing logic\n- consciousOutput: Determined sequence with steps and dependencies\n- activations: Route to step-executor with complete sequence\n\nInclude in activation:\n- Complete operation sequence with parameters\n- Step-by-step dependencies\n- Original input for test case processing",
+        "reminder": "Determine sequence. This is conscious - output detailed steps.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "step-executor",
+      "description": "Executes operations step-by-step",
+      "previous": [
+        "sequencer"
+      ],
+      "next": [
+        "compositor"
+      ],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute operations step-by-step on test cases.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Atomic operations identified\n- Operation sequence from sequencer\n\n## STEP-BY-STEP EXECUTION\n\n1. **Parse test cases** from original JSON\n\n2. **For each test case**, execute sequence:\n\n   **Execute Step 1**:\n   - Operation: [from sequence]\n   - Input: [test input]\n   - Apply operation\n   - Intermediate result 1: [output of step 1]\n   \n   **Execute Step 2**:\n   - Operation: [from sequence]\n   - Input: [intermediate result 1]\n   - Apply operation\n   - Intermediate result 2: [output of step 2]\n   \n   **Execute Step N**:\n   - Operation: [final operation]\n   - Input: [intermediate result N-1]\n   - Apply operation\n   - Final result: [output]\n\n3. **Execution trace** (for verification):\n   - Log each step's input and output\n   - Verify intermediate states make sense\n   - Track progressive transformation\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Step-by-step execution process\n- consciousOutput: Execution trace and intermediate results for each test\n- activations: Route to compositor with final results\n\nInclude in activation:\n- Final results for each test case\n- Execution trace for validation\n- Complete context for composition",
+        "reminder": "Execute steps. This is conscious - show execution trace.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "compositor",
+      "description": "Composes final result",
+      "previous": [
+        "step-executor"
+      ],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Compose final results from step-by-step execution.\n\nYou receive tasks and context containing:\n- Original input with test cases\n- Step-by-step execution results\n- Final outputs for each test case\n\n## FINAL COMPOSITION\n\n1. **Collect results**:\n   - Extract final results from step-by-step execution\n   - One result per test case\n\n2. **Validation**:\n   - All test cases processed\n   - All operations executed\n   - Results complete and valid\n\n3. **Format output**:\n   - Convert to JSON array of grids\n   - Ensure proper structure\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Final composition and validation\n- consciousOutput: JSON array of solution grids\n\nThe consciousOutput should contain the actual solutions.\nExample format: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure one grid per test case, each as 2D array of integers (0-9).",
+        "reminder": "Compose final results. Output JSON grids in consciousOutput.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Generate final grid output based on compositional decomposition.\n\nYou receive the original input and FOUR conscious thoughts from the network:\n- Operation-identifier: Atomic operations decomposed\n- Sequencer: Ordered steps with dependencies\n- Step-executor: Progressive transformation trace\n- Compositor: Final assembled results\n\nThe compositor has generated the solution grids in its consciousOutput.\n\n## OUTPUT REQUIREMENTS\n\nExtract the JSON array of grids from the compositor's consciousOutput.\n\nFormat: JSON array with one grid per test case\nExample: [[[0,3,0],[3,3,3],[0,3,0]], [[1,1],[1,1]]]\n\nEnsure:\n- Array length matches number of test cases\n- Each grid is a 2D array of integers (0-9)\n- Output exactly matches the compositionally-derived solutions",
+    "reminder": "Return JSON array of grids from compositor's solutions.",
+    "temperature": {
+      "Focused": {
+        "value": 0.3
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "name": "self-consistency-voter-5paths",
+  "maxRecursions": 10,
+  "neurons": [
+    {
+      "name": "splitter",
+      "description": "Receives problem and distributes to five parallel reasoning paths",
+      "previous": [],
+      "next": ["path1", "path2", "path3", "path4", "path5"],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Distribute problem to five parallel reasoning paths for enhanced self-consistency voting.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**:\n   - Main task description\n   - Problem statement\n   - Expected output format\n\n2. **Extract from context array**:\n   - Complete problem details\n   - Training examples if present\n   - Test case if present\n\n## PROCESSING\n\n1. **Problem understanding**:\n   - Identify the core question\n   - Note any constraints or requirements\n   - Understand what constitutes a valid answer\n\n2. **Path preparation**:\n   - Formulate identical starting task for all paths\n   - Package all necessary information\n   - Ensure each path gets complete context\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Problem analysis and distribution strategy\n- activations: Activate all five paths in parallel\n\nFor each path activation (path1 through path5):\n  In tasks array:\n    - \"Solve: [complete problem statement]\"\n    - \"Provide complete solution with reasoning\"\n    - \"Path ID: [1/2/3/4/5]\"\n  In context array:\n    - Full problem details from input\n    - All training examples if applicable\n    - Test case if applicable\n    - \"Independent reasoning path [1-5]\"",
+        "reminder": "Distribute problem identically to all five parallel paths.",
+        "temperature": {
+          "Precise": {
+            "value": 0.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "path1",
+      "description": "Most focused reasoning path (temp 0.2)",
+      "previous": ["splitter"],
+      "next": ["voter"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute path 1 with maximum precision and minimal randomness.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**: Problem, requirements, path ID\n2. **Extract from context array**: Complete problem details, examples, test case\n\n## REASONING APPROACH (Ultra-Focused)\n\n- Most deterministic reasoning\n- Strict logical progression\n- Conservative pattern identification\n- Verify every step\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Ultra-precise analytical process\n- requiredConsciousReasoning: \"PATH 1 SOLUTION:\\n[solution]\\n\\nREASONING:\\n[steps]\\n\\nCONFIDENCE: [level]\"\n- activations: Send to voter with \"PATH 1: [solution]\", \"PATH 1 REASONING: [summary]\", \"PATH 1 CONFIDENCE: [level]\"",
+        "reminder": "Ultra-focused deterministic reasoning.",
+        "temperature": {
+          "Precise": {
+            "value": 0.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "path2",
+      "description": "Focused reasoning path (temp 0.4)",
+      "previous": ["splitter"],
+      "next": ["voter"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute path 2 with focused analytical approach.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**: Problem, requirements, path ID\n2. **Extract from context array**: Complete problem details, examples, test case\n\n## REASONING APPROACH (Focused)\n\n- Systematic examination\n- Logical pattern discovery\n- Methodical verification\n- Clear rule formulation\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Focused analytical process\n- requiredConsciousReasoning: \"PATH 2 SOLUTION:\\n[solution]\\n\\nREASONING:\\n[steps]\\n\\nCONFIDENCE: [level]\"\n- activations: Send to voter with \"PATH 2: [solution]\", \"PATH 2 REASONING: [summary]\", \"PATH 2 CONFIDENCE: [level]\"",
+        "reminder": "Focused analytical reasoning.",
+        "temperature": {
+          "Focused": {
+            "value": 0.4
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "path3",
+      "description": "Balanced reasoning path (temp 0.7)",
+      "previous": ["splitter"],
+      "next": ["voter"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute path 3 with balanced flexible approach.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**: Problem, requirements, path ID\n2. **Extract from context array**: Complete problem details, examples, test case\n\n## REASONING APPROACH (Balanced)\n\n- Consider multiple interpretations\n- Balance logic and intuition\n- Explore alternative patterns\n- Synthesize best explanation\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Balanced reasoning process\n- requiredConsciousReasoning: \"PATH 3 SOLUTION:\\n[solution]\\n\\nREASONING:\\n[steps]\\n\\nCONFIDENCE: [level]\"\n- activations: Send to voter with \"PATH 3: [solution]\", \"PATH 3 REASONING: [summary]\", \"PATH 3 CONFIDENCE: [level]\"",
+        "reminder": "Balanced flexible reasoning.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.7
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "path4",
+      "description": "Creative reasoning path (temp 1.0)",
+      "previous": ["splitter"],
+      "next": ["voter"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute path 4 with creative exploration.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**: Problem, requirements, path ID\n2. **Extract from context array**: Complete problem details, examples, test case\n\n## REASONING APPROACH (Creative)\n\n- Explore unconventional patterns\n- Consider abstract relationships\n- Test novel hypotheses\n- Creative pattern synthesis\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Creative reasoning process\n- requiredConsciousReasoning: \"PATH 4 SOLUTION:\\n[solution]\\n\\nREASONING:\\n[steps]\\n\\nCONFIDENCE: [level]\"\n- activations: Send to voter with \"PATH 4: [solution]\", \"PATH 4 REASONING: [summary]\", \"PATH 4 CONFIDENCE: [level]\"",
+        "reminder": "Creative exploratory reasoning.",
+        "temperature": {
+          "Creative": {
+            "value": 1.0
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "path5",
+      "description": "Highly exploratory reasoning path (temp 1.2)",
+      "previous": ["splitter"],
+      "next": ["voter"],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute path 5 with maximum exploration and divergent thinking.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**: Problem, requirements, path ID\n2. **Extract from context array**: Complete problem details, examples, test case\n\n## REASONING APPROACH (Highly Exploratory)\n\n- Maximum divergent thinking\n- Explore edge case interpretations\n- Test radical hypotheses\n- Challenge conventional patterns\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Highly exploratory process\n- requiredConsciousReasoning: \"PATH 5 SOLUTION:\\n[solution]\\n\\nREASONING:\\n[steps]\\n\\nCONFIDENCE: [level]\"\n- activations: Send to voter with \"PATH 5: [solution]\", \"PATH 5 REASONING: [summary]\", \"PATH 5 CONFIDENCE: [level]\"",
+        "reminder": "Maximum exploratory reasoning.",
+        "temperature": {
+          "Exploratory": {
+            "value": 1.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "voter",
+      "description": "Aggregates solutions from all five paths and determines consensus",
+      "previous": ["path1", "path2", "path3", "path4", "path5"],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Aggregate solutions from five reasoning paths and determine consensus answer.\n\n## INPUT PARSING\n\n1. **Extract from tasks array**: Aggregation instructions\n2. **Extract from context array**:\n   - PATH 1-5 solutions, reasoning, confidence levels\n   - Original problem statement\n\n## VOTING PROCESS\n\n1. **Compare all solutions**:\n   - Group identical/similar solutions\n   - Count agreement levels\n   - Compare reasoning quality across paths\n   - Assess confidence patterns\n\n2. **Determine final answer**:\n   - If 3+ paths agree: Strong consensus\n   - If 2 paths agree + others close: Likely consensus\n   - If distributed: Choose most rigorous OR weight by confidence\n   - Prefer lower-temperature paths for tiebreaking\n\n3. **Justify selection**:\n   - Explain voting pattern\n   - Note strength of consensus\n   - Identify outliers and why\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Comprehensive voting analysis\n- requiredConsciousReasoning: \"CONSENSUS DECISION:\\n\\nFINAL SOLUTION: [chosen]\\n\\nVOTING: [X/5 paths agreed]\\n\\nPATTERN: [description]\\n\\nJUSTIFICATION: [why]\\n\\nALL PATHS:\\n- Path 1 (0.2): [solution]\\n- Path 2 (0.4): [solution]\\n- Path 3 (0.7): [solution]\\n- Path 4 (1.0): [solution]\\n- Path 5 (1.2): [solution]\"\n- activations: null (terminal)",
+        "reminder": "Aggregate five paths. Determine strongest consensus.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the five-path self-consistency voting result with complete transparency.\n\nYou receive conscious thoughts from:\n- Path 1-5: Solutions at different temperature settings\n- Voter: Consensus determination across all five paths\n\n## PRESENTATION\n\n1. **Extract all five solutions** with their temperature settings\n2. **Extract voting analysis** from voter\n3. **Present comprehensive summary**:\n   - Problem statement\n   - Five independent solutions (temp 0.2 to 1.2)\n   - Voting pattern and strength\n   - Final consensus answer\n   - Confidence with justification\n\n## FORMAT\n\nPresent:\n- Brief problem statement\n- Temperature spectrum results (0.2→0.4→0.7→1.0→1.2)\n- Agreement pattern visualization\n- Final answer with consensus strength\n- Overall confidence assessment",
+    "reminder": "Present all five paths and voting decision transparently.",
+    "temperature": {
+      "Precise": {
+        "value": 0.2
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}

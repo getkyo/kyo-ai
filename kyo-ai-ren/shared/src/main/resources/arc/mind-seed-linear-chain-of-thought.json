@@ -1,0 +1,92 @@
+{
+  "name": "linear-chain-of-thought",
+  "maxRecursions": 10,
+  "neurons": [
+    {
+      "name": "initiator",
+      "description": "Analyzes problem and initiates chain-of-thought",
+      "previous": [],
+      "next": [
+        "reasoner"
+      ],
+      "conscious": false,
+      "memory": null,
+      "gate": {
+        "prompt": "Initialize chain-of-thought reasoning.\n\n## INITIALIZATION\n\n1. **Analyze problem**:\n   - Extract complete problem statement\n   - Identify problem type and complexity\n   - Estimate reasoning depth needed\n\n2. **Set up reasoning chain**:\n   - Define what constitutes a complete solution\n   - Identify key milestones to reach\n   - Establish success criteria\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Problem analysis\n- activations: Send to reasoner\n\nIn activation tasks array:\n- \"Begin chain-of-thought reasoning\"\n- \"Success criteria: [what constitutes complete solution]\"\n\nIn activation context array:\n- Complete original problem\n- \"Reasoning chain: []\"\n- \"Current step: 1\"\n- \"Solution status: incomplete\"",
+        "reminder": "Initialize reasoning process with clear success criteria.",
+        "temperature": {
+          "Balanced": {
+            "value": 0.5
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "reasoner",
+      "description": "Performs reasoning steps with intelligent termination",
+      "previous": [
+        "initiator",
+        "reasoner"
+      ],
+      "next": [
+        "reasoner",
+        "concluder"
+      ],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Execute reasoning step with intelligent continuation control.\n\n## REASONING PROCESS\n\n1. **Extract current state**:\n   - Parse reasoning chain from context\n   - Identify current step number\n   - Review success criteria from tasks\n   - Check solution status\n\n2. **Perform reasoning**:\n   - Determine next logical step\n   - Build on previous results\n   - Make progress toward solution\n   - Show work explicitly\n\n3. **Evaluate progress**:\n   - Have we reached the solution?\n   - Is further reasoning needed?\n   - Would additional steps add value?\n\n## CONTINUATION DECISION\n\n**Continue to self (reasoner) if**:\n- Solution incomplete\n- Clear next step exists\n- Progress being made\n- Under step 8 (soft limit)\n\n**Route to concluder if**:\n- Solution found\n- No productive next step\n- Diminishing returns\n- Reached natural conclusion\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: This step's work and continuation decision\n- requiredConsciousReasoning: \"Step [N]: [reasoning and result]\"\n- activations: Route based on evaluation\n\nIf continuing (to reasoner):\n  In tasks:\n    - \"Continue reasoning\"\n    - \"Success criteria: [original criteria]\"\n  In context:\n    - Original problem\n    - \"Reasoning chain: [all previous steps + this one]\"\n    - \"Current step: [N+1]\"\n    - \"Solution status: [incomplete/partial/nearly complete]\"\n\nIf complete (to concluder):\n  In tasks:\n    - \"Conclude reasoning and present solution\"\n  In context:\n    - Original problem\n    - Complete reasoning chain\n    - Final answer/solution",
+        "reminder": "Reason step-by-step. Decide intelligently whether to continue.",
+        "temperature": {
+          "Focused": {
+            "value": 0.3
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    },
+    {
+      "name": "concluder",
+      "description": "Concludes reasoning and presents final solution",
+      "previous": [
+        "reasoner"
+      ],
+      "next": [],
+      "conscious": true,
+      "memory": null,
+      "gate": {
+        "prompt": "Conclude the chain-of-thought and present the solution.\n\n## CONCLUSION PROCESS\n\n1. **Review reasoning chain**:\n   - Extract all steps from context\n   - Identify key insights\n   - Trace logical flow\n\n2. **Formulate solution**:\n   - State final answer clearly\n   - Summarize reasoning path\n   - Highlight critical steps\n\n3. **Validate**:\n   - Verify answer addresses original problem\n   - Check reasoning coherence\n   - Confirm completeness\n\n## OUTPUT FORMAT\n\nGenerate output with:\n- reasoning: Solution formulation and validation\n- requiredConsciousReasoning: \"Conclusion: [final answer]\\n\\nKey reasoning: [brief summary of critical steps]\"\n- activations: null (terminal)",
+        "reminder": "Present final solution with reasoning summary.",
+        "temperature": {
+          "Precise": {
+            "value": 0.2
+          }
+        },
+        "history": {
+          "entries": [],
+          "maxEntries": 20
+        }
+      }
+    }
+  ],
+  "output": {
+    "prompt": "Present the complete chain-of-thought solution.\n\nYou receive conscious thoughts from:\n- Reasoner: Step-by-step reasoning (possibly multiple steps)\n- Concluder: Final solution and summary\n\n## PRESENTATION\n\n1. **Extract the full reasoning chain**\n2. **Identify the final answer** from concluder\n3. **Format as coherent narrative**\n\nPresent:\n- Clear statement of the problem\n- Logical progression of reasoning\n- Final answer with justification\n- Verification of completeness",
+    "reminder": "Present polished chain-of-thought solution.",
+    "temperature": {
+      "Precise": {
+        "value": 0.2
+      }
+    },
+    "history": {
+      "entries": [],
+      "maxEntries": 20
+    }
+  }
+}
